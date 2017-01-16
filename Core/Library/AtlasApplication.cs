@@ -21,7 +21,7 @@ namespace atlas.core.Library
 
         protected override IPageCacheRegistry CreatePageCacheRegistry()
         {
-            return new PageCacheRegistry();
+            return new AutoPageCacheRegistry();
         }
     }
 }

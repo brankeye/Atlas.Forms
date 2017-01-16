@@ -26,11 +26,11 @@ namespace atlas.core.Library.Services
 
         protected IPageFactory PageFactory { get; set; }
 
-        public NavigationService(IApplicationProvider applicationProvider, IPageFactory pageFactory)
+        public NavigationService(IApplicationProvider applicationProvider, IPageFactory pageFactory, bool setCurrent = false)
         {
             ApplicationProvider = applicationProvider;
             PageFactory = pageFactory;
-            if (Current == null) Current = this;
+            if (Current == null || setCurrent) Current = this;
         }
 
         public void InsertPageBefore(string page, string before)
@@ -96,7 +96,7 @@ namespace atlas.core.Library.Services
 
         public async Task PushAsync(string page, bool animated)
         {
-            var nextPage = PageFactory.CreatePage(page);
+            var nextPage = PageRetriever.GetPage(page);
             PageMethodInvoker.InvokeOnPageAppearing(nextPage);
             await Navigation.PushAsync(nextPage, animated);
             NavigationStackInternal.Add(new PageContainer(page, nextPage.GetType()));
@@ -111,7 +111,7 @@ namespace atlas.core.Library.Services
 
         public async Task PushModalAsync(string page, bool animated)
         {
-            var nextPage = PageFactory.CreatePage(page);
+            var nextPage = PageRetriever.GetPage(page);
             PageMethodInvoker.InvokeOnPageAppearing(nextPage);
             await Navigation.PushModalAsync(nextPage, animated);
             PageMethodInvoker.InvokeOnPageAppeared(nextPage);
@@ -120,6 +120,7 @@ namespace atlas.core.Library.Services
 
         public void RemovePage(string page)
         {
+            // TODO: loop through NavigationStack to find page with same key, then find actual page reference to remove.
             var nextPage = PageFactory.CreatePage(page);
             Navigation.RemovePage(nextPage);
             NavigationStackInternal.RemoveAt(NavigationStackInternal.Count - 1);
@@ -127,15 +128,12 @@ namespace atlas.core.Library.Services
 
         public void SetMainPage(string page)
         {
-            var nextPage = PageFactory.CreatePage(page);
+            var nextPage = PageRetriever.GetPage(page);
             PageMethodInvoker.InvokeOnPageAppearing(nextPage);
             var navigationPage = nextPage as NavigationPage;
             if (navigationPage != null)
             {
-                var typeInfo = navigationPage.GetType().GetTypeInfo();
-                //var hasConstructorThatTakesPage = typeInfo.DeclaredConstructors.Any(x => x.GetParameters().Any(y => y.ParameterType == typeof(Page)));
                 NavigationStackInternal.Add(new PageContainer(page, navigationPage.GetType()));
-                //navigationPage.Popped += NavigationPage_OnPopped;
             }
             ApplicationProvider.MainPage = nextPage;
             PageMethodInvoker.InvokeOnPageAppeared(nextPage);
@@ -144,25 +142,5 @@ namespace atlas.core.Library.Services
                 Navigation = ApplicationProvider.MainPage.Navigation;
             }
         }
-
-        /*
-        private void NavigationPage_OnPopped(object sender, NavigationEventArgs navigationEventArgs)
-        {
-            var navigationPage = (NavigationPage) sender;
-            var currentPage = navigationPage.CurrentPage;
-            var previousPage = navigationEventArgs.Page;
-            PageMethodInvoker.InvokeOnNavigatingFrom(previousPage);
-            NavigationStackInternal.RemoveAt(NavigationStackInternal.Count - 1);
-            PageMethodInvoker.InvokeOnNavigatedFrom(previousPage);
-            PageMethodInvoker.InvokeOnNavigatingTo(currentPage);
-            PageMethodInvoker.InvokeOnNavigatedTo(currentPage);
-            previousPage.Behaviors?.Clear();
-
-            if (Navigation.NavigationStack?.Count == 0)
-            {
-                navigationPage.Popped -= NavigationPage_OnPopped;
-            }
-        }
-        */
     }
 }

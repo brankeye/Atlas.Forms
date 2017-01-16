@@ -1,4 +1,5 @@
 ﻿using System;
+using atlas.core.Library.Behaviors;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Navigation;
 using Xamarin.Forms;
@@ -17,6 +18,7 @@ namespace atlas.core.Library.Pages
                 var innerPageType = PageNavigationStore.GetPageType(queue.Dequeue());
                 var innerPage = Activator.CreateInstance(innerPageType) as Page;
                 nextPage = Activator.CreateInstance(outerPageType, innerPage) as Page;
+                (nextPage as NavigationPage)?.Behaviors.Add(new NavigationPageBackButtonBehavior());
             }
             else
             {

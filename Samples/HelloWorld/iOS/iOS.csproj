@@ -138,6 +138,10 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Library\Library.csproj">
+      <Project>{5a98c917-a5e1-48d3-ba77-4a1aaa86f5ca}</Project>
+      <Name>Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\Shared.csproj">
       <Project>{f55e832d-8fbb-410b-b739-df090966398e}</Project>
       <Name>Shared</Name>
