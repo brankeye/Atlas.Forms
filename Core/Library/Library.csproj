@@ -39,9 +39,8 @@
     <Compile Include="AtlasApplication.cs" />
     <Compile Include="AtlasApplicationBase.cs" />
     <Compile Include="Behaviors\NavigationPageBackButtonBehavior.cs" />
+    <Compile Include="Caching\PageCache.cs" />
     <Compile Include="Caching\PageCacheRegistry.cs" />
-    <Compile Include="Caching\PageCacheContainer.cs" />
-    <Compile Include="Caching\AutoPageCacheRegistry.cs" />
     <Compile Include="Caching\PageCacheStore.cs" />
     <Compile Include="Interfaces\IMainPageAware.cs" />
     <Compile Include="Interfaces\IPageCacheService.cs" />
@@ -56,7 +55,7 @@
     <Compile Include="Interfaces\Pages\IPageDisappearedAware.cs" />
     <Compile Include="Interfaces\Pages\IPageDisappearingAware.cs" />
     <Compile Include="Navigation\ApplicationProvider.cs" />
-    <Compile Include="Caching\AutoPageCacheStore.cs" />
+    <Compile Include="Caching\PageCacheMap.cs" />
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
     <Compile Include="Navigation\PageNavigationStore.cs" />
     <Compile Include="Pages\PageContainer.cs" />

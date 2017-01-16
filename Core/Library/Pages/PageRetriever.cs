@@ -22,18 +22,18 @@ namespace atlas.core.Library.Pages
                 var innerPageKey = queue.Dequeue();
                 var outerPageType = PageNavigationStore.GetPageType(outerPageKey);
                 var innerPageType = PageNavigationStore.GetPageType(innerPageKey);
-                var innerPage = PageCacheStore.GetCachedPage(innerPageKey) ??
+                var innerPage = PageCacheStore.TryGetPage(innerPageKey) ??
                                 Activator.CreateInstance(innerPageType) as Page;
                 nextPage = Activator.CreateInstance(outerPageType, innerPage) as Page;
                 (nextPage as NavigationPage)?.Behaviors.Add(new NavigationPageBackButtonBehavior());
-                PageCacheRegistry.LoadNextPages(innerPageKey);
+                PageCache.PreloadCachedPages(innerPageKey);
             }
             else
             {
                 var pageType = PageNavigationStore.GetPageType(key);
-                nextPage = PageCacheStore.GetCachedPage(key) ??
+                nextPage = PageCacheStore.TryGetPage(key) ??
                                 Activator.CreateInstance(pageType) as Page;
-                PageCacheRegistry.LoadNextPages(key);
+                PageCache.PreloadCachedPages(key);
             }
             return nextPage;
         }

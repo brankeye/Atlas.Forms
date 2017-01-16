@@ -6,6 +6,6 @@ namespace atlas.core.Library.Interfaces
     {
         string Key { get; set; }
 
-        Type PageType { get; set; }
+        Type Type { get; set; }
     }
 }

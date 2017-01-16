@@ -2,34 +2,29 @@
 using System.Collections.Generic;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Navigation;
-using Xamarin.Forms;
+using atlas.core.Library.Pages;
 
 namespace atlas.core.Library.Caching
 {
-    public class PageCacheRegistry
+    public class PageCacheRegistry : IPageCacheRegistry
     {
-        public static void AddPageToCache(string pageKey)
+        public void RegisterPageForCache(string pageKey, string cachedPageKey)
         {
-            Page page;
-            if (!PageCacheStore.CacheStore.TryGetValue(pageKey, out page))
-            {
-                var pageType = PageNavigationStore.GetPageType(pageKey);
-                page = Activator.CreateInstance(pageType) as Page;
-                PageCacheStore.CacheStore.Add(pageKey, page);
-            }
+            var type = PageNavigationStore.GetPageType(cachedPageKey);
+            PageCacheMap.AddPageContainer(pageKey, new PageContainer(cachedPageKey, type));
         }
 
-        public static void LoadNextPages(string pageKey)
+        public void RegisterPageForCache<TPage>(string cachedPageKey)
         {
-            IList<PageCacheContainer> containers;
-            AutoPageCacheStore.CacheStore.TryGetValue(pageKey, out containers);
-            if (containers != null)
-            {
-                foreach (var container in containers)
-                {
-                    AddPageToCache(container.PageKey);
-                }
-            }
+            var pageType = typeof(TPage);
+            RegisterPageForCache(pageType.Name, cachedPageKey);
+        }
+
+        public void RegisterPageForCache<TPage, TCachedPage>()
+        {
+            var pageType = typeof(TPage);
+            var cachePageType = typeof(TCachedPage);
+            RegisterPageForCache(pageType.Name, cachePageType.Name);
         }
     }
 }

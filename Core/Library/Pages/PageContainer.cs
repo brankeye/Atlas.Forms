@@ -5,14 +5,14 @@ namespace atlas.core.Library.Pages
 {
     public class PageContainer : IPageContainer
     {
-        public PageContainer(string key, Type pageType)
+        public PageContainer(string key, Type type)
         {
             Key = key;
-            PageType = pageType;
+            Type = type;
         }
 
         public string Key { get; set; }
 
-        public Type PageType { get; set; }
+        public Type Type { get; set; }
     }
 }

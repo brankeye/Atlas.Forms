@@ -5,19 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using atlas.core.Library.Caching;
 using atlas.core.Library.Interfaces;
+using atlas.core.Library.Pages;
 using Xamarin.Forms;
 
 namespace atlas.core.Library.Services
 {
     public class PageCacheService : IPageCacheService
     {
-        public IReadOnlyDictionary<string, Page> CachedPages => Caching.PageCacheStore.CacheStore;
+        public IReadOnlyDictionary<string, Page> CachedPages => Caching.PageCacheStore.GetCacheStore();
 
-        public IReadOnlyDictionary<string, IList<PageCacheContainer>> PageCacheStore => AutoPageCacheStore.CacheStore;
+        public IReadOnlyDictionary<string, IList<IPageContainer>> PageCacheStore => PageCacheMap.GetCacheStore();
 
-        public Page GetPage(string page)
+        public Page GetPage(string key)
         {
-            return Caching.PageCacheStore.GetCachedPage(page);
+            return Caching.PageCacheStore.TryGetPage(key);
         }
     }
 }

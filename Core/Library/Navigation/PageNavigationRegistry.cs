@@ -11,10 +11,7 @@ namespace atlas.core.Library.Navigation
 
         public void RegisterPage<TPage>(string key)
         {
-            if (PageNavigationStore.PageTypeStore.ContainsKey(key) == false)
-            {
-                PageNavigationStore.PageTypeStore.Add(key, typeof(TPage));
-            }
+            PageNavigationStore.TryAddType(key, typeof(TPage));
         }
     }
 }
