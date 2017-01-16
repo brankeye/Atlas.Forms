@@ -9,7 +9,7 @@ namespace atlas.core.Library.Caching
 {
     public class PageCache
     {
-        public static void AddPageToCache(string key)
+        public static void AddPage(string key)
         {
             if (PageCacheStore.TryGetPage(key) == null)
             {
@@ -19,12 +19,17 @@ namespace atlas.core.Library.Caching
             }
         }
 
+        public static bool RemovePage(string key)
+        {
+            return PageCacheStore.RemovePage(key);
+        }
+
         public static void PreloadCachedPages(string key)
         {
             var containers = PageCacheMap.GetCachedPages(key);
             foreach (var container in containers)
             {
-                AddPageToCache(container.Key);
+                AddPage(container.Key);
             }
         }
     }

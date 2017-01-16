@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using atlas.core.Library.Caching;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Pages;
 using Xamarin.Forms;
@@ -50,12 +51,14 @@ namespace atlas.core.Library.Services
 
         public async Task<IPageContainer> PopAsync(bool animated)
         {
+            PageCacheStore.RemovePages(PageCacheMap.GetCachedPages(NavigationStackInternal.Last().Key));
             var currentPage = Navigation.NavigationStack[Navigation.NavigationStack.Count - 1];
             PageMethodInvoker.InvokeOnPageDisappearing(currentPage);
             await Navigation.PopAsync(animated);
             var pageContainer = NavigationStackInternal.Last();
             NavigationStackInternal.Remove(pageContainer);
             PageMethodInvoker.InvokeOnPageDisappeared(currentPage);
+            PageCache.PreloadCachedPages(NavigationStackInternal.Last().Key);
             return pageContainer;
         }
 
@@ -67,12 +70,14 @@ namespace atlas.core.Library.Services
 
         public async Task<IPageContainer> PopModalAsync(bool animated)
         {
+            PageCacheStore.RemovePages(PageCacheMap.GetCachedPages(ModalStackInternal.Last().Key));
             var currentPage = Navigation.ModalStack[Navigation.ModalStack.Count - 1];
             PageMethodInvoker.InvokeOnPageDisappearing(currentPage);
             await Navigation.PopModalAsync(animated);
             var pageContainer = ModalStackInternal.Last();
             ModalStackInternal.Remove(pageContainer);
             PageMethodInvoker.InvokeOnPageDisappeared(currentPage);
+            PageCache.PreloadCachedPages(ModalStackInternal.Last().Key);
             return pageContainer;
         }
 
@@ -96,6 +101,7 @@ namespace atlas.core.Library.Services
 
         public async Task PushAsync(string page, bool animated)
         {
+            PageCacheStore.RemovePages(PageCacheMap.GetCachedPages(NavigationStackInternal.Last().Key));
             var nextPage = PageRetriever.GetPage(page);
             PageMethodInvoker.InvokeOnPageAppearing(nextPage);
             await Navigation.PushAsync(nextPage, animated);
@@ -111,6 +117,7 @@ namespace atlas.core.Library.Services
 
         public async Task PushModalAsync(string page, bool animated)
         {
+            PageCacheStore.RemovePages(PageCacheMap.GetCachedPages(ModalStackInternal.Last().Key));
             var nextPage = PageRetriever.GetPage(page);
             PageMethodInvoker.InvokeOnPageAppearing(nextPage);
             await Navigation.PushModalAsync(nextPage, animated);
