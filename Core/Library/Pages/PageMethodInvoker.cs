@@ -34,24 +34,24 @@ namespace atlas.core.Library.Pages
             InvokeActionOnPage<IPageAppearedAware>(view, x => x.OnPageAppeared(parameters));
         }
 
-        public static void InvokeOnPageDisappearing(object view, IParametersService parameters = null)
+        public static void InvokeOnPageDisappearing(object view)
         {
-            InvokeActionOnPage<IPageDisappearingAware>(view, x => x.OnPageDisappearing(parameters));
+            InvokeActionOnPage<IPageDisappearingAware>(view, x => x.OnPageDisappearing());
         }
 
-        public static void InvokeOnPageDisappeared(object view, IParametersService parameters = null)
+        public static void InvokeOnPageDisappeared(object view)
         {
-            InvokeActionOnPage<IPageDisappearedAware>(view, x => x.OnPageDisappeared(parameters));
+            InvokeActionOnPage<IPageDisappearedAware>(view, x => x.OnPageDisappeared());
         }
 
-        public static void InvokeOnPageCaching(object view, IParametersService parameters = null)
+        public static void InvokeOnPageCaching(object view)
         {
-            InvokeActionOnPage<IPageCachingAware>(view, x => x.OnPageCaching(parameters));
+            InvokeActionOnPage<IPageCachingAware>(view, x => x.OnPageCaching());
         }
 
-        public static void InvokeOnPageCached(object view, IParametersService parameters = null)
+        public static void InvokeOnPageCached(object view)
         {
-            InvokeActionOnPage<IPageCachedAware>(view, x => x.OnPageCached(parameters));
+            InvokeActionOnPage<IPageCachedAware>(view, x => x.OnPageCached());
         }
     }
 }

@@ -2,6 +2,6 @@
 {
     public interface IPageDisappearingAware
     {
-        void OnPageDisappearing(IParametersService parameters = null);
+        void OnPageDisappearing();
     }
 }

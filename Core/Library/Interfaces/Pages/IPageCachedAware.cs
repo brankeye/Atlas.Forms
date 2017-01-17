@@ -2,6 +2,6 @@
 {
     public interface IPageCachedAware
     {
-        void OnPageCached(IParametersService parameters = null);
+        void OnPageCached();
     }
 }
