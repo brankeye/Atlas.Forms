@@ -2,10 +2,10 @@
 {
     public interface IParametersService
     {
-        bool Add<TObject>(string key, TObject item);
+        bool TryAdd(string key, object item);
 
-        TObject Get<TObject>(string key);
+        TObject TryGet<TObject>(string key);
 
-        bool Remove(string key);
+        bool TryRemove(string key);
     }
 }

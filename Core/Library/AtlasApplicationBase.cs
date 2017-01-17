@@ -1,4 +1,5 @@
 ﻿using atlas.core.Library.Interfaces;
+using atlas.core.Library.Services;
 using Xamarin.Forms;
 
 namespace atlas.core.Library
@@ -17,16 +18,19 @@ namespace atlas.core.Library
 
         public virtual void Initialize()
         {
-            CreateNavigationService();
+            NavigationService.Current = CreateNavigationService();
+            PageCacheService.Current = CreatePageCacheService();
             RegisterPagesForNavigation(CreatePageNavigationRegistry());
             RegisterPagesForCaching(CreatePageCacheRegistry());
         }
 
-        protected virtual void RegisterPagesForNavigation(IPageNavigationRegistry registry) { }
+        protected abstract void RegisterPagesForNavigation(IPageNavigationRegistry registry);
 
-        protected virtual void RegisterPagesForCaching(IPageCacheRegistry registry) { }
+        protected abstract void RegisterPagesForCaching(IPageCacheRegistry registry);
 
-        protected abstract void CreateNavigationService();
+        protected abstract INavigationService CreateNavigationService();
+
+        protected abstract IPageCacheService CreatePageCacheService();
 
         protected abstract IPageNavigationRegistry CreatePageNavigationRegistry();
 

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using atlas.core.Library.Interfaces;
 using atlas.core.Library.Navigation;
 using atlas.core.Library.Pages;
 using Xamarin.Forms;
@@ -15,7 +13,9 @@ namespace atlas.core.Library.Caching
             {
                 var pageType = PageNavigationStore.GetPageType(key);
                 var page = Activator.CreateInstance(pageType) as Page;
+                PageMethodInvoker.InvokeOnPageCaching(page);
                 PageCacheStore.AddPage(key, page);
+                PageMethodInvoker.InvokeOnPageCached(page);
             }
         }
 

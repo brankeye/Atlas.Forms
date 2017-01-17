@@ -23,16 +23,16 @@ namespace atlas.core.Library.Interfaces
 
         Task PopToRootAsync(bool animated);
 
-        Task PushAsync(string page);
+        Task PushAsync(string page, IParametersService parameters = null);
 
-        Task PushAsync(string page, bool animated);
+        Task PushAsync(string page, bool animated, IParametersService parameters = null);
 
-        Task PushModalAsync(string page);
+        Task PushModalAsync(string page, IParametersService parameters = null);
 
-        Task PushModalAsync(string page, bool animated);
+        Task PushModalAsync(string page, bool animated, IParametersService parameters = null);
 
         void RemovePage(string page);
 
-        void SetMainPage(string page);
+        void SetMainPage(string page, IParametersService parameters = null);
     }
 }

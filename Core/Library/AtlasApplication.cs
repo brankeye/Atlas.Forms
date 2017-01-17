@@ -8,10 +8,14 @@ namespace atlas.core.Library
 {
     public abstract class AtlasApplication : AtlasApplicationBase
     {
-        protected override void CreateNavigationService()
+        protected override INavigationService CreateNavigationService()
         {
-            // initializes static Current instance of NavigationService
-            var navigationService = new NavigationService(new ApplicationProvider(), new PageFactory());
+            return new NavigationService(new ApplicationProvider());
+        }
+
+        protected override IPageCacheService CreatePageCacheService()
+        {
+            return new PageCacheService();
         }
 
         protected override IPageNavigationRegistry CreatePageNavigationRegistry()

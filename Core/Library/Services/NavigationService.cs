@@ -11,7 +11,7 @@ namespace atlas.core.Library.Services
 {
     public class NavigationService : INavigationService
     {
-        public static INavigationService Current { get; private set; }
+        public static INavigationService Current { get; internal set; }
 
         public IReadOnlyList<IPageContainer> NavigationStack => NavigationStackInternal.ToList();
 
@@ -25,18 +25,14 @@ namespace atlas.core.Library.Services
 
         protected IApplicationProvider ApplicationProvider { get; }
 
-        protected IPageFactory PageFactory { get; set; }
-
-        public NavigationService(IApplicationProvider applicationProvider, IPageFactory pageFactory, bool setCurrent = false)
+        public NavigationService(IApplicationProvider applicationProvider)
         {
             ApplicationProvider = applicationProvider;
-            PageFactory = pageFactory;
-            if (Current == null || setCurrent) Current = this;
         }
 
         public void InsertPageBefore(string page, string before)
         {
-            var nextPage = PageFactory.CreatePage(page);
+            var nextPage = PageRetriever.GetPage(page);
             var beforeIndex = NavigationStackInternal.IndexOf(NavigationStackInternal.FirstOrDefault(x => x.Key == before));
             var beforePage = Navigation.NavigationStack.ElementAtOrDefault(beforeIndex);
             Navigation.InsertPageBefore(nextPage, beforePage);
@@ -94,56 +90,61 @@ namespace atlas.core.Library.Services
             }
         }
 
-        public async Task PushAsync(string page)
+        public async Task PushAsync(string page, IParametersService parameters = null)
         {
-            await PushAsync(page, true);
+            await PushAsync(page, true, parameters);
         }
 
-        public async Task PushAsync(string page, bool animated)
+        public async Task PushAsync(string page, bool animated, IParametersService parameters = null)
         {
             PageCacheStore.RemovePages(PageCacheMap.GetCachedPages(NavigationStackInternal.Last().Key));
             var nextPage = PageRetriever.GetPage(page);
-            PageMethodInvoker.InvokeOnPageAppearing(nextPage);
+            PageMethodInvoker.InvokeOnPageAppearing(nextPage, parameters);
             await Navigation.PushAsync(nextPage, animated);
             NavigationStackInternal.Add(new PageContainer(page, nextPage.GetType()));
-            PageMethodInvoker.InvokeOnPageAppeared(nextPage);
+            PageMethodInvoker.InvokeOnPageAppeared(nextPage, parameters);
             
         }
 
-        public async Task PushModalAsync(string page)
+        public async Task PushModalAsync(string page, IParametersService parameters = null)
         {
-            await PushModalAsync(page, true);
+            await PushModalAsync(page, true, parameters);
         }
 
-        public async Task PushModalAsync(string page, bool animated)
+        public async Task PushModalAsync(string page, bool animated, IParametersService parameters = null)
         {
             PageCacheStore.RemovePages(PageCacheMap.GetCachedPages(ModalStackInternal.Last().Key));
             var nextPage = PageRetriever.GetPage(page);
-            PageMethodInvoker.InvokeOnPageAppearing(nextPage);
+            PageMethodInvoker.InvokeOnPageAppearing(nextPage, parameters);
             await Navigation.PushModalAsync(nextPage, animated);
-            PageMethodInvoker.InvokeOnPageAppeared(nextPage);
+            PageMethodInvoker.InvokeOnPageAppeared(nextPage, parameters);
             ModalStackInternal.Add(new PageContainer(page, nextPage.GetType()));
         }
 
         public void RemovePage(string page)
         {
-            // TODO: loop through NavigationStack to find page with same key, then find actual page reference to remove.
-            var nextPage = PageFactory.CreatePage(page);
-            Navigation.RemovePage(nextPage);
-            NavigationStackInternal.RemoveAt(NavigationStackInternal.Count - 1);
+            for (var i = NavigationStackInternal.Count - 1; i >= 0; i--)
+            {
+                if (NavigationStackInternal[i].Key == page)
+                {
+                    Navigation.RemovePage(Navigation.NavigationStack[i]);
+                    NavigationStackInternal.RemoveAt(i);
+                    break;
+                }
+            }
         }
 
-        public void SetMainPage(string page)
+        public void SetMainPage(string page, IParametersService parameters = null)
         {
             var nextPage = PageRetriever.GetPage(page);
-            PageMethodInvoker.InvokeOnPageAppearing(nextPage);
+            PageMethodInvoker.InvokeOnPageAppearing(nextPage, parameters);
             var navigationPage = nextPage as NavigationPage;
             if (navigationPage != null)
             {
                 NavigationStackInternal.Add(new PageContainer(page, navigationPage.GetType()));
             }
             ApplicationProvider.MainPage = nextPage;
-            PageMethodInvoker.InvokeOnPageAppeared(nextPage);
+            PageMethodInvoker.InvokeOnPageAppeared(nextPage, parameters);
             if (ApplicationProvider.MainPage != null)
             {
                 Navigation = ApplicationProvider.MainPage.Navigation;

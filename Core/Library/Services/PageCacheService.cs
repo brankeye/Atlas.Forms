@@ -12,6 +12,8 @@ namespace atlas.core.Library.Services
 {
     public class PageCacheService : IPageCacheService
     {
+        public static IPageCacheService Current { get; internal set; }
+
         public IReadOnlyDictionary<string, Page> CachedPages => Caching.PageCacheStore.GetCacheStore();
 
         public IReadOnlyDictionary<string, IList<IPageContainer>> PageCacheStore => PageCacheMap.GetCacheStore();
