@@ -1,11 +1,11 @@
-﻿namespace atlas.core.Library.Interfaces
+﻿using atlas.core.Library.Pages;
+
+namespace atlas.core.Library.Interfaces
 {
     public interface IPageCacheRegistry
     {
-        void RegisterPageForCache<TPage, TCachedPage>();
+        FluentPageCacheContainer WhenAppears<TPage>();
 
-        void RegisterPageForCache<TPage>(string cachedPageKey);
-
-        void RegisterPageForCache(string pageKey, string cachedPageKey);
+        FluentPageCacheContainer WhenAppears(string pageKey);
     }
 }

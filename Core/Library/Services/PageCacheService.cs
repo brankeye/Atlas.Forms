@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using atlas.core.Library.Caching;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Pages;
@@ -14,13 +10,13 @@ namespace atlas.core.Library.Services
     {
         public static IPageCacheService Current { get; internal set; }
 
-        public IReadOnlyDictionary<string, Page> CachedPages => Caching.PageCacheStore.GetCacheStore();
+        public IReadOnlyDictionary<string, PageCacheContainer> CachedPages => Caching.PageCacheStore.GetCacheStore();
 
-        public IReadOnlyDictionary<string, IList<IPageContainer>> PageCacheStore => PageCacheMap.GetCacheStore();
+        public IReadOnlyDictionary<string, IList<PageMapContainer>> PageCacheStore => PageCacheMap.GetCacheStore();
 
         public Page GetPage(string key)
         {
-            return Caching.PageCacheStore.TryGetPage(key);
+            return Caching.PageCacheStore.TryGetPage(key)?.Page;
         }
     }
 }

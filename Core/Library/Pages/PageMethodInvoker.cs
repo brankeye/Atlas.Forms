@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace atlas.core.Library.Pages
 {
-    public static class PageMethodInvoker
+    public class PageMethodInvoker
     {
         public static void InvokeActionOnPage<T>(object view, Action<T> action)
             where T : class

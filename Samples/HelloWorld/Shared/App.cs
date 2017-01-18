@@ -1,6 +1,7 @@
 ﻿using atlas.core.Library;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Services;
+using atlas.samples.helloworld.Shared.Views.Pages;
 using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared
@@ -28,7 +29,8 @@ namespace atlas.samples.helloworld.Shared
 
         protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
         {
-            registry.RegisterPageForCache<Views.Pages.Dashboard, Views.Pages.About>();
+            registry.WhenAppears<Dashboard>().CachePage<About>();
+            registry.WhenAppears<Dashboard>().CachePage<Changelog>().AsKeepAlive();
         }
 
         protected override void OnStart()

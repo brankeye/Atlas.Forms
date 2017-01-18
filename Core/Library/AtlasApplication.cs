@@ -1,7 +1,6 @@
 ﻿using atlas.core.Library.Caching;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Navigation;
-using atlas.core.Library.Pages;
 using atlas.core.Library.Services;
 
 namespace atlas.core.Library
@@ -10,7 +9,7 @@ namespace atlas.core.Library
     {
         protected override INavigationService CreateNavigationService()
         {
-            return new NavigationService(new ApplicationProvider());
+            return new NavigationService(new ApplicationProvider(), new PageCacheCoordinator());
         }
 
         protected override IPageCacheService CreatePageCacheService()

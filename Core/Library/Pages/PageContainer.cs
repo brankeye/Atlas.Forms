@@ -5,6 +5,8 @@ namespace atlas.core.Library.Pages
 {
     public class PageContainer : IPageContainer
     {
+        public PageContainer() { }
+
         public PageContainer(string key, Type type)
         {
             Key = key;

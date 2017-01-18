@@ -1,6 +1,4 @@
-﻿using Xamarin.Forms;
-
-namespace atlas.core.Library.Interfaces.Pages
+﻿namespace atlas.core.Library.Interfaces.Pages
 {
     public interface IPageCachingAware
     {

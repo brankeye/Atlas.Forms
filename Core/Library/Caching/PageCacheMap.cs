@@ -1,35 +1,34 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using atlas.core.Library.Interfaces;
+using atlas.core.Library.Pages;
 
 namespace atlas.core.Library.Caching
 {
     public class PageCacheMap
     {
-        protected static Dictionary<string, IList<IPageContainer>> CacheStore { get; } = new Dictionary<string, IList<IPageContainer>>();
+        protected static Dictionary<string, IList<PageMapContainer>> CacheStore { get; } = new Dictionary<string, IList<PageMapContainer>>();
 
-        public static IList<IPageContainer> GetCachedPages(string key)
+        public static IList<PageMapContainer> GetCachedPages(string key)
         {
-            IList<IPageContainer> list;
+            IList<PageMapContainer> list;
             if (CacheStore.TryGetValue(key, out list))
             {
                 return list;
             }
-            return new List<IPageContainer>();
+            return new List<PageMapContainer>();
         }
 
-        public static void AddPageContainer(string key, IPageContainer pageContainer)
+        public static void AddPageContainer(string key, PageMapContainer pageContainer)
         {
-            IList<IPageContainer> list;
+            IList<PageMapContainer> list;
             if (!CacheStore.TryGetValue(key, out list))
             {
-                list = new List<IPageContainer>();
+                list = new List<PageMapContainer>();
                 CacheStore.Add(key, list);
             }
             list.Add(pageContainer);
         }
 
-        public static IReadOnlyDictionary<string, IList<IPageContainer>> GetCacheStore()
+        public static IReadOnlyDictionary<string, IList<PageMapContainer>> GetCacheStore()
         {
             return CacheStore;
         }

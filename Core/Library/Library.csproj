@@ -39,9 +39,11 @@
     <Compile Include="AtlasApplication.cs" />
     <Compile Include="AtlasApplicationBase.cs" />
     <Compile Include="Behaviors\NavigationPageBackButtonBehavior.cs" />
-    <Compile Include="Caching\PageCache.cs" />
+    <Compile Include="Caching\PageCacheCoordinator.cs" />
     <Compile Include="Caching\PageCacheRegistry.cs" />
     <Compile Include="Caching\PageCacheStore.cs" />
+    <Compile Include="Enums\CacheState.cs" />
+    <Compile Include="Interfaces\IPageCacheCoordinator.cs" />
     <Compile Include="Interfaces\Pages\IPageCachedAware.cs" />
     <Compile Include="Interfaces\Pages\IPageCachingAware.cs" />
     <Compile Include="Interfaces\IMainPageAware.cs" />
@@ -60,11 +62,13 @@
     <Compile Include="Caching\PageCacheMap.cs" />
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
     <Compile Include="Navigation\PageNavigationStore.cs" />
+    <Compile Include="Pages\FluentPageCacheContainer.cs" />
+    <Compile Include="Pages\PageCacheContainer.cs" />
+    <Compile Include="Pages\PageMapContainer.cs" />
     <Compile Include="Pages\PageContainer.cs" />
     <Compile Include="Pages\PageFactory.cs" />
     <Compile Include="Pages\PageKeyParser.cs" />
     <Compile Include="Pages\PageMethodInvoker.cs" />
-    <Compile Include="Pages\PageRetriever.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\PageCacheService.cs" />

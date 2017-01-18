@@ -1,30 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Navigation;
+﻿using atlas.core.Library.Interfaces;
 using atlas.core.Library.Pages;
 
 namespace atlas.core.Library.Caching
 {
     public class PageCacheRegistry : IPageCacheRegistry
     {
-        public void RegisterPageForCache(string pageKey, string cachedPageKey)
+        public FluentPageCacheContainer WhenAppears(string pageKey)
         {
-            var type = PageNavigationStore.GetPageType(cachedPageKey);
-            PageCacheMap.AddPageContainer(pageKey, new PageContainer(cachedPageKey, type));
+            var container = new PageMapContainer();
+            PageCacheMap.AddPageContainer(pageKey, container);
+            return new FluentPageCacheContainer(container);
         }
 
-        public void RegisterPageForCache<TPage>(string cachedPageKey)
+        public FluentPageCacheContainer WhenAppears<TPage>()
         {
-            var pageType = typeof(TPage);
-            RegisterPageForCache(pageType.Name, cachedPageKey);
-        }
-
-        public void RegisterPageForCache<TPage, TCachedPage>()
-        {
-            var pageType = typeof(TPage);
-            var cachePageType = typeof(TCachedPage);
-            RegisterPageForCache(pageType.Name, cachePageType.Name);
+            return WhenAppears(typeof(TPage).Name);
         }
     }
 }
