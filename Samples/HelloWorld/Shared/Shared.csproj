@@ -37,6 +37,8 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\MasterPageItem.cs" />
+    <Compile Include="ViewModels\Pages\Dashboard.cs" />
     <Compile Include="Views\Pages\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
@@ -48,6 +50,18 @@
     </Compile>
     <Compile Include="Views\Pages\Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\TutorialOne.xaml.cs">
+      <DependentUpon>TutorialOne.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\Tutorials.xaml.cs">
+      <DependentUpon>Tutorials.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\TutorialThree.xaml.cs">
+      <DependentUpon>TutorialThree.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\TutorialTwo.xaml.cs">
+      <DependentUpon>TutorialTwo.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +107,30 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\Pages\Changelog.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Pages\Tutorials.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Pages\TutorialOne.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Pages\TutorialTwo.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\Pages\TutorialThree.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

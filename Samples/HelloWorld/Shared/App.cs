@@ -10,12 +10,7 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
-            // The root page of your application
-            var cacheService = PageCacheService.Current;
-            var cacheMap = cacheService.CacheMap;
-            var cachedPages = cacheService.CachedPages;
-            NavigationService.Current.SetMainPage("NavigationPage/Dashboard");
-            cachedPages = cacheService.CachedPages;
+            NavigationService.Current.SetMainPage("Dashboard");
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)
@@ -25,12 +20,22 @@ namespace atlas.samples.helloworld.Shared
             registry.RegisterPage<Views.Pages.About>();
             registry.RegisterPage<Views.Pages.Changelog>();
             registry.RegisterPage<Views.Pages.Contact>();
+            registry.RegisterPage<Views.Pages.Tutorials>();
+            registry.RegisterPage<Views.Pages.TutorialOne>();
+            registry.RegisterPage<Views.Pages.TutorialTwo>();
+            registry.RegisterPage<Views.Pages.TutorialThree>();
         }
 
         protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
         {
-            registry.WhenAppears<Dashboard>().CachePage<About>();
+            registry.WhenAppears<Dashboard>().CachePage<Tutorials>().AsKeepAlive();
+            registry.WhenAppears<Dashboard>().CachePage<About>().AsKeepAlive();
             registry.WhenAppears<Dashboard>().CachePage<Changelog>().AsKeepAlive();
+            registry.WhenAppears<Dashboard>().CachePage<Contact>().AsKeepAlive();
+
+            registry.WhenAppears<Tutorials>().CachePage<TutorialOne>();
+            registry.WhenAppears<TutorialOne>().CachePage<TutorialTwo>();
+            registry.WhenAppears<TutorialTwo>().CachePage<TutorialThree>();
         }
 
         protected override void OnStart()

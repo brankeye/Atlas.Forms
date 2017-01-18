@@ -101,11 +101,11 @@ namespace atlas.core.Library.Services
         {
             CacheCoordinator.RemoveCachedPages(NavigationStackInternal.Last().Key);
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
+            CacheCoordinator.LoadCachedPages(page);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
             await Navigation.PushAsync(nextPage, animated);
             NavigationStackInternal.Add(new PageContainer(page, nextPage.GetType()));
             PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
-            
         }
 
         public async Task PushModalAsync(string page, IParametersService parameters = null)
@@ -117,10 +117,55 @@ namespace atlas.core.Library.Services
         {
             CacheCoordinator.RemoveCachedPages(ModalStackInternal.Last().Key);
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
+            CacheCoordinator.LoadCachedPages(page);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
             await Navigation.PushModalAsync(nextPage, animated);
             PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
             ModalStackInternal.Add(new PageContainer(page, nextPage.GetType()));
+        }
+
+        public void Present(string page, IParametersService parameters = null)
+        {
+            var currentPage = Navigation.NavigationStack.Last();
+            if (currentPage is MasterDetailPage)
+            {
+                var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
+                CacheCoordinator.LoadCachedPages(page);
+                PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
+                (currentPage as MasterDetailPage).Detail = nextPage;
+                PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
+            }
+            else if (currentPage is TabbedPage)
+            {
+                var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
+                CacheCoordinator.LoadCachedPages(page);
+                PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
+                var tabbedPage = currentPage as TabbedPage;
+                tabbedPage.CurrentPage = tabbedPage.Children.FirstOrDefault(x => x.Title == page);
+                PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
+            }
+        }
+
+        public void PresentModal(string page, IParametersService parameters = null)
+        {
+            var currentPage = Navigation.ModalStack.Last();
+            if (currentPage is MasterDetailPage)
+            {
+                var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
+                CacheCoordinator.LoadCachedPages(page);
+                PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
+                (currentPage as MasterDetailPage).Detail = nextPage;
+                PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
+            }
+            else if (currentPage is TabbedPage)
+            {
+                var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
+                CacheCoordinator.LoadCachedPages(page);
+                PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
+                var tabbedPage = currentPage as TabbedPage;
+                tabbedPage.CurrentPage = tabbedPage.Children.FirstOrDefault(x => x.Title == page);
+                PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
+            }
         }
 
         public void RemovePage(string page)
@@ -139,6 +184,7 @@ namespace atlas.core.Library.Services
         public void SetMainPage(string page, IParametersService parameters = null)
         {
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
+            CacheCoordinator.LoadCachedPages(page);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
             var navigationPage = nextPage as NavigationPage;
             if (navigationPage != null)
@@ -146,11 +192,11 @@ namespace atlas.core.Library.Services
                 NavigationStackInternal.Add(new PageContainer(page, navigationPage.GetType()));
             }
             ApplicationProvider.MainPage = nextPage;
-            PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
             if (ApplicationProvider.MainPage != null)
             {
                 Navigation = ApplicationProvider.MainPage.Navigation;
             }
+            PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
         }
     }
 }

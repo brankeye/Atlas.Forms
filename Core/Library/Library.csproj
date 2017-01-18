@@ -43,10 +43,11 @@
     <Compile Include="Caching\PageCacheRegistry.cs" />
     <Compile Include="Caching\PageCacheStore.cs" />
     <Compile Include="Enums\CacheState.cs" />
+    <Compile Include="Extensions\NavigationExtensions.cs" />
     <Compile Include="Interfaces\IPageCacheCoordinator.cs" />
     <Compile Include="Interfaces\Pages\IPageCachedAware.cs" />
     <Compile Include="Interfaces\Pages\IPageCachingAware.cs" />
-    <Compile Include="Interfaces\IMainPageAware.cs" />
+    <Compile Include="Interfaces\IApplicationProvider.cs" />
     <Compile Include="Interfaces\IPageCacheService.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="Interfaces\IPageCacheRegistry.cs" />

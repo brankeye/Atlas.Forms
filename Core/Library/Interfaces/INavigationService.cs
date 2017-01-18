@@ -27,6 +27,10 @@ namespace atlas.core.Library.Interfaces
 
         Task PushAsync(string page, bool animated, IParametersService parameters = null);
 
+        void Present(string page, IParametersService parameters = null);
+
+        void PresentModal(string page, IParametersService parameters = null);
+
         Task PushModalAsync(string page, IParametersService parameters = null);
 
         Task PushModalAsync(string page, bool animated, IParametersService parameters = null);

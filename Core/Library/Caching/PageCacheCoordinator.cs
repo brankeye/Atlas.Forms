@@ -23,12 +23,10 @@ namespace atlas.core.Library.Caching
                 var innerPage = GetCachedOrNewPageInternal(innerPageKey);
                 nextPage = Activator.CreateInstance(outerPageType, innerPage) as Page;
                 (nextPage as NavigationPage)?.Behaviors.Add(new NavigationPageBackButtonBehavior());
-                LoadCachedPages(innerPageKey);
             }
             else
             {
                 nextPage = GetCachedOrNewPageInternal(key);
-                LoadCachedPages(key);
             }
             return nextPage;
         }
@@ -46,12 +44,10 @@ namespace atlas.core.Library.Caching
                 if (innerPage == null) return null;
                 nextPage = Activator.CreateInstance(outerPageType, innerPage) as Page;
                 (nextPage as NavigationPage)?.Behaviors.Add(new NavigationPageBackButtonBehavior());
-                LoadCachedPages(innerPageKey);
             }
             else
             {
                 nextPage = GetCachedPageInternal(key);
-                if(nextPage != null) LoadCachedPages(key);
             }
             return nextPage;
         }
@@ -69,8 +65,7 @@ namespace atlas.core.Library.Caching
             var container = PageCacheStore.TryGetPage(key);
             if (container != null)
             {
-                if (container.CacheState == CacheState.Default ||
-                    container.CacheState == CacheState.KeepAlive)
+                if (container.CacheState == CacheState.Default)
                 {
                     PageCacheStore.RemovePage(container.Key);
                 }
@@ -84,7 +79,8 @@ namespace atlas.core.Library.Caching
             var containers = PageCacheMap.GetCachedPages(key);
             foreach (var container in containers)
             {
-                if (container.CacheState == CacheState.Default)
+                if (container.CacheState == CacheState.Default ||
+                    container.CacheState == CacheState.KeepAlive)
                 {
                     PageCacheStore.RemovePage(container.Key);
                 }
@@ -93,6 +89,12 @@ namespace atlas.core.Library.Caching
 
         public void LoadCachedPages(string key)
         {
+            if (PageKeyParser.IsSequence(key))
+            {
+                var queue = PageKeyParser.GetPageKeysFromSequence(key);
+                var outerPageKey = queue.Dequeue();
+                key = queue.Dequeue();
+            }
             var containers = PageCacheMap.GetCachedPages(key);
             foreach (var container in containers)
             {
