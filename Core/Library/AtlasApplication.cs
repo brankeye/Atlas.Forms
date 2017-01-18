@@ -14,7 +14,7 @@ namespace atlas.core.Library
 
         protected override IPageCacheService CreatePageCacheService()
         {
-            return new PageCacheService();
+            return new PageCacheService(new PageCacheCoordinator());
         }
 
         protected override IPageNavigationRegistry CreatePageNavigationRegistry()

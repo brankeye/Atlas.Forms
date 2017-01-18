@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using atlas.core.Library.Pages;
+using Xamarin.Forms;
 
 namespace atlas.core.Library.Interfaces
 {
@@ -11,5 +12,7 @@ namespace atlas.core.Library.Interfaces
         void LoadCachedPages(string key);
 
         void AddPageToCache(string key);
+
+        void AddPageToCache(PageMapContainer container);
     }
 }

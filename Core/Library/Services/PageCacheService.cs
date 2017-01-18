@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using atlas.core.Library.Caching;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Pages;
@@ -10,13 +11,30 @@ namespace atlas.core.Library.Services
     {
         public static IPageCacheService Current { get; internal set; }
 
+        protected IPageCacheCoordinator CacheCoordinator { get; }
+
+        internal PageCacheService(IPageCacheCoordinator cacheCoordinator)
+        {
+            CacheCoordinator = cacheCoordinator;
+        }
+
         public IReadOnlyDictionary<string, PageCacheContainer> CachedPages => Caching.PageCacheStore.GetCacheStore();
 
-        public IReadOnlyDictionary<string, IList<PageMapContainer>> PageCacheStore => PageCacheMap.GetCacheStore();
+        public IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.GetCacheStore();
 
-        public Page GetPage(string key)
+        public Page GetCachedOrNewPage(string key)
         {
-            return Caching.PageCacheStore.TryGetPage(key)?.Page;
+            return CacheCoordinator.GetCachedOrNewPage(key);
+        }
+
+        public void AddPage(string key)
+        {
+            CacheCoordinator.AddPageToCache(key);
+        }
+
+        public void AddPage(PageMapContainer container)
+        {
+            CacheCoordinator.AddPageToCache(container);
         }
     }
 }

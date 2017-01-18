@@ -25,7 +25,7 @@ namespace atlas.core.Library.Services
 
         protected IPageCacheCoordinator CacheCoordinator { get; }
 
-        public NavigationService(IApplicationProvider applicationProvider, IPageCacheCoordinator cacheCoordinator)
+        internal NavigationService(IApplicationProvider applicationProvider, IPageCacheCoordinator cacheCoordinator)
         {
             ApplicationProvider = applicationProvider;
             CacheCoordinator = cacheCoordinator;

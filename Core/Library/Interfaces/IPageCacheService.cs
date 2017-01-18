@@ -6,10 +6,14 @@ namespace atlas.core.Library.Interfaces
 {
     public interface IPageCacheService
     {
-        IReadOnlyDictionary<string, IList<PageMapContainer>> PageCacheStore { get; }
+        IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap { get; }
 
         IReadOnlyDictionary<string, PageCacheContainer> CachedPages { get; }
 
-        Page GetPage(string page);
+        Page GetCachedOrNewPage(string page);
+
+        void AddPage(string key);
+
+        void AddPage(PageMapContainer container);
     }
 }

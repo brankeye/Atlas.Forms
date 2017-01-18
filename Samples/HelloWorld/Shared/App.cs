@@ -11,8 +11,8 @@ namespace atlas.samples.helloworld.Shared
         public App()
         {
             // The root page of your application
-            var cacheService = new PageCacheService();
-            var pageCacheStore = cacheService.PageCacheStore;
+            var cacheService = PageCacheService.Current;
+            var cacheMap = cacheService.CacheMap;
             var cachedPages = cacheService.CachedPages;
             NavigationService.Current.SetMainPage("NavigationPage/Dashboard");
             cachedPages = cacheService.CachedPages;

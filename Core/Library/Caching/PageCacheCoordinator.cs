@@ -37,7 +37,8 @@ namespace atlas.core.Library.Caching
             var container = PageCacheStore.TryGetPage(key);
             if (container != null)
             {
-                if (container.CacheState == CacheState.Default)
+                if (container.CacheState == CacheState.Default ||
+                    container.CacheState == CacheState.KeepAlive)
                 {
                     PageCacheStore.RemovePage(container.Key);
                 }
