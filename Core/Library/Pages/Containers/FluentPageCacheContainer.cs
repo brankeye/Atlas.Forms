@@ -1,7 +1,7 @@
 ﻿using atlas.core.Library.Enums;
 using atlas.core.Library.Navigation;
 
-namespace atlas.core.Library.Pages
+namespace atlas.core.Library.Pages.Containers
 {
     public class FluentPageCacheContainer
     {

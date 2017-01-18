@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Pages;
+using atlas.core.Library.Pages.Containers;
 using Xamarin.Forms;
 
 namespace atlas.core.Library.Services
@@ -50,11 +51,11 @@ namespace atlas.core.Library.Services
         {
             CacheCoordinator.RemoveCachedPages(NavigationStackInternal.Last().Key);
             var currentPage = Navigation.NavigationStack[Navigation.NavigationStack.Count - 1];
-            PageMethodInvoker.InvokeOnPageDisappearing(currentPage);
+            PageActionInvoker.InvokeOnPageDisappearing(currentPage);
             await Navigation.PopAsync(animated);
             var pageContainer = NavigationStackInternal.Last();
             NavigationStackInternal.Remove(pageContainer);
-            PageMethodInvoker.InvokeOnPageDisappeared(currentPage);
+            PageActionInvoker.InvokeOnPageDisappeared(currentPage);
             CacheCoordinator.LoadCachedPages(NavigationStackInternal.Last().Key);
             return pageContainer;
         }
@@ -69,11 +70,11 @@ namespace atlas.core.Library.Services
         {
             CacheCoordinator.RemoveCachedPages(ModalStackInternal.Last().Key);
             var currentPage = Navigation.ModalStack[Navigation.ModalStack.Count - 1];
-            PageMethodInvoker.InvokeOnPageDisappearing(currentPage);
+            PageActionInvoker.InvokeOnPageDisappearing(currentPage);
             await Navigation.PopModalAsync(animated);
             var pageContainer = ModalStackInternal.Last();
             ModalStackInternal.Remove(pageContainer);
-            PageMethodInvoker.InvokeOnPageDisappeared(currentPage);
+            PageActionInvoker.InvokeOnPageDisappeared(currentPage);
             CacheCoordinator.LoadCachedPages(ModalStackInternal.Last().Key);
             return pageContainer;
         }
@@ -100,10 +101,10 @@ namespace atlas.core.Library.Services
         {
             CacheCoordinator.RemoveCachedPages(NavigationStackInternal.Last().Key);
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
-            PageMethodInvoker.InvokeOnPageAppearing(nextPage, parameters);
+            PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
             await Navigation.PushAsync(nextPage, animated);
             NavigationStackInternal.Add(new PageContainer(page, nextPage.GetType()));
-            PageMethodInvoker.InvokeOnPageAppeared(nextPage, parameters);
+            PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
             
         }
 
@@ -116,9 +117,9 @@ namespace atlas.core.Library.Services
         {
             CacheCoordinator.RemoveCachedPages(ModalStackInternal.Last().Key);
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
-            PageMethodInvoker.InvokeOnPageAppearing(nextPage, parameters);
+            PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
             await Navigation.PushModalAsync(nextPage, animated);
-            PageMethodInvoker.InvokeOnPageAppeared(nextPage, parameters);
+            PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
             ModalStackInternal.Add(new PageContainer(page, nextPage.GetType()));
         }
 
@@ -138,14 +139,14 @@ namespace atlas.core.Library.Services
         public void SetMainPage(string page, IParametersService parameters = null)
         {
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page);
-            PageMethodInvoker.InvokeOnPageAppearing(nextPage, parameters);
+            PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
             var navigationPage = nextPage as NavigationPage;
             if (navigationPage != null)
             {
                 NavigationStackInternal.Add(new PageContainer(page, navigationPage.GetType()));
             }
             ApplicationProvider.MainPage = nextPage;
-            PageMethodInvoker.InvokeOnPageAppeared(nextPage, parameters);
+            PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
             if (ApplicationProvider.MainPage != null)
             {
                 Navigation = ApplicationProvider.MainPage.Navigation;

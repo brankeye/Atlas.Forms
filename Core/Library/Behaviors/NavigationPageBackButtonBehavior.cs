@@ -1,4 +1,5 @@
 ﻿using atlas.core.Library.Pages;
+using atlas.core.Library.Services;
 using Xamarin.Forms;
 
 namespace atlas.core.Library.Behaviors
@@ -22,10 +23,10 @@ namespace atlas.core.Library.Behaviors
             var navigationPage = (NavigationPage) sender;
             var currentPage = navigationPage.CurrentPage;
             var previousPage = e.Page;
-            PageMethodInvoker.InvokeOnPageDisappearing(previousPage);
-            PageMethodInvoker.InvokeOnPageDisappeared(previousPage);
-            PageMethodInvoker.InvokeOnPageAppearing(currentPage);
-            PageMethodInvoker.InvokeOnPageAppeared(currentPage);
+            PageActionInvoker.InvokeOnPageDisappearing(previousPage);
+            PageActionInvoker.InvokeOnPageDisappeared(previousPage);
+            PageActionInvoker.InvokeOnPageAppearing(currentPage, new ParametersService());
+            PageActionInvoker.InvokeOnPageAppeared(currentPage, new ParametersService());
             previousPage.Behaviors?.Clear();
         }
     }

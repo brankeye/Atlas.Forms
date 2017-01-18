@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using atlas.core.Library.Enums;
 using atlas.core.Library.Pages;
+using atlas.core.Library.Pages.Containers;
 using Xamarin.Forms;
 
 namespace atlas.core.Library.Caching

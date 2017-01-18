@@ -4,6 +4,7 @@ using atlas.core.Library.Enums;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Navigation;
 using atlas.core.Library.Pages;
+using atlas.core.Library.Pages.Containers;
 using Xamarin.Forms;
 
 namespace atlas.core.Library.Caching
@@ -32,7 +33,38 @@ namespace atlas.core.Library.Caching
             return nextPage;
         }
 
+        public Page GetCachedPage(string key)
+        {
+            Page nextPage;
+            if (PageKeyParser.IsSequence(key))
+            {
+                var queue = PageKeyParser.GetPageKeysFromSequence(key);
+                var outerPageKey = queue.Dequeue();
+                var innerPageKey = queue.Dequeue();
+                var outerPageType = PageNavigationStore.GetPageType(outerPageKey);
+                var innerPage = GetCachedPageInternal(innerPageKey);
+                if (innerPage == null) return null;
+                nextPage = Activator.CreateInstance(outerPageType, innerPage) as Page;
+                (nextPage as NavigationPage)?.Behaviors.Add(new NavigationPageBackButtonBehavior());
+                LoadCachedPages(innerPageKey);
+            }
+            else
+            {
+                nextPage = GetCachedPageInternal(key);
+                if(nextPage != null) LoadCachedPages(key);
+            }
+            return nextPage;
+        }
+
         protected Page GetCachedOrNewPageInternal(string key)
+        {
+            var page = GetCachedPageInternal(key);
+            if (page != null) return page;
+            var pageType = PageNavigationStore.GetPageType(key);
+            return Activator.CreateInstance(pageType) as Page;
+        }
+
+        protected Page GetCachedPageInternal(string key)
         {
             var container = PageCacheStore.TryGetPage(key);
             if (container != null)
@@ -44,8 +76,7 @@ namespace atlas.core.Library.Caching
                 }
                 return container.Page;
             }
-            var pageType = PageNavigationStore.GetPageType(key);
-            return Activator.CreateInstance(pageType) as Page;
+            return null;
         }
 
         public void RemoveCachedPages(string key)
@@ -65,7 +96,7 @@ namespace atlas.core.Library.Caching
             var containers = PageCacheMap.GetCachedPages(key);
             foreach (var container in containers)
             {
-                AddPageToCache(container);
+                AddPageToCache(container.Key, container);
             }
         }
 
@@ -75,21 +106,21 @@ namespace atlas.core.Library.Caching
             {
                 var pageType = PageNavigationStore.GetPageType(key);
                 var page = Activator.CreateInstance(pageType) as Page;
-                PageMethodInvoker.InvokeOnPageCaching(page);
+                PageActionInvoker.InvokeOnPageCaching(page);
                 PageCacheStore.AddPage(key, new PageCacheContainer(key, pageType, page));
-                PageMethodInvoker.InvokeOnPageCached(page);
+                PageActionInvoker.InvokeOnPageCached(page);
             }
         }
 
-        public void AddPageToCache(PageMapContainer mapContainer)
+        public void AddPageToCache(string key, PageMapContainer mapContainer)
         {
             if (PageCacheStore.TryGetPage(mapContainer.Key) == null)
             {
                 var pageType = PageNavigationStore.GetPageType(mapContainer.Key);
                 var page = Activator.CreateInstance(pageType) as Page;
-                PageMethodInvoker.InvokeOnPageCaching(page);
-                PageCacheStore.AddPage(mapContainer.Key, new PageCacheContainer(mapContainer.Key, pageType, mapContainer.CacheState, page));
-                PageMethodInvoker.InvokeOnPageCached(page);
+                PageActionInvoker.InvokeOnPageCaching(page);
+                PageCacheStore.AddPage(mapContainer.Key, new PageCacheContainer(key, pageType, mapContainer.CacheState, page));
+                PageActionInvoker.InvokeOnPageCached(page);
             }
         }
     }

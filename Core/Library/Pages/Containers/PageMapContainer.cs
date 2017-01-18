@@ -1,7 +1,7 @@
 ﻿using System;
 using atlas.core.Library.Enums;
 
-namespace atlas.core.Library.Pages
+namespace atlas.core.Library.Pages.Containers
 {
     public class PageMapContainer : PageContainer
     {

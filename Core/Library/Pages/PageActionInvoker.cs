@@ -1,27 +1,18 @@
 ﻿using System;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Interfaces.Pages;
+using atlas.core.Library.Utilities;
 using Xamarin.Forms;
 
 namespace atlas.core.Library.Pages
 {
-    public class PageMethodInvoker
+    public class PageActionInvoker
     {
         public static void InvokeActionOnPage<T>(object view, Action<T> action)
             where T : class
         {
-            var viewAsT = view as T;
-            if (viewAsT != null)
-            {
-                action.Invoke(viewAsT);
-            }
-
-            var viewAsPage = view as Page;
-            var viewModelAsT = viewAsPage?.BindingContext as T;
-            if (viewModelAsT != null)
-            {
-                action.Invoke(viewModelAsT);
-            }
+            ActionInvoker.Invoke(view, action);
+            ActionInvoker.Invoke((view as Page)?.BindingContext, action);
         }
 
         public static void InvokeOnPageAppearing(object view, IParametersService parameters = null)
