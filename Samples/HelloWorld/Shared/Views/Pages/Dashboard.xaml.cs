@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using atlas.core.Library.Extensions;
+using atlas.core.Library.Interfaces;
+using atlas.core.Library.Interfaces.Pages;
 using atlas.core.Library.Services;
 using atlas.samples.helloworld.Shared.ViewModels;
 using Xamarin.Forms;
@@ -11,9 +14,8 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         public Dashboard()
         {
             InitializeComponent();
-            
-            //NavigationService.Current.Present();
-            this.Present("NavigationPage/Tutorials");
+
+            NavigationService.Current.Present(this, "About");
 
             var masterPageItems = new List<MasterPageItem>
             {
@@ -40,8 +42,8 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
             };
 
             listView.ItemsSource = masterPageItems;
-            var enumerator = listView.ItemsSource.GetEnumerator();
-            if (enumerator.MoveNext()) listView.SelectedItem = enumerator.Current;
+            //var enumerator = listView.ItemsSource.GetEnumerator();
+            //if (enumerator.MoveNext()) listView.SelectedItem = enumerator.Current;
 
             listView.ItemSelected += ListView_OnItemSelected;
         }
@@ -50,6 +52,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         {
             var selectedItem = (MasterPageItem) selectedItemChangedEventArgs.SelectedItem;
             this.Present(selectedItem.PageKey);
+            IsPresented = false;
         }
     }
 }

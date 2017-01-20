@@ -39,6 +39,7 @@
     <Compile Include="AtlasApplication.cs" />
     <Compile Include="AtlasApplicationBase.cs" />
     <Compile Include="Behaviors\NavigationPageBackButtonBehavior.cs" />
+    <Compile Include="Behaviors\TabbedPagePresentationBehavior.cs" />
     <Compile Include="Caching\PageCacheCoordinator.cs" />
     <Compile Include="Caching\PageCacheRegistry.cs" />
     <Compile Include="Caching\PageCacheStore.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="Extensions\NavigationExtensions.cs" />
     <Compile Include="Interfaces\IPageCacheCoordinator.cs" />
     <Compile Include="Interfaces\Pages\IPageCachedAware.cs" />
+    <Compile Include="Interfaces\Pages\IInitializeAware.cs" />
     <Compile Include="Interfaces\Pages\IPageCachingAware.cs" />
     <Compile Include="Interfaces\IApplicationProvider.cs" />
     <Compile Include="Interfaces\IPageCacheService.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Caching\PageCacheMap.cs" />
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
     <Compile Include="Navigation\PageNavigationStore.cs" />
+    <Compile Include="Navigation\PageProcessor.cs" />
     <Compile Include="Pages\Containers\FluentPageCacheContainer.cs" />
     <Compile Include="Pages\Containers\PageCacheContainer.cs" />
     <Compile Include="Pages\Containers\PageMapContainer.cs" />

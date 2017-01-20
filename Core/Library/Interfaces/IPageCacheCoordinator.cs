@@ -1,4 +1,5 @@
-﻿using atlas.core.Library.Pages;
+﻿using System.Threading.Tasks;
+using atlas.core.Library.Pages;
 using atlas.core.Library.Pages.Containers;
 using Xamarin.Forms;
 
@@ -6,13 +7,11 @@ namespace atlas.core.Library.Interfaces
 {
     public interface IPageCacheCoordinator
     {
-        Page GetCachedOrNewPage(string key);
+        Page GetCachedOrNewPage(string key, IParametersService parameters = null);
 
-        Page GetCachedPage(string key);
+        Task RemoveCachedPages(string key);
 
-        void RemoveCachedPages(string key);
-
-        void LoadCachedPages(string key);
+        Task LoadCachedPages(string key);
 
         void AddPageToCache(string key);
 

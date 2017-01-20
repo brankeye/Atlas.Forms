@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
@@ -7,6 +8,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         public Changelog()
         {
             InitializeComponent();
+            IdLabel.Text = Guid.NewGuid().ToString();
         }
     }
 }

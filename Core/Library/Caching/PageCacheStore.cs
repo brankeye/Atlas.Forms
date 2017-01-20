@@ -6,41 +6,58 @@ using Xamarin.Forms;
 
 namespace atlas.core.Library.Caching
 {
-    public class PageCacheStore
+    internal class PageCacheStore
     {
         protected static Dictionary<string, PageCacheContainer> CacheStore { get; } = new Dictionary<string, PageCacheContainer>();
 
+        private static readonly object _mutex = new object();
+
         public static PageCacheContainer TryGetPage(string key)
         {
-            PageCacheContainer page;
-            CacheStore.TryGetValue(key, out page);
-            return page;
+            lock (_mutex)
+            {
+                PageCacheContainer page;
+                CacheStore.TryGetValue(key, out page);
+                return page;
+            }
         }
 
         public static void AddPage(string key, PageCacheContainer page)
         {
-            CacheStore.Add(key, page);
+            lock (_mutex)
+            {
+                CacheStore.Add(key, page);
+            }
         }
 
         public static void RemovePages(IList<PageMapContainer> containers)
         {
-            foreach (var container in containers)
+            lock (_mutex)
             {
-                if (container.CacheState == CacheState.Default)
+                foreach (var container in containers)
                 {
-                    RemovePage(container.Key);
+                    if (container.CacheState == CacheState.Default)
+                    {
+                        CacheStore.Remove(container.Key);
+                    }
                 }
             }
         }
 
         public static bool RemovePage(string key)
         {
-            return CacheStore.Remove(key);
+            lock (_mutex)
+            {
+                return CacheStore.Remove(key);
+            }
         }
 
         public static IReadOnlyDictionary<string, PageCacheContainer> GetCacheStore()
         {
-            return CacheStore;
+            lock (_mutex)
+            {
+                return CacheStore;
+            }
         }
     }
 }

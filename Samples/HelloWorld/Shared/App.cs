@@ -24,6 +24,7 @@ namespace atlas.samples.helloworld.Shared
             registry.RegisterPage<Views.Pages.TutorialOne>();
             registry.RegisterPage<Views.Pages.TutorialTwo>();
             registry.RegisterPage<Views.Pages.TutorialThree>();
+            registry.RegisterPage<Views.Pages.TestPage>();
         }
 
         protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
@@ -33,9 +34,9 @@ namespace atlas.samples.helloworld.Shared
             registry.WhenAppears<Dashboard>().CachePage<Changelog>().AsKeepAlive();
             registry.WhenAppears<Dashboard>().CachePage<Contact>().AsKeepAlive();
 
-            registry.WhenAppears<Tutorials>().CachePage<TutorialOne>();
-            registry.WhenAppears<TutorialOne>().CachePage<TutorialTwo>();
-            registry.WhenAppears<TutorialTwo>().CachePage<TutorialThree>();
+            registry.WhenAppears<Dashboard>().CachePage<TutorialOne>().AsKeepAlive();
+            registry.WhenAppears<Dashboard>().CachePage<TutorialTwo>().AsKeepAlive();
+            registry.WhenAppears<Dashboard>().CachePage<TutorialThree>().AsKeepAlive();
         }
 
         protected override void OnStart()

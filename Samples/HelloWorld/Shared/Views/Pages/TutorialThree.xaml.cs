@@ -14,6 +14,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         public TutorialThree()
         {
             InitializeComponent();
+            IdLabel.Text = Guid.NewGuid().ToString();
         }
 
         public void OnPageAppearing(IParametersService parameters = null)

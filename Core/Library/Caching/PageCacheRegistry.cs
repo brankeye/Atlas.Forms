@@ -1,4 +1,5 @@
-﻿using atlas.core.Library.Interfaces;
+﻿using System;
+using atlas.core.Library.Interfaces;
 using atlas.core.Library.Pages.Containers;
 
 namespace atlas.core.Library.Caching
@@ -15,6 +16,11 @@ namespace atlas.core.Library.Caching
         public FluentPageCacheContainer WhenAppears<TPage>()
         {
             return WhenAppears(typeof(TPage).Name);
+        }
+
+        public void Remove(string key, int index)
+        {
+            PageCacheMap.Remove(key, index);
         }
     }
 }

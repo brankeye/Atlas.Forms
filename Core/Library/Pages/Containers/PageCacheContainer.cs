@@ -21,5 +21,7 @@ namespace atlas.core.Library.Pages.Containers
         }
 
         public Page Page { get; set; }
+
+        internal bool Initialized { get; set; }
     }
 }

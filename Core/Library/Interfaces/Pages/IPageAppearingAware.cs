@@ -2,6 +2,6 @@
 {
     public interface IPageAppearingAware
     {
-        void OnPageAppearing(IParametersService parameters = null);
+        void OnPageAppearing(IParametersService parameters);
     }
 }

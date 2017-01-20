@@ -23,10 +23,8 @@ namespace atlas.core.Library.Behaviors
             var navigationPage = (NavigationPage) sender;
             var currentPage = navigationPage.CurrentPage;
             var previousPage = e.Page;
-            PageActionInvoker.InvokeOnPageDisappearing(previousPage);
             PageActionInvoker.InvokeOnPageDisappeared(previousPage);
-            PageActionInvoker.InvokeOnPageAppearing(currentPage, new ParametersService());
-            PageActionInvoker.InvokeOnPageAppeared(currentPage, new ParametersService());
+            PageActionInvoker.InvokeOnPageAppeared(currentPage);
             previousPage.Behaviors?.Clear();
         }
     }

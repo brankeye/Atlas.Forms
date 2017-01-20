@@ -8,5 +8,7 @@ namespace atlas.core.Library.Interfaces
         FluentPageCacheContainer WhenAppears<TPage>();
 
         FluentPageCacheContainer WhenAppears(string pageKey);
+
+        void Remove(string key, int index);
     }
 }
