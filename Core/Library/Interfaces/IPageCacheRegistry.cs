@@ -1,14 +1,13 @@
 ﻿using atlas.core.Library.Pages;
 using atlas.core.Library.Pages.Containers;
+using Xamarin.Forms;
 
 namespace atlas.core.Library.Interfaces
 {
     public interface IPageCacheRegistry
     {
-        FluentPageCacheContainer WhenAppears<TPage>();
+        FluentTriggerPageApi WhenPage(string pageKey);
 
-        FluentPageCacheContainer WhenAppears(string pageKey);
-
-        void Remove(string key, int index);
+        FluentTriggerPageApi WhenPage<TPage>() where TPage : Page;
     }
 }

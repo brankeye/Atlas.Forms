@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using atlas.core.Library.Extensions;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Interfaces.Pages;
 using atlas.core.Library.Services;
 using atlas.samples.helloworld.Shared.ViewModels;
 using Xamarin.Forms;
@@ -51,7 +48,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
         {
             var selectedItem = (MasterPageItem) selectedItemChangedEventArgs.SelectedItem;
-            this.Present(selectedItem.PageKey);
+            NavigationService.Current.Present(this, selectedItem.PageKey);
             IsPresented = false;
         }
     }

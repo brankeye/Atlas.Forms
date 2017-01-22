@@ -21,5 +21,7 @@ namespace atlas.core.Library.Pages.Containers
         }
 
         public CacheState CacheState { get; set; }
+
+        public CacheOption CacheOption { get; set; }
     }
 }

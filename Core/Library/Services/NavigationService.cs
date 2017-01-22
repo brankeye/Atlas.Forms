@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using atlas.core.Library.Enums;
 using atlas.core.Library.Interfaces;
 using atlas.core.Library.Pages;
 using atlas.core.Library.Pages.Containers;
@@ -69,14 +70,14 @@ namespace atlas.core.Library.Services
 
         public async Task<IPageContainer> PopInternalAsync(IList<IPageContainer> stackInternal, IReadOnlyList<Page> pageStack, bool animated, Func<INavigation, Task> func)
         {
-            CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key).Start();
+            CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key);
             var currentPage = pageStack[pageStack.Count - 1];
             PageActionInvoker.InvokeOnPageDisappearing(currentPage);
             await func(Navigation);
             var pageContainer = stackInternal.Last();
             stackInternal.Remove(pageContainer);
             PageActionInvoker.InvokeOnPageDisappeared(currentPage);
-            CacheCoordinator.LoadCachedPages(stackInternal.Last().Key).Start();
+            CacheCoordinator.LoadCachedPages(stackInternal.Last().Key, CacheOption.Appears);
             return pageContainer;
         }
 
@@ -120,11 +121,11 @@ namespace atlas.core.Library.Services
             var paramService = parameters ?? new ParametersService();
             if (stackInternal.Count > 0)
             {
-                CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key).Start();
+                CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key);
             }
             
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            CacheCoordinator.LoadCachedPages(page).Start();
+            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             await func(Navigation, nextPage);
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
@@ -136,7 +137,7 @@ namespace atlas.core.Library.Services
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
             if (nextPage is NavigationPage) Navigation = (nextPage as NavigationPage).Navigation;
-            CacheCoordinator.LoadCachedPages(page);
+            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             if (currentPage is MasterDetailPage)
             {
@@ -166,7 +167,7 @@ namespace atlas.core.Library.Services
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            CacheCoordinator.LoadCachedPages(page);
+            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             var navigationPage = nextPage as NavigationPage;
             if (navigationPage != null)

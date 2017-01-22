@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using atlas.core.Library.Behaviors;
 using atlas.core.Library.Enums;
@@ -49,6 +51,12 @@ namespace atlas.core.Library.Caching
             var pageType = PageNavigationStore.GetPageType(key);
             var nextPage = Activator.CreateInstance(pageType) as Page;
             PageActionInvoker.InvokeInitialize(nextPage, parameters);
+            var pageMapList = PageCacheMap.GetCachedPages(key);
+            var mapContainer = pageMapList.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated);
+            if (mapContainer != null)
+            {
+                AddPageToCache(key, nextPage, mapContainer, true);
+            }
             return nextPage;
         }
 
@@ -66,61 +74,65 @@ namespace atlas.core.Library.Caching
             return null;
         }
 
-        public Task RemoveCachedPages(string key)
+        public void RemoveCachedPages(string key)
         {
-            return Task.Run(() =>
+            var containers = PageCacheMap.GetCachedPages(key);
+            foreach (var container in containers)
             {
-                var containers = PageCacheMap.GetCachedPages(key);
-                foreach (var container in containers)
+                if (container.CacheState == CacheState.Default ||
+                    container.CacheState == CacheState.KeepAlive)
                 {
-                    if (container.CacheState == CacheState.Default ||
-                        container.CacheState == CacheState.KeepAlive)
-                    {
-                        PageCacheStore.RemovePage(container.Key);
-                    }
+                    PageCacheStore.RemovePage(container.Key);
                 }
-            });
-        }
-
-        public Task LoadCachedPages(string key)
-        {
-            return Task.Run(() =>
-            {
-                if (PageKeyParser.IsSequence(key))
-                {
-                    var queue = PageKeyParser.GetPageKeysFromSequence(key);
-                    var outerPageKey = queue.Dequeue();
-                    key = queue.Dequeue();
-                }
-                var containers = PageCacheMap.GetCachedPages(key);
-                foreach (var container in containers)
-                {
-                    AddPageToCache(container.Key, container);
-                }
-            });
-        }
-
-        public void AddPageToCache(string key)
-        {
-            if (PageCacheStore.TryGetPage(key) == null)
-            {
-                var pageType = PageNavigationStore.GetPageType(key);
-                var page = Activator.CreateInstance(pageType) as Page;
-                PageActionInvoker.InvokeOnPageCaching(page);
-                PageCacheStore.AddPage(key, new PageCacheContainer(key, pageType, page));
-                PageActionInvoker.InvokeOnPageCached(page);
             }
         }
 
-        public void AddPageToCache(string key, PageMapContainer mapContainer)
+        public void LoadCachedPages(string key, CacheOption option = CacheOption.None)
+        {
+            if (PageKeyParser.IsSequence(key))
+            {
+                var queue = PageKeyParser.GetPageKeysFromSequence(key);
+                var outerPageKey = queue.Dequeue();
+                key = queue.Dequeue();
+            }
+            var containers = PageCacheMap.GetCachedPages(key);
+            if (option != CacheOption.None)
+            {
+                containers = containers.ToList().Where(x => x.CacheOption == option).ToList();
+            }
+            foreach (var container in containers)
+            {
+                if (PageCacheStore.TryGetPage(container.Key) == null)
+                {
+                    AddPageToCache(container.Key, container);
+                }
+            }
+        }
+
+        public void AddPageToCache(string key, PageMapContainer mapContainer, bool isInitialized = false)
+        {
+            var pageType = PageNavigationStore.GetPageType(mapContainer.Key);
+            var page = Activator.CreateInstance(pageType) as Page;
+            AddPageToCache(key, page, mapContainer, isInitialized);
+        }
+
+        public void AddPageToCache(string key, Page pageInstance, PageMapContainer mapContainer, bool isInitialized = false)
         {
             if (PageCacheStore.TryGetPage(mapContainer.Key) == null)
             {
-                var pageType = PageNavigationStore.GetPageType(mapContainer.Key);
-                var page = Activator.CreateInstance(pageType) as Page;
-                PageActionInvoker.InvokeOnPageCaching(page);
-                PageCacheStore.AddPage(mapContainer.Key, new PageCacheContainer(key, pageType, mapContainer.CacheState, page));
-                PageActionInvoker.InvokeOnPageCached(page);
+                PageActionInvoker.InvokeOnPageCaching(pageInstance);
+                var container = new PageCacheContainer
+                {
+                    Key = mapContainer.Key,
+                    CacheOption = mapContainer.CacheOption,
+                    CacheState = mapContainer.CacheState,
+                    Initialized = isInitialized,
+                    Page = pageInstance,
+                    Type = pageInstance.GetType()
+                };
+                container.Initialized = isInitialized;
+                PageCacheStore.AddPage(key, container);
+                PageActionInvoker.InvokeOnPageCached(pageInstance);
             }
         }
     }

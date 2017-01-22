@@ -29,14 +29,10 @@ namespace atlas.samples.helloworld.Shared
 
         protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
         {
-            registry.WhenAppears<Dashboard>().CachePage<Tutorials>().AsKeepAlive();
-            registry.WhenAppears<Dashboard>().CachePage<About>().AsKeepAlive();
-            registry.WhenAppears<Dashboard>().CachePage<Changelog>().AsKeepAlive();
-            registry.WhenAppears<Dashboard>().CachePage<Contact>().AsKeepAlive();
-
-            registry.WhenAppears<Dashboard>().CachePage<TutorialOne>().AsKeepAlive();
-            registry.WhenAppears<Dashboard>().CachePage<TutorialTwo>().AsKeepAlive();
-            registry.WhenAppears<Dashboard>().CachePage<TutorialThree>().AsKeepAlive();
+            registry.WhenPage<Tutorials>().IsCreated().CachePage().AsKeepAlive();
+            registry.WhenPage<About>().IsCreated().CachePage().AsKeepAlive();
+            registry.WhenPage<Changelog>().IsCreated().CachePage().AsKeepAlive();
+            registry.WhenPage<Contact>().IsCreated().CachePage().AsKeepAlive();
         }
 
         protected override void OnStart()

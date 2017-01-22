@@ -35,7 +35,7 @@ namespace atlas.core.Library.Services
 
         public void AddPage(string key)
         {
-            CacheCoordinator.AddPageToCache(key);
+            //CacheCoordinator.AddPageToCache(key);
         }
 
         public void AddPage(string key, PageMapContainer container)
