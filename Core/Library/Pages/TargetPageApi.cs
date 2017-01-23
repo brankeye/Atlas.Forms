@@ -1,33 +1,33 @@
-﻿using System;
-using atlas.core.Library.Enums;
+﻿using atlas.core.Library.Enums;
+using atlas.core.Library.Interfaces;
+using atlas.core.Library.Pages.Containers;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Pages.Containers
+namespace atlas.core.Library.Pages
 {
-    public class FluentTargetPageApi
+    public class TargetPageApi : ITargetPageApi
     {
         private readonly PageMapContainer _container;
+        private readonly string _triggerPage;
 
-        private string TriggerPage { get; }
-
-        public FluentTargetPageApi(string triggerPage, PageMapContainer mapContainer)
+        public TargetPageApi(string triggerPage, PageMapContainer mapContainer)
         {
             _container = mapContainer;
-            TriggerPage = triggerPage;
+            _triggerPage = triggerPage;
         }
 
-        public FluentTargetPageApi CachePage()
+        public ITargetPageApi CachePage()
         {
-            return CachePage(TriggerPage);
+            return CachePage(_triggerPage);
         }
 
-        public FluentTargetPageApi CachePage(string key)
+        public ITargetPageApi CachePage(string key)
         {
             _container.Key = key;
             return this;
         }
 
-        public FluentTargetPageApi CachePage<TPage>()
+        public ITargetPageApi CachePage<TPage>()
             where TPage : Page
         {
             return CachePage(typeof(TPage).Name);

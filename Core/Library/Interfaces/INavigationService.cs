@@ -11,13 +11,13 @@ namespace atlas.core.Library.Interfaces
 
         void InsertPageBefore(string page, string before, IParametersService parameters = null);
 
-        Task<IPageContainer> PopAsync();
+        Task<IPageContainer> PopAsync(IParametersService parameters = null);
 
-        Task<IPageContainer> PopAsync(bool animated);
+        Task<IPageContainer> PopAsync(bool animated, IParametersService parameters = null);
 
-        Task<IPageContainer> PopModalAsync();
+        Task<IPageContainer> PopModalAsync(IParametersService parameters = null);
 
-        Task<IPageContainer> PopModalAsync(bool animated);
+        Task<IPageContainer> PopModalAsync(bool animated, IParametersService parameters = null);
 
         Task PopToRootAsync();
 

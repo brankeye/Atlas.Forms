@@ -1,23 +1,23 @@
 ﻿using System;
 using atlas.core.Library.Enums;
+using atlas.core.Library.Interfaces;
 
 namespace atlas.core.Library.Pages.Containers
 {
     public class PageMapContainer : PageContainer
     {
-        public PageMapContainer()
+        public PageMapContainer() { }
+
+        public PageMapContainer(CacheState state, CacheOption option, IPageContainer container) : base (container)
         {
-            CacheState = CacheState.Default;
+            CacheState = state;
+            CacheOption = option;
         }
 
-        public PageMapContainer(string key, Type type) : base(key, type)
+        public PageMapContainer(PageMapContainer container) : base(container)
         {
-            CacheState = CacheState.Default;
-        }
-
-        public PageMapContainer(string key, Type type, CacheState cacheState) : base(key, type)
-        {
-            CacheState = cacheState;
+            CacheState = container.CacheState;
+            CacheOption = container.CacheOption;
         }
 
         public CacheState CacheState { get; set; }

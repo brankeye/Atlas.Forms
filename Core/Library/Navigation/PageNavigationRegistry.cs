@@ -11,7 +11,7 @@ namespace atlas.core.Library.Navigation
 
         public void RegisterPage<TPage>(string key)
         {
-            PageNavigationStore.TryAddType(key, typeof(TPage));
+            PageNavigationStore.PageTypes[key] = typeof(TPage);
         }
     }
 }

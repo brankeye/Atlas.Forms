@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using atlas.core.Library.Behaviors;
+﻿using atlas.core.Library.Behaviors;
 using Xamarin.Forms;
 
 namespace atlas.core.Library.Navigation

@@ -46,6 +46,8 @@
     <Compile Include="Enums\CacheOption.cs" />
     <Compile Include="Enums\CacheState.cs" />
     <Compile Include="Interfaces\IPageCacheCoordinator.cs" />
+    <Compile Include="Interfaces\ITargetPageApi.cs" />
+    <Compile Include="Interfaces\ITriggerPageApi.cs" />
     <Compile Include="Interfaces\Pages\IPageCachedAware.cs" />
     <Compile Include="Interfaces\Pages\IInitializeAware.cs" />
     <Compile Include="Interfaces\Pages\IPageCachingAware.cs" />
@@ -65,8 +67,8 @@
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
     <Compile Include="Navigation\PageNavigationStore.cs" />
     <Compile Include="Navigation\PageProcessor.cs" />
-    <Compile Include="Pages\Containers\FluentTriggerPageApi.cs" />
-    <Compile Include="Pages\Containers\FluentTargetPageApi.cs" />
+    <Compile Include="Pages\TriggerPageApi.cs" />
+    <Compile Include="Pages\TargetPageApi.cs" />
     <Compile Include="Pages\Containers\PageCacheContainer.cs" />
     <Compile Include="Pages\Containers\PageMapContainer.cs" />
     <Compile Include="Pages\Containers\PageContainer.cs" />

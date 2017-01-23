@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using atlas.core.Library.Caching;
 using atlas.core.Library.Interfaces;
-using atlas.core.Library.Pages;
 using atlas.core.Library.Pages.Containers;
 using Xamarin.Forms;
 
@@ -19,9 +17,9 @@ namespace atlas.core.Library.Services
             CacheCoordinator = cacheCoordinator;
         }
 
-        public IReadOnlyDictionary<string, PageCacheContainer> CachedPages => Caching.PageCacheStore.GetCacheStore();
+        public IReadOnlyDictionary<string, PageCacheContainer> CachedPages => PageCacheStore.GetPageCache();
 
-        public IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.GetCacheStore();
+        public IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.GetMappings();
 
         public Page GetCachedOrNewPage(string key)
         {
@@ -30,17 +28,13 @@ namespace atlas.core.Library.Services
 
         public Page GetCachedPage(string key)
         {
-            return CacheCoordinator.GetCachedOrNewPage(key);
+            //TODO: return CacheCoordinator.GetCachedPage(key);
+            return null;
         }
 
-        public void AddPage(string key)
+        public void AddPage(string key, PageMapContainer container, bool isInitialized = false)
         {
-            //CacheCoordinator.AddPageToCache(key);
-        }
-
-        public void AddPage(string key, PageMapContainer container)
-        {
-            CacheCoordinator.AddPageToCache(key, container);
+            CacheCoordinator.AddPageToCache(key, container, isInitialized);
         }
     }
 }

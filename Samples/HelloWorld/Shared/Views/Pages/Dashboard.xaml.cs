@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using atlas.core.Library.Services;
 using atlas.samples.helloworld.Shared.ViewModels;
 using Xamarin.Forms;

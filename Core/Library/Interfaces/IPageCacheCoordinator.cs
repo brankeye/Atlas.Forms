@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using atlas.core.Library.Enums;
-using atlas.core.Library.Pages;
+﻿using atlas.core.Library.Enums;
 using atlas.core.Library.Pages.Containers;
 using Xamarin.Forms;
 

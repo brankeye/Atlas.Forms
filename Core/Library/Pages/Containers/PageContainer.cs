@@ -13,6 +13,12 @@ namespace atlas.core.Library.Pages.Containers
             Type = type;
         }
 
+        public PageContainer(IPageContainer container)
+        {
+            Key = container.Key;
+            Type = container.Type;
+        }
+
         public string Key { get; set; }
 
         public Type Type { get; set; }

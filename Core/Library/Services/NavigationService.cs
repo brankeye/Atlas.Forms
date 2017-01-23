@@ -34,7 +34,7 @@ namespace atlas.core.Library.Services
             CacheCoordinator = cacheCoordinator;
         }
 
-        public void InsertPageBefore(string page, string before, IParametersService parameters = null)
+        public virtual void InsertPageBefore(string page, string before, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
@@ -44,49 +44,53 @@ namespace atlas.core.Library.Services
             NavigationStackInternal.Insert(beforeIndex, new PageContainer(page, nextPage.GetType()));
         }
 
-        public async Task<IPageContainer> PopAsync()
+        public virtual async Task<IPageContainer> PopAsync(IParametersService parameters = null)
         {
             var pageContainer = await PopAsync(true);
             return pageContainer;
         }
 
-        public async Task<IPageContainer> PopAsync(bool animated)
+        public virtual async Task<IPageContainer> PopAsync(bool animated, IParametersService parameters = null)
         {
-            return await PopInternalAsync(NavigationStackInternal, Navigation.NavigationStack, animated,
-                navigation => navigation.PopModalAsync(animated));
+            return await PopInternalAsync(NavigationStackInternal, 
+                                          Navigation.NavigationStack,
+                                          navigation => navigation.PopModalAsync(animated),
+                                          animated, parameters);
         }
 
-        public async Task<IPageContainer> PopModalAsync()
+        public virtual async Task<IPageContainer> PopModalAsync(IParametersService parameters = null)
         {
             var pageContainer = await PopModalAsync(true);
             return pageContainer;
         }
 
-        public async Task<IPageContainer> PopModalAsync(bool animated)
+        public virtual async Task<IPageContainer> PopModalAsync(bool animated, IParametersService parameters = null)
         {
-            return await PopInternalAsync(ModalStackInternal, Navigation.ModalStack, animated,
-                navigation => navigation.PopModalAsync(animated));
+            return await PopInternalAsync(ModalStackInternal, 
+                                          Navigation.ModalStack, 
+                                          navigation => navigation.PopModalAsync(animated),
+                                          animated, parameters);
         }
 
-        public async Task<IPageContainer> PopInternalAsync(IList<IPageContainer> stackInternal, IReadOnlyList<Page> pageStack, bool animated, Func<INavigation, Task> func)
+        protected virtual async Task<IPageContainer> PopInternalAsync(IList < IPageContainer> stackInternal, IReadOnlyList<Page> pageStack, Func<INavigation, Task> func, bool animated, IParametersService parameters = null)
         {
             CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key);
             var currentPage = pageStack[pageStack.Count - 1];
-            PageActionInvoker.InvokeOnPageDisappearing(currentPage);
+            PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
             await func(Navigation);
             var pageContainer = stackInternal.Last();
             stackInternal.Remove(pageContainer);
-            PageActionInvoker.InvokeOnPageDisappeared(currentPage);
+            PageActionInvoker.InvokeOnPageDisappeared(currentPage, parameters);
             CacheCoordinator.LoadCachedPages(stackInternal.Last().Key, CacheOption.Appears);
             return pageContainer;
         }
 
-        public async Task PopToRootAsync()
+        public virtual async Task PopToRootAsync()
         {
             await PopToRootAsync(true);
         }
 
-        public async Task PopToRootAsync(bool animated)
+        public virtual async Task PopToRootAsync(bool animated)
         {
             while (Navigation.NavigationStack.Count > 1)
             {
@@ -94,45 +98,47 @@ namespace atlas.core.Library.Services
             }
         }
 
-        public async Task PushAsync(string page, IParametersService parameters = null)
+        public virtual async Task PushAsync(string page, IParametersService parameters = null)
         {
             await PushAsync(page, true, parameters);
         }
 
-        public async Task PushAsync(string page, bool animated, IParametersService parameters)
+        public virtual async Task PushAsync(string page, bool animated, IParametersService parameters = null)
         {
-            await PushInternalAsync(page, animated, NavigationStackInternal,
-                (navigation, nextPage) => navigation.PushAsync(nextPage, animated), parameters);
+            await PushInternalAsync(NavigationStackInternal,
+                                    (navigation, nextPage) => navigation.PushAsync(nextPage, animated),
+                                    page, animated, parameters);
         }
 
-        public async Task PushModalAsync(string page, IParametersService parameters = null)
+        public virtual async Task PushModalAsync(string page, IParametersService parameters = null)
         {
             await PushModalAsync(page, true, parameters);
         }
 
-        public async Task PushModalAsync(string page, bool animated, IParametersService parameters = null)
+        public virtual async Task PushModalAsync(string page, bool animated, IParametersService parameters = null)
         {
-            await PushInternalAsync(page, animated, ModalStackInternal,
-                (navigation, nextPage) => navigation.PushModalAsync(nextPage, animated), parameters);
+            await PushInternalAsync(ModalStackInternal, 
+                                    (navigation, nextPage) => navigation.PushModalAsync(nextPage, animated),
+                                    page, animated, parameters);
         }
 
-        public async Task PushInternalAsync(string page, bool animated, IList<IPageContainer> stackInternal, Func<INavigation, Page, Task> func, IParametersService parameters = null)
+        protected virtual async Task PushInternalAsync(IList<IPageContainer> stackInternal, Func<INavigation, Page, Task> func, string page, bool animated, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
             if (stackInternal.Count > 0)
             {
                 CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key);
             }
-            
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
+            
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             await func(Navigation, nextPage);
-            PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
             stackInternal.Add(new PageContainer(page, nextPage.GetType()));
+            PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
+            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
 
-        public void Present(object currentPage, string page, IParametersService parameters = null)
+        public virtual void Present(object currentPage, string page, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
@@ -167,19 +173,16 @@ namespace atlas.core.Library.Services
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             var navigationPage = nextPage as NavigationPage;
             if (navigationPage != null)
             {
                 NavigationStackInternal.Add(new PageContainer(page, navigationPage.GetType()));
             }
+            Navigation = nextPage.Navigation;
             ApplicationProvider.MainPage = nextPage;
-            if (ApplicationProvider.MainPage != null)
-            {
-                Navigation = ApplicationProvider.MainPage.Navigation;
-            }
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
+            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
     }
 }

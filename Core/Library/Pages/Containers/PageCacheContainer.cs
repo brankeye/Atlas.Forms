@@ -6,16 +6,9 @@ namespace atlas.core.Library.Pages.Containers
 {
     public class PageCacheContainer : PageMapContainer
     {
-        public PageCacheContainer()
-        {
-        }
+        public PageCacheContainer() { }
 
-        public PageCacheContainer(string key, Type type, Page page) : base(key, type)
-        {
-            Page = page;
-        }
-
-        public PageCacheContainer(string key, Type type, CacheState cacheState, Page page) : base(key, type, cacheState)
+        public PageCacheContainer(Page page, PageMapContainer container) : base(container)
         {
             Page = page;
         }

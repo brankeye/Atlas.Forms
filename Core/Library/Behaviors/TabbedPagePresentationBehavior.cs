@@ -26,8 +26,8 @@ namespace atlas.core.Library.Behaviors
         private void OnCurrentPageChanged(object sender, EventArgs eventArgs)
         {
             var tabbedPage = (TabbedPage) sender;
-            PageActionInvoker.InvokeOnPageDisappeared(LastPage);
-            PageActionInvoker.InvokeOnPageAppeared(tabbedPage.CurrentPage);
+            PageActionInvoker.InvokeOnPageDisappeared(LastPage, new ParametersService());
+            PageActionInvoker.InvokeOnPageAppeared(tabbedPage.CurrentPage, new ParametersService());
             LastPage = tabbedPage.CurrentPage;
         }
     }
