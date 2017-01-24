@@ -8,8 +8,8 @@
     <ProjectGuid>{5A98C917-A5E1-48D3-BA77-4A1AAA86F5CA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>atlas.core.Library</RootNamespace>
-    <AssemblyName>Atlas</AssemblyName>
+    <RootNamespace>Atlas.Forms</RootNamespace>
+    <AssemblyName>Atlas.Forms</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

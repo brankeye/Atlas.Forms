@@ -1,4 +1,4 @@
-﻿namespace atlas.core.Library.Interfaces
+﻿namespace Atlas.Forms.Interfaces
 {
     public interface IPageNavigationRegistry
     {

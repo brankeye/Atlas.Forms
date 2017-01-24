@@ -1,8 +1,7 @@
-﻿using System;
-using atlas.core.Library.Enums;
-using atlas.core.Library.Interfaces;
+﻿using Atlas.Forms.Enums;
+using Atlas.Forms.Interfaces;
 
-namespace atlas.core.Library.Pages.Containers
+namespace Atlas.Forms.Pages.Containers
 {
     public class PageMapContainer : PageContainer
     {

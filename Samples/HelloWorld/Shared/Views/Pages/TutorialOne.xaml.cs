@@ -1,7 +1,7 @@
 ﻿using System;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Interfaces.Pages;
-using atlas.core.Library.Services;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Pages;
+using Atlas.Forms.Services;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
@@ -13,9 +13,9 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
             IdLabel.Text = Guid.NewGuid().ToString();
         }
 
-        public void OnPageAppearing(IParametersService parameters = null)
+        public void OnPageAppearing(IParametersService parameters)
         {
-            
+            var id = parameters.TryGet<int>("Id");
         }
 
         private void Button_OnClicked(object sender, EventArgs e)

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using atlas.core.Library.Pages.Containers;
+using Atlas.Forms.Pages.Containers;
 
-namespace atlas.core.Library.Caching
+namespace Atlas.Forms.Caching
 {
     internal class PageCacheMap
     {

@@ -1,9 +1,9 @@
-﻿using atlas.core.Library.Caching;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Navigation;
-using atlas.core.Library.Services;
+﻿using Atlas.Forms.Caching;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Navigation;
+using Atlas.Forms.Services;
 
-namespace atlas.core.Library
+namespace Atlas.Forms
 {
     public abstract class AtlasApplication : AtlasApplicationBase
     {

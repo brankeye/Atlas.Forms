@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using atlas.core.Library.Enums;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Pages;
-using atlas.core.Library.Pages.Containers;
+using Atlas.Forms.Enums;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Pages;
+using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Services
+namespace Atlas.Forms.Services
 {
     public class NavigationService : INavigationService
     {
@@ -28,7 +28,7 @@ namespace atlas.core.Library.Services
 
         protected IPageCacheCoordinator CacheCoordinator { get; }
 
-        internal NavigationService(IApplicationProvider applicationProvider, IPageCacheCoordinator cacheCoordinator)
+        public NavigationService(IApplicationProvider applicationProvider, IPageCacheCoordinator cacheCoordinator)
         {
             ApplicationProvider = applicationProvider;
             CacheCoordinator = cacheCoordinator;
@@ -130,7 +130,7 @@ namespace atlas.core.Library.Services
                 CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key);
             }
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            
+            Navigation = nextPage.Navigation;
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             await func(Navigation, nextPage);
             stackInternal.Add(new PageContainer(page, nextPage.GetType()));
@@ -142,7 +142,7 @@ namespace atlas.core.Library.Services
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            if (nextPage is NavigationPage) Navigation = (nextPage as NavigationPage).Navigation;
+            Navigation = nextPage.Navigation;
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             if (currentPage is MasterDetailPage)

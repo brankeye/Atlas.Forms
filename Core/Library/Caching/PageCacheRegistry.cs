@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Pages;
-using atlas.core.Library.Pages.Containers;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Pages;
+using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Caching
+namespace Atlas.Forms.Caching
 {
     public class PageCacheRegistry : IPageCacheRegistry
     {
@@ -24,6 +24,17 @@ namespace atlas.core.Library.Caching
         public ITriggerPageApi WhenPage<TPage>() where TPage : Page
         {
             return WhenPage(typeof(TPage).Name);
+        }
+
+        public bool Remove(string pageKey, PageMapContainer container)
+        {
+            var list = PageCacheMap.Mappings[pageKey];
+            return list.Remove(container);
+        }
+
+        public IList<PageMapContainer> GetMappingsForKey(string pageKey)
+        {
+            return PageCacheMap.Mappings[pageKey];
         }
     }
 }

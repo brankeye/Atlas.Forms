@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using atlas.core.Library.Interfaces;
+using Atlas.Forms.Interfaces;
 
-namespace atlas.core.Library.Services
+namespace Atlas.Forms.Services
 {
     public class ParametersService : IParametersService
     {
@@ -9,9 +9,12 @@ namespace atlas.core.Library.Services
 
         public bool TryAdd(string key, object item)
         {
-            if (item == null || Store.ContainsKey(key)) return false;
-            Store.Add(key, item);
-            return true;
+            var canAddItem = item != null && !Store.ContainsKey(key);
+            if (canAddItem)
+            {
+                Store.Add(key, item);
+            }
+            return canAddItem;
         }
 
         public TObject TryGet<TObject>(string key)

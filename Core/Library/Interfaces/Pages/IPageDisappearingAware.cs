@@ -1,4 +1,4 @@
-﻿namespace atlas.core.Library.Interfaces.Pages
+﻿namespace Atlas.Forms.Interfaces.Pages
 {
     public interface IPageDisappearingAware
     {

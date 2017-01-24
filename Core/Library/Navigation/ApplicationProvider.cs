@@ -1,7 +1,7 @@
-﻿using atlas.core.Library.Interfaces;
+﻿using Atlas.Forms.Interfaces;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Navigation
+namespace Atlas.Forms.Navigation
 {
     public class ApplicationProvider : IApplicationProvider
     {

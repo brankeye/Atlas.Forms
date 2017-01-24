@@ -1,8 +1,8 @@
-﻿using atlas.core.Library.Pages;
-using atlas.core.Library.Services;
+﻿using Atlas.Forms.Pages;
+using Atlas.Forms.Services;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Behaviors
+namespace Atlas.Forms.Behaviors
 {
     public class NavigationPageBackButtonBehavior : Behavior<NavigationPage>
     {

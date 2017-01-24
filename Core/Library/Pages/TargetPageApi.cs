@@ -1,9 +1,9 @@
-﻿using atlas.core.Library.Enums;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Pages.Containers;
+﻿using Atlas.Forms.Enums;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Pages
+namespace Atlas.Forms.Pages
 {
     public class TargetPageApi : ITargetPageApi
     {

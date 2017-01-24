@@ -1,8 +1,8 @@
-﻿using atlas.core.Library.Enums;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Pages.Containers;
+﻿using Atlas.Forms.Enums;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Pages.Containers;
 
-namespace atlas.core.Library.Pages
+namespace Atlas.Forms.Pages
 {
     public class TriggerPageApi : ITriggerPageApi
     {

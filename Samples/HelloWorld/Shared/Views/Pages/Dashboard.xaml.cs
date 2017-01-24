@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using atlas.core.Library.Services;
 using atlas.samples.helloworld.Shared.ViewModels;
+using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using atlas.core.Library.Caching;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Pages.Containers;
+using Atlas.Forms.Caching;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Services
+namespace Atlas.Forms.Services
 {
     public class PageCacheService : IPageCacheService
     {
@@ -12,7 +12,7 @@ namespace atlas.core.Library.Services
 
         protected IPageCacheCoordinator CacheCoordinator { get; }
 
-        internal PageCacheService(IPageCacheCoordinator cacheCoordinator)
+        public PageCacheService(IPageCacheCoordinator cacheCoordinator)
         {
             CacheCoordinator = cacheCoordinator;
         }
@@ -21,18 +21,18 @@ namespace atlas.core.Library.Services
 
         public IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.GetMappings();
 
-        public Page GetCachedOrNewPage(string key)
+        public virtual Page GetCachedOrNewPage(string key, IParametersService parameters = null)
         {
-            return CacheCoordinator.GetCachedOrNewPage(key);
+            return CacheCoordinator.GetCachedOrNewPage(key, parameters ?? new ParametersService());
         }
 
-        public Page GetCachedPage(string key)
+        public virtual Page GetCachedPage(string key, IParametersService parameters = null)
         {
-            //TODO: return CacheCoordinator.GetCachedPage(key);
+            CacheCoordinator.GetCachedPage(key, parameters ?? new ParametersService());
             return null;
         }
 
-        public void AddPage(string key, PageMapContainer container, bool isInitialized = false)
+        public virtual void AddPage(string key, PageMapContainer container, bool isInitialized = false)
         {
             CacheCoordinator.AddPageToCache(key, container, isInitialized);
         }

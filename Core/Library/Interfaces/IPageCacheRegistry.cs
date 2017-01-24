@@ -1,11 +1,17 @@
-﻿using Xamarin.Forms;
+﻿using System.Collections.Generic;
+using Atlas.Forms.Pages.Containers;
+using Xamarin.Forms;
 
-namespace atlas.core.Library.Interfaces
+namespace Atlas.Forms.Interfaces
 {
     public interface IPageCacheRegistry
     {
         ITriggerPageApi WhenPage(string pageKey);
 
         ITriggerPageApi WhenPage<TPage>() where TPage : Page;
+
+        bool Remove(string pageKey, PageMapContainer container);
+
+        IList<PageMapContainer> GetMappingsForKey(string pageKey);
     }
 }

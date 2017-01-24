@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
-using atlas.core.Library.Enums;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Navigation;
-using atlas.core.Library.Pages;
-using atlas.core.Library.Pages.Containers;
+using Atlas.Forms.Enums;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages;
+using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Caching
+namespace Atlas.Forms.Caching
 {
     internal class PageCacheCoordinator : IPageCacheCoordinator
     {
@@ -21,7 +21,6 @@ namespace atlas.core.Library.Caching
                 var innerPageKey = queue.Dequeue();
                 var outerPageType = PageNavigationStore.PageTypes[outerPageKey];
                 var innerPage = GetCachedOrNewPageInternal(innerPageKey, parameters);
-                PageProcessor.Process(innerPage);
                 nextPage = Activator.CreateInstance(outerPageType, innerPage) as Page;
                 PageProcessor.Process(nextPage);
             }
@@ -32,7 +31,7 @@ namespace atlas.core.Library.Caching
             return nextPage;
         }
 
-        protected Page GetCachedOrNewPageInternal(string key, IParametersService parameters = null)
+        public Page GetCachedPage(string key, IParametersService parameters = null)
         {
             var pageContainer = GetCachedPageInternal(key);
             if (pageContainer?.Page != null)
@@ -44,6 +43,16 @@ namespace atlas.core.Library.Caching
                 }
                 return pageContainer.Page;
             }
+            return null;
+        }
+
+        protected Page GetCachedOrNewPageInternal(string key, IParametersService parameters = null)
+        {
+            var cachedPage = GetCachedPage(key, parameters);
+            if (cachedPage != null)
+            {
+                return cachedPage;
+            }
 
             var pageType = PageNavigationStore.PageTypes[key];
             var nextPage = Activator.CreateInstance(pageType) as Page;
@@ -54,6 +63,7 @@ namespace atlas.core.Library.Caching
             {
                 AddPageToCache(key, nextPage, mapContainer, true);
             }
+            PageProcessor.Process(nextPage);
             return nextPage;
         }
 

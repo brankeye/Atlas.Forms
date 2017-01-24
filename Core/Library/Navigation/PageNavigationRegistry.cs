@@ -1,6 +1,6 @@
-﻿using atlas.core.Library.Interfaces;
+﻿using Atlas.Forms.Interfaces;
 
-namespace atlas.core.Library.Navigation
+namespace Atlas.Forms.Navigation
 {
     public class PageNavigationRegistry : IPageNavigationRegistry
     {

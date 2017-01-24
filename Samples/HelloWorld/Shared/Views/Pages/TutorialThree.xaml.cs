@@ -1,6 +1,6 @@
 ﻿using System;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Interfaces.Pages;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Pages;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {

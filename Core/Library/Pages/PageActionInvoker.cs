@@ -1,20 +1,49 @@
 ﻿using System;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Interfaces.Pages;
-using atlas.core.Library.Utilities;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Pages;
+using Atlas.Forms.Utilities;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Pages
+namespace Atlas.Forms.Pages
 {
     public class PageActionInvoker
     {
         public static void InvokeActionOnPage<T>(object view, Action<T> action) where T : class
         {
-            var page = view as T;
-            if (page != null)
+            var canContinue = true;
+            while (canContinue)
             {
-                ActionInvoker.Invoke(page, action);
-                ActionInvoker.Invoke((page as Page)?.BindingContext, action);
+                var page = view as T;
+                if (page != null)
+                {
+                    ActionInvoker.Invoke(page, action);
+                    ActionInvoker.Invoke((page as Page)?.BindingContext, action);
+                }
+                else
+                {
+                    canContinue = false;
+                }
+
+                if (page is NavigationPage)
+                {
+                    var navigationPage = page as NavigationPage;
+                    view = navigationPage.CurrentPage;
+                    continue;
+                }
+                if (page is MasterDetailPage)
+                {
+                    var masterDetailPage = page as MasterDetailPage;
+                    view = masterDetailPage.Detail;
+                    continue;
+                }
+                if (page is TabbedPage)
+                {
+                    var tabbedPage = page as TabbedPage;
+                    view = tabbedPage.CurrentPage;
+                    continue;
+                }
+
+                canContinue = false;
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace atlas.core.Library.Utilities
+namespace Atlas.Forms.Utilities
 {
     public class ActionInvoker
     {

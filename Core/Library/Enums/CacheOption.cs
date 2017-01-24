@@ -1,4 +1,4 @@
-﻿namespace atlas.core.Library.Enums
+﻿namespace Atlas.Forms.Enums
 {
     public enum CacheOption
     {

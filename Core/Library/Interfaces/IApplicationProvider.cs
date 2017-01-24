@@ -1,6 +1,6 @@
 ﻿using Xamarin.Forms;
 
-namespace atlas.core.Library.Interfaces
+namespace Atlas.Forms.Interfaces
 {
     public interface IApplicationProvider
     {

@@ -1,8 +1,8 @@
-﻿using atlas.core.Library.Interfaces;
-using atlas.core.Library.Services;
+﻿using Atlas.Forms.Interfaces;
+using Atlas.Forms.Services;
 using Xamarin.Forms;
 
-namespace atlas.core.Library
+namespace Atlas.Forms
 {
     public abstract class AtlasApplicationBase : Application
     {
@@ -24,10 +24,6 @@ namespace atlas.core.Library
             RegisterPagesForCaching(CreatePageCacheRegistry());
         }
 
-        protected abstract void RegisterPagesForNavigation(IPageNavigationRegistry registry);
-
-        protected abstract void RegisterPagesForCaching(IPageCacheRegistry registry);
-
         protected abstract INavigationService CreateNavigationService();
 
         protected abstract IPageCacheService CreatePageCacheService();
@@ -35,5 +31,9 @@ namespace atlas.core.Library
         protected abstract IPageNavigationRegistry CreatePageNavigationRegistry();
 
         protected abstract IPageCacheRegistry CreatePageCacheRegistry();
+
+        protected abstract void RegisterPagesForNavigation(IPageNavigationRegistry registry);
+
+        protected abstract void RegisterPagesForCaching(IPageCacheRegistry registry);
     }
 }

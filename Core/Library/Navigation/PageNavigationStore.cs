@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace atlas.core.Library.Navigation
+namespace Atlas.Forms.Navigation
 {
     public class PageNavigationStore
     {

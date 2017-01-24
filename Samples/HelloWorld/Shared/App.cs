@@ -1,7 +1,7 @@
-﻿using atlas.core.Library;
-using atlas.core.Library.Interfaces;
-using atlas.core.Library.Services;
-using atlas.samples.helloworld.Shared.Views.Pages;
+﻿using atlas.samples.helloworld.Shared.Views.Pages;
+using Atlas.Forms;
+using Atlas.Forms.Interfaces;
+using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace atlas.core.Library.Pages
+namespace Atlas.Forms.Pages
 {
     public static class PageKeyParser
     {

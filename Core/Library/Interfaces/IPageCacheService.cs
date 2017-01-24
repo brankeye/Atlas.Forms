@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using atlas.core.Library.Pages.Containers;
+using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
-namespace atlas.core.Library.Interfaces
+namespace Atlas.Forms.Interfaces
 {
     public interface IPageCacheService
     {
@@ -10,9 +10,9 @@ namespace atlas.core.Library.Interfaces
 
         IReadOnlyDictionary<string, PageCacheContainer> CachedPages { get; }
 
-        Page GetCachedOrNewPage(string page);
+        Page GetCachedOrNewPage(string page, IParametersService parameters = null);
 
-        Page GetCachedPage(string page);
+        Page GetCachedPage(string page, IParametersService parameters = null);
 
         void AddPage(string key, PageMapContainer container, bool isInitialized = false);
     }

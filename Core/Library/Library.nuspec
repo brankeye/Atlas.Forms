@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Atlas.Forms</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>BrandonKeyes</authors>
+    <owners>BrandonKeyes</owners>
+    <projectUrl>https://github.com/brankeye/Atlas</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Atlas.Forms is a small library that allows for navigation from view-models with automatic page-caching.</description>
+    <releaseNotes>Initial beta release.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Xamarin Forms Xamarin.Forms Atlas navigation page caching page-caching library framework</tags>
+	
+	<dependencies>
+		<dependency id="Xamarin.Forms" version="2.3.3.175" />
+	</dependencies>
+  </metadata>
+</package>

@@ -1,8 +1,6 @@
-﻿using System;
-using atlas.core.Library.Enums;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
-namespace atlas.core.Library.Pages.Containers
+namespace Atlas.Forms.Pages.Containers
 {
     public class PageCacheContainer : PageMapContainer
     {
