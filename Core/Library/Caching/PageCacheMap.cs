@@ -5,7 +5,7 @@ namespace Atlas.Forms.Caching
 {
     public class PageCacheMap
     {
-        public static PageCacheMap Current { get; } = new PageCacheMap();
+        public static PageCacheMap Current { get; set; } = new PageCacheMap();
 
         public Dictionary<string, IList<PageMapContainer>> Mappings { get; } = new Dictionary<string, IList<PageMapContainer>>();
 

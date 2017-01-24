@@ -59,8 +59,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fixtures\PageCacheCoordinatorFixture.cs" />
+    <Compile Include="Helpers\StateManager.cs" />
     <Compile Include="Mocks\NavigationServiceMock.cs" />
-    <Compile Include="Mocks\PageCacheCoordinatorMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

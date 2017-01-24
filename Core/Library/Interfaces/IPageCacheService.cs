@@ -12,7 +12,7 @@ namespace Atlas.Forms.Interfaces
 
         Page GetCachedOrNewPage(string page, IParametersService parameters = null);
 
-        Page GetCachedPage(string page, IParametersService parameters = null);
+        Page TryGetCachedPage(string page, IParametersService parameters = null);
 
         void AddPage(string key, PageMapContainer container, bool isInitialized = false);
     }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
@@ -19,7 +21,8 @@ namespace Atlas.Forms.Caching
                 var queue = PageKeyParser.GetPageKeysFromSequence(key);
                 var outerPageKey = queue.Dequeue();
                 var innerPageKey = queue.Dequeue();
-                var outerPageType = GetPageNavigationStore().PageTypes[outerPageKey];
+                Type outerPageType;
+                GetPageNavigationStore().PageTypes.TryGetValue(outerPageKey, out outerPageType);
                 var innerPage = GetCachedOrNewPageInternal(innerPageKey, parameters);
                 nextPage = Activator.CreateInstance(outerPageType, innerPage) as Page;
                 PageProcessor.Process(nextPage);
@@ -31,9 +34,9 @@ namespace Atlas.Forms.Caching
             return nextPage;
         }
 
-        public virtual Page GetCachedPage(string key, IParametersService parameters = null)
+        public virtual Page TryGetCachedPage(string key, IParametersService parameters = null)
         {
-            var pageContainer = GetCachedPageInternal(key);
+            var pageContainer = TryGetCachedPageInternal(key);
             if (pageContainer?.Page != null)
             {
                 if (!pageContainer.Initialized)
@@ -48,13 +51,14 @@ namespace Atlas.Forms.Caching
 
         protected virtual Page GetCachedOrNewPageInternal(string key, IParametersService parameters = null)
         {
-            var cachedPage = GetCachedPage(key, parameters);
+            var cachedPage = TryGetCachedPage(key, parameters);
             if (cachedPage != null)
             {
                 return cachedPage;
             }
 
-            var pageType = GetPageNavigationStore().PageTypes[key];
+            Type pageType;
+            GetPageNavigationStore().PageTypes.TryGetValue(key, out pageType);
             var nextPage = Activator.CreateInstance(pageType) as Page;
             PageActionInvoker.InvokeInitialize(nextPage, parameters);
             var pageMapList = GetPageCacheMap().Mappings[key];
@@ -67,9 +71,10 @@ namespace Atlas.Forms.Caching
             return nextPage;
         }
 
-        protected virtual PageCacheContainer GetCachedPageInternal(string key)
+        protected virtual PageCacheContainer TryGetCachedPageInternal(string key)
         {
-            var container = GetPageCacheStore().PageCache[key];
+            PageCacheContainer container;
+            GetPageCacheStore().PageCache.TryGetValue(key, out container);
             if (container != null)
             {
                 if (container.CacheState == CacheState.Default)
@@ -83,7 +88,12 @@ namespace Atlas.Forms.Caching
 
         public virtual void RemoveCachedPages(string key)
         {
-            var containers = PageCacheMap.Current.Mappings[key];
+            IList<PageMapContainer> containers; 
+            GetPageCacheMap().Mappings.TryGetValue(key, out containers);
+            if (containers == null)
+            {
+                return;
+            }
             foreach (var container in containers)
             {
                 if (container.CacheState == CacheState.Default ||
@@ -102,7 +112,13 @@ namespace Atlas.Forms.Caching
                 var outerPageKey = queue.Dequeue();
                 key = queue.Dequeue();
             }
-            var containers = GetPageCacheMap().Mappings[key];
+
+            IList<PageMapContainer> containers;
+            GetPageCacheMap().Mappings.TryGetValue(key, out containers);
+            if (containers == null)
+            {
+                return;
+            }
             if (option != CacheOption.None)
             {
                 containers = containers.ToList().Where(x => x.CacheOption == option).ToList();
@@ -118,14 +134,21 @@ namespace Atlas.Forms.Caching
 
         public virtual void AddPageToCache(string key, PageMapContainer mapContainer, bool isInitialized = false)
         {
-            var pageType = GetPageNavigationStore().PageTypes[mapContainer.Key];
+            Type pageType;
+            GetPageNavigationStore().PageTypes.TryGetValue(key, out pageType);
+            if (pageType == null)
+            {
+                return;
+            }
             var page = Activator.CreateInstance(pageType) as Page;
             AddPageToCache(key, page, mapContainer, isInitialized);
         }
 
         public virtual void AddPageToCache(string key, Page pageInstance, PageMapContainer mapContainer, bool isInitialized = false)
         {
-            if (GetPageCacheStore().PageCache[mapContainer.Key] == null)
+            PageCacheContainer containerCheck;
+            GetPageCacheStore().PageCache.TryGetValue(key, out containerCheck);
+            if (containerCheck == null)
             {
                 PageActionInvoker.InvokeOnPageCaching(pageInstance);
                 var container = new PageCacheContainer
@@ -138,7 +161,7 @@ namespace Atlas.Forms.Caching
                     Type = pageInstance.GetType()
                 };
                 container.Initialized = isInitialized;
-                GetPageCacheStore().PageCache[key] = container;
+                GetPageCacheStore().PageCache.Add(key, container);
                 PageActionInvoker.InvokeOnPageCached(pageInstance);
             }
         }

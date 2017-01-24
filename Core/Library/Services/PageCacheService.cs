@@ -26,10 +26,9 @@ namespace Atlas.Forms.Services
             return CacheCoordinator.GetCachedOrNewPage(key, parameters ?? new ParametersService());
         }
 
-        public virtual Page GetCachedPage(string key, IParametersService parameters = null)
+        public virtual Page TryGetCachedPage(string key, IParametersService parameters = null)
         {
-            CacheCoordinator.GetCachedPage(key, parameters ?? new ParametersService());
-            return null;
+            return CacheCoordinator.TryGetCachedPage(key, parameters ?? new ParametersService());
         }
 
         public virtual void AddPage(string key, PageMapContainer container, bool isInitialized = false)

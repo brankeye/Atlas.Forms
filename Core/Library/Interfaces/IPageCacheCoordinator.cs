@@ -6,7 +6,7 @@ namespace Atlas.Forms.Interfaces
 {
     public interface IPageCacheCoordinator
     {
-        Page GetCachedPage(string key, IParametersService parameters = null);
+        Page TryGetCachedPage(string key, IParametersService parameters = null);
 
         Page GetCachedOrNewPage(string key, IParametersService parameters = null);
 
