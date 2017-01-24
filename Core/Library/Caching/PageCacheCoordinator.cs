@@ -59,10 +59,15 @@ namespace Atlas.Forms.Caching
 
             Type pageType;
             GetPageNavigationStore().PageTypes.TryGetValue(key, out pageType);
+            if (pageType == null)
+            {
+                return null;
+            }
             var nextPage = Activator.CreateInstance(pageType) as Page;
             PageActionInvoker.InvokeInitialize(nextPage, parameters);
-            var pageMapList = GetPageCacheMap().Mappings[key];
-            var mapContainer = pageMapList.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated);
+            IList<PageMapContainer> pageMapList;
+            GetPageCacheMap().Mappings.TryGetValue(key, out pageMapList);
+            var mapContainer = pageMapList?.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated);
             if (mapContainer != null)
             {
                 AddPageToCache(key, nextPage, mapContainer, true);
@@ -125,7 +130,9 @@ namespace Atlas.Forms.Caching
             }
             foreach (var container in containers)
             {
-                if (GetPageCacheStore().PageCache[container.Key] == null)
+                PageCacheContainer pageContainer;
+                GetPageCacheStore().PageCache.TryGetValue(container.Key, out pageContainer);
+                if (pageContainer == null)
                 {
                     AddPageToCache(container.Key, container);
                 }
