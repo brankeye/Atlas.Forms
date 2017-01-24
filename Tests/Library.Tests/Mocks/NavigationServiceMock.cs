@@ -24,7 +24,7 @@ namespace Library.Tests.Mocks
 
         protected static IPageCacheCoordinator CreatePageCacheCoordinatorMock()
         {
-            return new PageCacheCoordinator();
+            return new PageCacheCoordinatorMock();
         }
     }
 }

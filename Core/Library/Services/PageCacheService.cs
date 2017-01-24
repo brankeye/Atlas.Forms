@@ -17,9 +17,9 @@ namespace Atlas.Forms.Services
             CacheCoordinator = cacheCoordinator;
         }
 
-        public IReadOnlyDictionary<string, PageCacheContainer> CachedPages => PageCacheStore.GetPageCache();
+        public IReadOnlyDictionary<string, PageCacheContainer> CachedPages => PageCacheStore.Current.GetPageCache();
 
-        public IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.GetMappings();
+        public IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.Current.GetMappings();
 
         public virtual Page GetCachedOrNewPage(string key, IParametersService parameters = null)
         {

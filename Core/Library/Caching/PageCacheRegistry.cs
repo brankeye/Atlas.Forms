@@ -11,11 +11,11 @@ namespace Atlas.Forms.Caching
         public ITriggerPageApi WhenPage(string pageKey)
         {
             var container = new PageMapContainer();
-            var list = PageCacheMap.Mappings[pageKey];
+            var list = PageCacheMap.Current.Mappings[pageKey];
             if (list == null)
             {
                 list = new List<PageMapContainer>();
-                PageCacheMap.Mappings[pageKey] = list;
+                PageCacheMap.Current.Mappings[pageKey] = list;
             }
             list.Add(container);
             return new TriggerPageApi(pageKey, container);
@@ -28,13 +28,13 @@ namespace Atlas.Forms.Caching
 
         public bool Remove(string pageKey, PageMapContainer container)
         {
-            var list = PageCacheMap.Mappings[pageKey];
+            var list = PageCacheMap.Current.Mappings[pageKey];
             return list.Remove(container);
         }
 
         public IList<PageMapContainer> GetMappingsForKey(string pageKey)
         {
-            return PageCacheMap.Mappings[pageKey];
+            return PageCacheMap.Current.Mappings[pageKey];
         }
     }
 }

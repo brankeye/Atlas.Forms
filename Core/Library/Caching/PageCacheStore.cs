@@ -5,9 +5,11 @@ namespace Atlas.Forms.Caching
 {
     public class PageCacheStore
     {
-        public static Dictionary<string, PageCacheContainer> PageCache { get; } = new Dictionary<string, PageCacheContainer>();
+        public static PageCacheStore Current { get; } = new PageCacheStore();
 
-        public static IReadOnlyDictionary<string, PageCacheContainer> GetPageCache()
+        public Dictionary<string, PageCacheContainer> PageCache { get; } = new Dictionary<string, PageCacheContainer>();
+
+        public IReadOnlyDictionary<string, PageCacheContainer> GetPageCache()
         {
             return PageCache;
         }

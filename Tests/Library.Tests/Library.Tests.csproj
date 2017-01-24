@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mocks\NavigationServiceMock.cs" />
+    <Compile Include="Mocks\PageCacheCoordinatorMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
