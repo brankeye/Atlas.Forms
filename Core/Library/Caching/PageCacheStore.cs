@@ -3,7 +3,7 @@ using Atlas.Forms.Pages.Containers;
 
 namespace Atlas.Forms.Caching
 {
-    internal class PageCacheStore
+    public class PageCacheStore
     {
         public static Dictionary<string, PageCacheContainer> PageCache { get; } = new Dictionary<string, PageCacheContainer>();
 

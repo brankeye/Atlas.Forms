@@ -2,6 +2,10 @@
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
+#if TEST
+using Application = Atlas.Forms.FormsApplication;
+#endif
+
 namespace Atlas.Forms
 {
     public abstract class AtlasApplicationBase : Application

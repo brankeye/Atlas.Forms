@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace Atlas.Forms.Caching
 {
-    internal class PageCacheCoordinator : IPageCacheCoordinator
+    public class PageCacheCoordinator : IPageCacheCoordinator
     {
         public Page GetCachedOrNewPage(string key, IParametersService parameters = null)
         {

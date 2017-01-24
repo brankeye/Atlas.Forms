@@ -16,7 +16,9 @@ namespace atlas.samples.helloworld.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+#if !TEST
             LoadApplication(new App());
+#endif
         }
     }
 }
