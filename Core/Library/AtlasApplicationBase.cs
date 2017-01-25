@@ -1,7 +1,5 @@
 ﻿using Atlas.Forms.Interfaces;
 using Atlas.Forms.Services;
-using Xamarin.Forms;
-
 #if TEST
 using Application = Atlas.Forms.FormsApplication;
 #endif
@@ -20,7 +18,7 @@ namespace Atlas.Forms
             Initialize();
         }
 
-        public virtual void Initialize()
+        protected virtual void Initialize()
         {
             NavigationService.Current = CreateNavigationService();
             PageCacheService.Current = CreatePageCacheService();

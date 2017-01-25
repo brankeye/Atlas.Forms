@@ -1,5 +1,4 @@
-﻿using System;
-using Atlas.Forms.Interfaces;
+﻿using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Pages;
 
 namespace atlas.samples.helloworld.Shared.ViewModels.Pages

@@ -7,19 +7,30 @@ namespace Atlas.Forms
 {
     public abstract class AtlasApplication : AtlasApplicationBase
     {
+        private IApplicationProvider ApplicationProvider { get; set; }
+
+        private IPageCacheCoordinator CacheCoordinator { get; set; }
+
+        protected override void Initialize()
+        {
+            ApplicationProvider = CreateApplicationProvider();
+            CacheCoordinator = CreatePageCacheCoordinator();
+            base.Initialize();
+        }
+
         protected override INavigationService CreateNavigationService()
         {
-            return new NavigationService(new ApplicationProvider(), new PageCacheCoordinator());
+            return new NavigationService(ApplicationProvider, CacheCoordinator);
         }
 
         protected override IPageCacheService CreatePageCacheService()
         {
-            return new PageCacheService(new PageCacheCoordinator());
+            return new PageCacheService(CacheCoordinator);
         }
 
         protected override IPageDialogService CreatePageDialogService()
         {
-            return new PageDialogService(new ApplicationProvider());
+            return new PageDialogService(ApplicationProvider);
         }
 
         protected override IPageNavigationRegistry CreatePageNavigationRegistry()
@@ -30,6 +41,16 @@ namespace Atlas.Forms
         protected override IPageCacheRegistry CreatePageCacheRegistry()
         {
             return new PageCacheRegistry();
+        }
+
+        protected virtual IApplicationProvider CreateApplicationProvider()
+        {
+            return new ApplicationProvider();
+        }
+
+        protected virtual IPageCacheCoordinator CreatePageCacheCoordinator()
+        {
+            return new PageCacheCoordinator();
         }
     }
 }

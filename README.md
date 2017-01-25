@@ -1,19 +1,17 @@
 # Atlas.Forms
-Atlas.Forms is a small library that provides navigation from view-models and automatic page-caching.
-
-NOTE: Atlas.Forms is in active development, it is still in beta.
+Atlas is a small library that provides navigation from view-models, automatic page-caching, and a page dialog service usable from view-models.
 
 ## Nuget
 Atlas.Forms is available for [download on Nuget](https://www.nuget.org/packages/Atlas.Forms/).
-
 To install Atlas.Forms, run the following command in the Package Manager Console:
-		Install-Package Atlas.Forms
+
+    Install-Package Atlas.Forms
 
 ## Usage
-Navigate with Atlas.Forms using an API similar to the INavigation interface, where strings replace Page references.
+Atlas navigation uses an API similar to the INavigation interface, where strings replace Page references.
 
 ### Using Atlas.Forms
-In your App class, simply inherit from ```AtlasApplication``` instead of ```Application```.
+In your App class, inherit from ```AtlasApplication``` instead of ```Application```.
 
 ```csharp
 public class App : AtlasApplication {}
@@ -25,6 +23,7 @@ In your App class, override ```RegisterPagesForNavigation``` and register pages 
 ```csharp
 protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)
 {
+    // Save a reference to the registry if you'd like to use it later.
 	registry.RegisterPage<NavigationPage>(); // Key used will be "NavigationPage"
 	registry.RegisterPage<Views.Pages.About>(); // Key used will be "About"
 	registry.RegisterPage<Views.Pages.Dashboard>("Dash"); // Key used will be "Dash"
@@ -37,13 +36,13 @@ In your App class, override ```RegisterPagesForCaching``` and register pages for
 ```csharp
 protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
 {
-	// When the About page appears, the Changelog page will be created and added to the page cache. Removed upon first access.
+	// When the About page appears the Changelog page will be added to the cache as a Default instance.
 	registry.WhenPage<About>().Appears().CachePage("Changelog");
 
-	// When the Tutorials page is created it will be added to the cache as a KeepAlive instance and saved there until some navigation forward or backward occurs.
+	// When the Tutorials page is created it will be added to the cache as a KeepAlive instance.
 	registry.WhenPage<Tutorials>().IsCreated().CachePage().AsKeepAlive();
 	
-	// Cache the Contact page when it appears as a single instance.
+	// Cache the Contact page when it appears as a SingleInstance.
 	registry.WhenPage<Contact>().Appears().CachePage().AsSingleInstance();
 }
 ```
@@ -56,13 +55,13 @@ protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
 	
 	```IsCreated``` When the page is first created, cache the chosen page.
 
-#### There are three options for when a page is automatically removed from the cache. These are:
+#### There are three options for how page lifetime is handled. These are:
 
-	```No option set``` - Will be removed from the cache after first retrieval (means same instance is never used twice from the cache).
+	```Default``` - Removed from cache after first retrieval (means same instance is never used twice).
 	
-	```KeepAlive``` - Will be removed from the cache only after navigating forward or backward (good for MasterDetailPage).
+	```KeepAlive``` - Removed from cache when navigating forward or backward (ideal for MasterDetailPage).
 	
-	```SingleInstance``` - Will never be removed from the cache. Yours to manage.
+	```SingleInstance``` - Never removed from cache. Yours to manage.
 
 ### How to navigate
 Set the main page in your App.cs class.
@@ -79,8 +78,7 @@ public class App : AtlasApplication
 }
 ```
 
-When navigating, either pass a single page string, or pass two pages delimited by the "/" character.
-If two pages are passed, the left-side page will act as a container (be sure it has a public constructor that takes a Page instance).
+When navigating, the service will first look for a page with the same key in the page-cache, if not found, a new instance will be created.
 
 Then use PushAsync(string page) to navigate, with optional parameters to be passed to the OnPageAppearing/OnPageAppeared functions.
 ```csharp
