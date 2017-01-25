@@ -49,19 +49,19 @@ protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
 
 #### There are three triggers that control when pages are automatically cached. These are:
 
-	```Appears``` - When the page appears, cache the chosen page.
+	Appears - When the page appears, cache the chosen page.
 	
-	```Disappears``` When the page disappears, cache the chosen page.
+	Disappears - When the page disappears, cache the chosen page.
 	
-	```IsCreated``` When the page is first created, cache the chosen page.
+	IsCreated - When the page is first created, cache the chosen page.
 
 #### There are three options for how page lifetime is handled. These are:
 
-	```Default``` - Removed from cache after first retrieval (means same instance is never used twice).
+	Default - Removed from cache after first retrieval (means same instance is never used twice).
 	
-	```KeepAlive``` - Removed from cache when navigating forward or backward (ideal for MasterDetailPage).
+	KeepAlive - Removed from cache when navigating forward or backward (ideal for MasterDetailPage).
 	
-	```SingleInstance``` - Never removed from cache. Yours to manage.
+	SingleInstance - Never removed from cache. Yours to manage.
 
 ### How to navigate
 Set the main page in your App.cs class.
@@ -80,34 +80,77 @@ public class App : AtlasApplication
 
 When navigating, the service will first look for a page with the same key in the page-cache, if not found, a new instance will be created.
 
-Then use PushAsync(string page) to navigate, with optional parameters to be passed to the OnPageAppearing/OnPageAppeared functions.
+Then use ```PushAsync``` to navigate, with optional parameters to be passed to the ```OnPageAppearing/OnPageAppeared``` functions.
 ```csharp
-public class MainPageViewModel
+public class MainPageViewModel : IPageAppearingAware, IPageAppearedAware
 {
-	private void Button_OnClicked(object sender, EventArgs e)
+	private void NavigateButton_OnClicked()
 	{
 		var parameters = new ParametersService();
 		parameters.TryAdd("Id", 1);
 		NavigationService.Current.PushAsync("NextPage", parameters);
 	}
-}
-
-public class NextPageViewModel : IInitializeAware, IPageAppearingAware, IPageAppearedAware
-{
-	public void Initialize(IParametersService parameters)
-	{
-		// Only called once.
-		var id = parameters.TryGet<int>("Id");
-	}
-
+	
 	public void OnPageAppearing(IParametersService parameters)
 	{
-		var id = parameters.TryGet<int>("Id");
+		var id = parameters.TryGet<int>("Name"); // Name = "Atlas"
 	}
 	
 	public void OnPageAppeared(IParametersService parameters)
 	{
-		var id = parameters.TryGet<int>("Id");
+		var id = parameters.TryGet<int>("Name"); // Name = "Atlas"
+	}
+}
+
+public class NextPageViewModel : IInitializeAware, IPageAppearingAware, IPageAppearedAware
+{
+	private void BackButton_OnClicked()
+	{
+		var parameters = new ParametersService();
+		parameters.TryAdd("Name", "Atlas");
+		NavigationService.Current.PopAsync(parameters);
+	}
+
+	public void Initialize(IParametersService parameters)
+	{
+		// Only called once.
+		var id = parameters.TryGet<int>("Id"); // Id = 1
+	}
+
+	public void OnPageAppearing(IParametersService parameters)
+	{
+		var id = parameters.TryGet<int>("Id"); // Id = 1
+	}
+	
+	public void OnPageAppeared(IParametersService parameters)
+	{
+		var id = parameters.TryGet<int>("Id"); // Id = 1
+	}
+}
+```
+
+### How to use dialog pages from viewmodels.
+
+public class MainPageViewModel
+{
+	private void DisplayAlert()
+	{
+		PageDialogService.Current.DisplayAlert("Internet connection failed", "Please try to reconnect", "Ok");
+	}
+	
+	private void DisplayAlert()
+	{
+		PageDialogService.Current.DisplayAlert("Internet connection failed", "Please try to reconnect", "Ok");
+	}
+	
+	private void DisplayOptionAlert()
+	{
+		PageDialogService.Current.DisplayAlert("Accept survey?", "It won't take long", "Ok", "Nope");
+	}
+	
+	private void DisplayActionSheet()
+	{
+		PageDialogService.Current.DisplayActionSheet("Save photo", "Cancel", "Delete", "Photo Roll", "Email");
 	}
 }
 ```
