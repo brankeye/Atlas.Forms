@@ -5,14 +5,14 @@ namespace Atlas.Forms.Services
 {
     public class ParametersService : IParametersService
     {
-        protected Dictionary<string, object> Store { get; set; }
+        protected Dictionary<string, object> Store { get; set; } = new Dictionary<string, object>();
 
         public bool TryAdd(string key, object item)
         {
             var canAddItem = item != null && !Store.ContainsKey(key);
             if (canAddItem)
             {
-                Store.Add(key, item);
+                Store[key] = item;
             }
             return canAddItem;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
@@ -22,7 +23,7 @@ namespace Atlas.Forms.Services
 
         protected IList<IPageContainer> ModalStackInternal { get; } = new List<IPageContainer>();
 
-        protected INavigation Navigation { get; set; }
+        public INavigation Navigation { get; set; }
 
         protected IApplicationProvider ApplicationProvider { get; }
 
@@ -54,7 +55,7 @@ namespace Atlas.Forms.Services
         {
             return await PopInternalAsync(NavigationStackInternal, 
                                           Navigation.NavigationStack,
-                                          navigation => navigation.PopModalAsync(animated),
+                                          navigation => navigation.PopAsync(animated),
                                           animated, parameters);
         }
 
@@ -72,9 +73,12 @@ namespace Atlas.Forms.Services
                                           animated, parameters);
         }
 
-        protected virtual async Task<IPageContainer> PopInternalAsync(IList < IPageContainer> stackInternal, IReadOnlyList<Page> pageStack, Func<INavigation, Task> func, bool animated, IParametersService parameters = null)
+        protected virtual async Task<IPageContainer> PopInternalAsync(IList<IPageContainer> stackInternal, IReadOnlyList<Page> pageStack, Func<INavigation, Task> func, bool animated, IParametersService parameters = null)
         {
-            CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key);
+            if (stackInternal.Count > 0)
+            {
+                CacheCoordinator.RemoveCachedPages(stackInternal[stackInternal.Count - 1].Key);
+            }
             var currentPage = pageStack[pageStack.Count - 1];
             PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
             await func(Navigation);
@@ -130,7 +134,7 @@ namespace Atlas.Forms.Services
                 CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key);
             }
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            Navigation = nextPage.Navigation;
+            SetNavigation(nextPage);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             await func(Navigation, nextPage);
             stackInternal.Add(new PageContainer(page, nextPage.GetType()));
@@ -142,7 +146,7 @@ namespace Atlas.Forms.Services
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            Navigation = nextPage.Navigation;
+            SetNavigation(nextPage);
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             if (currentPage is MasterDetailPage)
@@ -177,12 +181,33 @@ namespace Atlas.Forms.Services
             var navigationPage = nextPage as NavigationPage;
             if (navigationPage != null)
             {
-                NavigationStackInternal.Add(new PageContainer(page, navigationPage.GetType()));
+                var queue = PageKeyParser.GetPageKeysFromSequence(page);
+                queue.Dequeue();
+                var innerPageKey = queue.Dequeue();
+                Type innerPageType;
+                PageNavigationStore.Current.PageTypes.TryGetValue(innerPageKey, out innerPageType);
+                if (innerPageType == null)
+                {
+                    return;
+                }
+                NavigationStackInternal.Add(new PageContainer(innerPageKey, innerPageType));
             }
-            Navigation = nextPage.Navigation;
+            SetNavigation(nextPage);
             ApplicationProvider.MainPage = nextPage;
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
+        }
+
+        protected virtual void SetNavigation(Page page)
+        {
+            if (page is NavigationPage)
+            {
+                Navigation = page.Navigation;
+            }
+            else if (Navigation == null)
+            {
+                Navigation = page.Navigation;
+            }
         }
     }
 }

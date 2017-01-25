@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fixtures\NavigationServiceFixture.cs" />
     <Compile Include="Fixtures\PageCacheCoordinatorFixture.cs" />
     <Compile Include="Helpers\StateManager.cs" />
     <Compile Include="Mocks\NavigationServiceMock.cs" />

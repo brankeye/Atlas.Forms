@@ -11,7 +11,8 @@ namespace Atlas.Forms.Caching
         public ITriggerPageApi WhenPage(string pageKey)
         {
             var container = new PageMapContainer();
-            var list = PageCacheMap.Current.Mappings[pageKey];
+            IList<PageMapContainer> list;
+            PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
             if (list == null)
             {
                 list = new List<PageMapContainer>();
@@ -28,13 +29,16 @@ namespace Atlas.Forms.Caching
 
         public bool Remove(string pageKey, PageMapContainer container)
         {
-            var list = PageCacheMap.Current.Mappings[pageKey];
-            return list.Remove(container);
+            IList<PageMapContainer> list;
+            PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
+            return list != null && list.Remove(container);
         }
 
         public IList<PageMapContainer> GetMappingsForKey(string pageKey)
         {
-            return PageCacheMap.Current.Mappings[pageKey];
+            IList<PageMapContainer> list;
+            PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
+            return list;
         }
     }
 }

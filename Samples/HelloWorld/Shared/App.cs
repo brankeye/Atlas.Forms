@@ -10,6 +10,20 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
+            //NavigationService.Current.SetMainPage("About");
+            //NavigationService.Current.PushModalAsync("Contact").Wait();
+            //NavigationService.Current.PushModalAsync("Changelog").Wait();
+
+            //var mp = MainPage;
+            //var ns = NavigationService.Current.Navigation;
+            //var nslist = NavigationService.Current.NavigationStack;
+
+            //NavigationService.Current.PopAsync().Wait();
+
+            //mp = MainPage;
+            //ns = NavigationService.Current.Navigation;
+            //nslist = NavigationService.Current.NavigationStack;
+
             NavigationService.Current.SetMainPage("Dashboard");
         }
 

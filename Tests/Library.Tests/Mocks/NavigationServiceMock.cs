@@ -1,6 +1,7 @@
 ﻿using Atlas.Forms.Caching;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Services;
+using Library.Tests.Helpers;
 using Moq;
 using Xamarin.Forms;
 
@@ -24,6 +25,7 @@ namespace Library.Tests.Mocks
 
         protected static IPageCacheCoordinator CreatePageCacheCoordinatorMock()
         {
+            StateManager.ResetAll();
             return new PageCacheCoordinator();
         }
     }
