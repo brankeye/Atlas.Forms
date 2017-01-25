@@ -190,24 +190,6 @@ namespace Library.Tests.Fixtures
             Assert.That(stackCount, Is.EqualTo(1));
         }
 
-        [Test]
-        public void PresentPage_MasterDetailPage_PageIsPresented()
-        {
-            var navigationService = GetNavigationService();
-            Setup();
-            var masterDetailPage = new MasterDetailPage
-            {
-                Master = new ContentPage
-                {
-                    Title = "Default"
-                }
-            };
-            Assert.That(masterDetailPage, Is.Not.Null);
-            navigationService.PresentPage(masterDetailPage, "FirstPage");
-            var detailPage = masterDetailPage?.Detail;
-            Assert.That(detailPage, Is.Not.Null);
-        }
-
         protected static INavigationService GetNavigationService()
         {
             return new NavigationServiceMock();

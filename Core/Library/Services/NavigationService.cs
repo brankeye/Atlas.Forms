@@ -142,13 +142,14 @@ namespace Atlas.Forms.Services
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
 
-        public virtual void PresentPage(object currentPage, string page, IParametersService parameters = null)
+        public virtual void PresentPage(string page, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
             SetNavigation(nextPage);
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
+            var currentPage = GetCurrentPage();
             if (currentPage is MasterDetailPage)
             {
                 ((MasterDetailPage) currentPage).Detail = nextPage;
@@ -224,6 +225,19 @@ namespace Atlas.Forms.Services
             {
                 Navigation = page.Navigation;
             }
+        }
+
+        protected virtual Page GetCurrentPage()
+        {
+            if (Navigation.NavigationStack.Count > 0)
+            {
+                return (Navigation.NavigationStack[0] as NavigationPage)?.CurrentPage;
+            }
+            if (Navigation.ModalStack.Count > 0)
+            {
+                return Navigation.ModalStack.Last();
+            }
+            return ApplicationProvider.MainPage;
         }
     }
 }

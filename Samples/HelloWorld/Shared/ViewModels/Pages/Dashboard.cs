@@ -1,13 +1,15 @@
-﻿using Atlas.Forms.Interfaces;
+﻿using System;
+using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Pages;
+using Atlas.Forms.Services;
 
 namespace atlas.samples.helloworld.Shared.ViewModels.Pages
 {
-    public class Dashboard : IPageAppearingAware
+    public class Dashboard
     {
-        public void OnPageAppearing(IParametersService parameters)
+        public void ChangePage(string page)
         {
-
+            NavigationService.Current.PresentPage(page);
         }
     }
 }

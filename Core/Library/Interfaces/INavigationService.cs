@@ -34,7 +34,7 @@ namespace Atlas.Forms.Interfaces
 
         Task PushModalAsync(string page, bool animated, IParametersService parameters = null);
 
-        void PresentPage(object currentPage, string page, IParametersService parameters = null);
+        void PresentPage(string page, IParametersService parameters = null);
 
         void RemovePage(string page);
 

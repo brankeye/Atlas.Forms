@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using atlas.samples.helloworld.Shared;
+using Android.App;
 using Android.Content.PM;
 using Android.OS;
 

@@ -1,5 +1,7 @@
 ﻿using Atlas.Forms.Interfaces;
 using Atlas.Forms.Services;
+using Xamarin.Forms;
+
 #if TEST
 using Application = Atlas.Forms.FormsApplication;
 #endif
