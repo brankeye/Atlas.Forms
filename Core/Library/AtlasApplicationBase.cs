@@ -24,6 +24,7 @@ namespace Atlas.Forms
         {
             NavigationService.Current = CreateNavigationService();
             PageCacheService.Current = CreatePageCacheService();
+            PageDialogService.Current = CreatePageDialogService();
             RegisterPagesForNavigation(CreatePageNavigationRegistry());
             RegisterPagesForCaching(CreatePageCacheRegistry());
         }
@@ -31,6 +32,8 @@ namespace Atlas.Forms
         protected abstract INavigationService CreateNavigationService();
 
         protected abstract IPageCacheService CreatePageCacheService();
+
+        protected abstract IPageDialogService CreatePageDialogService();
 
         protected abstract IPageNavigationRegistry CreatePageNavigationRegistry();
 

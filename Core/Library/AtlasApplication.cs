@@ -17,6 +17,11 @@ namespace Atlas.Forms
             return new PageCacheService(new PageCacheCoordinator());
         }
 
+        protected override IPageDialogService CreatePageDialogService()
+        {
+            return new PageDialogService(new ApplicationProvider());
+        }
+
         protected override IPageNavigationRegistry CreatePageNavigationRegistry()
         {
             return new PageNavigationRegistry();

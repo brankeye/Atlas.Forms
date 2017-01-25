@@ -137,7 +137,7 @@ namespace Atlas.Forms.Services
             SetNavigation(nextPage);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             await func(Navigation, nextPage);
-            stackInternal.Add(new PageContainer(page, nextPage.GetType()));
+            AddPageToStack(page, nextPage, stackInternal);
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
@@ -155,7 +155,12 @@ namespace Atlas.Forms.Services
             }
             else if (currentPage is TabbedPage)
             {
-                ((TabbedPage) currentPage).CurrentPage = nextPage;
+                var tabbedPage = (TabbedPage) currentPage;
+                tabbedPage.CurrentPage = tabbedPage.Children.FirstOrDefault(x => x.Title == page);
+            }
+            if (nextPage is NavigationPage)
+            {
+                AddPageToStack(page, nextPage, NavigationStackInternal);
             }
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
         }
@@ -178,10 +183,21 @@ namespace Atlas.Forms.Services
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
-            var navigationPage = nextPage as NavigationPage;
-            if (navigationPage != null)
+            SetNavigation(nextPage);
+            ApplicationProvider.MainPage = nextPage;
+            if (nextPage is NavigationPage)
             {
-                var queue = PageKeyParser.GetPageKeysFromSequence(page);
+                AddPageToStack(page, nextPage, NavigationStackInternal);
+            }
+            PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
+            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
+        }
+
+        protected virtual void AddPageToStack(string pageKey, Page page, IList<IPageContainer> stack)
+        {
+            if (PageKeyParser.IsSequence(pageKey))
+            {
+                var queue = PageKeyParser.GetPageKeysFromSequence(pageKey);
                 queue.Dequeue();
                 var innerPageKey = queue.Dequeue();
                 Type innerPageType;
@@ -190,12 +206,12 @@ namespace Atlas.Forms.Services
                 {
                     return;
                 }
-                NavigationStackInternal.Add(new PageContainer(innerPageKey, innerPageType));
+                stack.Add(new PageContainer(innerPageKey, innerPageType));
             }
-            SetNavigation(nextPage);
-            ApplicationProvider.MainPage = nextPage;
-            PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
-            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
+            else
+            {
+                stack.Add(new PageContainer(pageKey, PageNavigationStore.Current.PageTypes[pageKey]));
+            }
         }
 
         protected virtual void SetNavigation(Page page)
