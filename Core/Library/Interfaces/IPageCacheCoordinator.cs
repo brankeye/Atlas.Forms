@@ -1,4 +1,5 @@
-﻿using Atlas.Forms.Enums;
+﻿using System.Collections.Generic;
+using Atlas.Forms.Enums;
 using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
@@ -6,6 +7,8 @@ namespace Atlas.Forms.Interfaces
 {
     public interface IPageCacheCoordinator
     {
+        //IList<Page> GetSegmentPages(string key, IParametersService parameters = null);
+
         Page TryGetCachedPage(string key, IParametersService parameters = null);
 
         Page GetCachedOrNewPage(string key, IParametersService parameters = null);

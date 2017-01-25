@@ -12,6 +12,57 @@ namespace Atlas.Forms.Caching
 {
     public class PageCacheCoordinator : IPageCacheCoordinator
     {
+        //public IList<Page> GetSegmentPages(string key, IParametersService parameters = null)
+        //{
+        //    IList<Page> list = new List<Page>();
+        //    if (PageKeyParser.IsSequence(key))
+        //    {
+        //        var queue = PageKeyParser.GetPageKeysFromSequence(key);
+        //        while (queue.Count > 0)
+        //        {
+        //            var pageKey = queue.Dequeue();
+        //            Type pageType;
+        //            GetPageNavigationStore().PageTypes.TryGetValue(pageKey, out pageType);
+        //            var constructorTakesPage =
+        //                pageType.GetTypeInfo().DeclaredConstructors
+        //                .FirstOrDefault(x => x.GetParameters()
+        //                .FirstOrDefault(y => y.ParameterType == typeof(Page)) != null)
+        //                != null;
+        //            if (constructorTakesPage)
+        //            {
+        //                var nextPageKey = queue.Dequeue();
+        //                Type nextPageType;
+        //                GetPageNavigationStore().PageTypes.TryGetValue(nextPageKey, out nextPageType);
+        //                var innerPage = GetCachedOrNewPageInternal(nextPageKey, parameters);
+        //                var nextPage = Activator.CreateInstance(pageType, innerPage) as Page;
+        //                list.Add(nextPage);
+        //                list.Add(innerPage);
+        //            }
+        //            else
+        //            {
+        //                var nextPage = GetCachedOrNewPageInternal(pageKey, parameters);
+        //                list.Add(nextPage);
+        //            }
+        //        }
+
+        //        for (var i = 0; i < list.Count; i++)
+        //        {
+        //            var page = list[i];
+        //            if (page is MasterDetailPage && i < list.Count - 1)
+        //            {
+        //                var masterDetailPage = page as MasterDetailPage;
+        //                masterDetailPage.Detail = list[i + 1];
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        var nextPage = GetCachedOrNewPageInternal(key, parameters);
+        //        list.Add(nextPage);
+        //    }
+        //    return list;
+        //}
+
         public virtual Page GetCachedOrNewPage(string key, IParametersService parameters = null)
         {
             Page nextPage;
