@@ -44,6 +44,8 @@ namespace Library.Tests.Fixtures
             Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
             Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
             Assert.That(secondPageContainer.Key, Is.EqualTo("SecondPage"));
+            var stackCount = navigationService.Navigation.NavigationStack.Count;
+            Assert.That(stackCount, Is.EqualTo(3));
         }
 
         [Test]
@@ -58,6 +60,8 @@ namespace Library.Tests.Fixtures
             var secondPageContainer = navigationService.ModalStack[1];
             Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
             Assert.That(secondPageContainer.Key, Is.EqualTo("SecondPage"));
+            var stackCount = navigationService.Navigation.ModalStack.Count;
+            Assert.That(stackCount, Is.EqualTo(2));
         }
 
         [Test]
@@ -75,12 +79,16 @@ namespace Library.Tests.Fixtures
             Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
             Assert.That(secondPageContainer.Key, Is.EqualTo("SecondPage"));
             navigationService.PopAsync().Wait();
+            var stackCount = navigationService.Navigation.NavigationStack.Count;
+            Assert.That(stackCount, Is.EqualTo(2));
             Assert.That(navigationService.NavigationStack.Count, Is.EqualTo(2));
             var lastPage = navigationService.NavigationStack[1];
             Assert.That(lastPage.Key, Is.EqualTo("FirstPage"));
             navigationService.PopAsync().Wait();
             lastPage = navigationService.NavigationStack[0];
             Assert.That(lastPage.Key, Is.EqualTo("MainPage"));
+            stackCount = navigationService.Navigation.NavigationStack.Count;
+            Assert.That(stackCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -99,6 +107,8 @@ namespace Library.Tests.Fixtures
             Assert.That(navigationService.ModalStack.Count, Is.EqualTo(1));
             var lastPage = navigationService.ModalStack[0];
             Assert.That(lastPage.Key, Is.EqualTo("FirstPage"));
+            var stackCount = navigationService.Navigation.ModalStack.Count;
+            Assert.That(stackCount, Is.EqualTo(1));
         }
 
         [Test]
@@ -122,6 +132,8 @@ namespace Library.Tests.Fixtures
             Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
             Assert.That(secondPageContainer.Key, Is.EqualTo("SecondPage"));
             Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
+            var stackCount = navigationService.Navigation.NavigationStack.Count;
+            Assert.That(stackCount, Is.EqualTo(4));
         }
 
         [Test]
@@ -149,6 +161,8 @@ namespace Library.Tests.Fixtures
             navigationService.RemovePage("SecondPage");
             Assert.That(navigationService.NavigationStack[1].Key, Is.EqualTo("FirstPage"));
             Assert.That(navigationService.NavigationStack[2].Key, Is.EqualTo("ThirdPage"));
+            var stackCount = navigationService.Navigation.NavigationStack.Count;
+            Assert.That(stackCount, Is.EqualTo(3));
         }
 
         [Test]
@@ -172,6 +186,8 @@ namespace Library.Tests.Fixtures
             mainPageContainer = navigationService.NavigationStack[0];
             Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
             Assert.That(navigationService.NavigationStack.Count, Is.EqualTo(1));
+            var stackCount = navigationService.Navigation.NavigationStack.Count;
+            Assert.That(stackCount, Is.EqualTo(1));
         }
 
         [Test]
