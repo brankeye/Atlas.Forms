@@ -49,13 +49,19 @@ protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
 ```
 
 There are three triggers that control when pages are automatically cached. These are:
+
 ```Appears``` - When the page appears, cache the chosen page.
+
 ```Disappears``` When the page disappears, cache the chosen page.
+
 ```IsCreated``` When the page is first created, cache the chosen page.
 
 There are three options for when a page is automatically removed from the cache. These are:
+
 ```No option set``` - Will be removed from the cache after first retrieval (means same instance is never used twice from the cache).
+
 ```KeepAlive``` - Will be removed from the cache only after navigating forward or backward (good for MasterDetailPage).
+
 ```SingleInstance``` - Will never be removed from the cache. Yours to manage.
 
 ### How to navigate
@@ -145,7 +151,7 @@ public interface INavigationService
 
 	Task PushModalAsync(string page, bool animated, IParametersService parameters = null);
 
-	void Present(object currentPage, string page, IParametersService parameters = null);
+	void PresentPage(object currentPage, string page, IParametersService parameters = null);
 
 	void RemovePage(string page);
 
