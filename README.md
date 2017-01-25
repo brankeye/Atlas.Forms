@@ -1,11 +1,13 @@
 # Atlas.Forms
-Atlas is a small library that provides navigation from view-models, automatic page-caching, and a page dialog service usable from view-models.
+Atlas is a small library that provides a viewmodel-first navigation service, a page-cache service, automatic page-caching when navigating, as well as a page dialog service, all usable from view or viewmodel.
+
+NOTE: Atlas is still in beta.
 
 ## Nuget
 Atlas.Forms is available for [download on Nuget](https://www.nuget.org/packages/Atlas.Forms/).
 To install Atlas.Forms, run the following command in the Package Manager Console:
 
-    Install-Package Atlas.Forms
+    Install-Package Atlas.Forms -Pre
 
 ## Usage
 Atlas navigation uses an API similar to the INavigation interface, where strings replace Page references.
@@ -79,6 +81,8 @@ public class App : AtlasApplication
 ```
 
 When navigating, the service will first look for a page with the same key in the page-cache, if not found, a new instance will be created.
+
+All ```MasterDetailPage``` implementations must set the ```Detail``` in the constructor using the ```PageCacheService```.
 
 Then use ```PushAsync``` to navigate, with optional parameters to be passed to the ```OnPageAppearing/OnPageAppeared``` functions.
 ```csharp
