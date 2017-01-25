@@ -142,7 +142,7 @@ namespace Atlas.Forms.Services
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
 
-        public virtual void Present(object currentPage, string page, IParametersService parameters = null)
+        public virtual void PresentPage(object currentPage, string page, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);

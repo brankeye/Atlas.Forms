@@ -11,7 +11,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         {
             InitializeComponent();
 
-            NavigationService.Current.Present(this, "About");
+            NavigationService.Current.PresentPage(this, "About");
 
             var masterPageItems = new List<MasterPageItem>
             {
@@ -47,7 +47,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
         {
             var selectedItem = (MasterPageItem) selectedItemChangedEventArgs.SelectedItem;
-            NavigationService.Current.Present(this, selectedItem.PageKey);
+            NavigationService.Current.PresentPage(this, selectedItem.PageKey);
             IsPresented = false;
         }
     }

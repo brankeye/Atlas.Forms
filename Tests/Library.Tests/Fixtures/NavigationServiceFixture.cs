@@ -101,6 +101,97 @@ namespace Library.Tests.Fixtures
             Assert.That(lastPage.Key, Is.EqualTo("FirstPage"));
         }
 
+        [Test]
+        public void InsertPageBefore_PageIsRegistered_PageIsInserted()
+        {
+            var navigationService = GetNavigationService();
+            Setup();
+            navigationService.SetMainPage("NavigationPage/MainPage");
+            navigationService.PushAsync("FirstPage").Wait();
+            navigationService.PushAsync("ThirdPage").Wait();
+            var mainPageContainer = navigationService.NavigationStack[0];
+            var firstPageContainer = navigationService.NavigationStack[1];
+            var thirdPageContainer = navigationService.NavigationStack[2];
+            Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
+            Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
+            Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
+            navigationService.InsertPageBefore("SecondPage", "ThirdPage");
+            firstPageContainer = navigationService.NavigationStack[1];
+            var secondPageContainer = navigationService.NavigationStack[2];
+            thirdPageContainer = navigationService.NavigationStack[3];
+            Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
+            Assert.That(secondPageContainer.Key, Is.EqualTo("SecondPage"));
+            Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
+        }
+
+        [Test]
+        public void RemovePage_PageIsRegistered_PageIsRemoved()
+        {
+            var navigationService = GetNavigationService();
+            Setup();
+            navigationService.SetMainPage("NavigationPage/MainPage");
+            navigationService.PushAsync("FirstPage").Wait();
+            navigationService.PushAsync("SecondPage").Wait();
+            navigationService.PushAsync("ThirdPage").Wait();
+            var mainPageContainer = navigationService.NavigationStack[0];
+            var firstPageContainer = navigationService.NavigationStack[1];
+            var secondPageContainer = navigationService.NavigationStack[2];
+            var thirdPageContainer = navigationService.NavigationStack[3];
+            Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
+            Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
+            Assert.That(secondPageContainer.Key, Is.EqualTo("SecondPage"));
+            Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
+            navigationService.RemovePage("ThirdPage");
+            Assert.That(navigationService.NavigationStack.Last().Key, Is.EqualTo("SecondPage"));
+            navigationService.PushAsync("ThirdPage").Wait();
+            thirdPageContainer = navigationService.NavigationStack[3];
+            Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
+            navigationService.RemovePage("SecondPage");
+            Assert.That(navigationService.NavigationStack[1].Key, Is.EqualTo("FirstPage"));
+            Assert.That(navigationService.NavigationStack[2].Key, Is.EqualTo("ThirdPage"));
+        }
+
+        [Test]
+        public void PopToRootAsync_NavigationStackIsPopulated_RootIsPoppedTo()
+        {
+            var navigationService = GetNavigationService();
+            Setup();
+            navigationService.SetMainPage("NavigationPage/MainPage");
+            navigationService.PushAsync("FirstPage").Wait();
+            navigationService.PushAsync("SecondPage").Wait();
+            navigationService.PushAsync("ThirdPage").Wait();
+            var mainPageContainer = navigationService.NavigationStack[0];
+            var firstPageContainer = navigationService.NavigationStack[1];
+            var secondPageContainer = navigationService.NavigationStack[2];
+            var thirdPageContainer = navigationService.NavigationStack[3];
+            Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
+            Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
+            Assert.That(secondPageContainer.Key, Is.EqualTo("SecondPage"));
+            Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
+            navigationService.PopToRootAsync().Wait();
+            mainPageContainer = navigationService.NavigationStack[0];
+            Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
+            Assert.That(navigationService.NavigationStack.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void PresentPage_MasterDetailPage_PageIsPresented()
+        {
+            var navigationService = GetNavigationService();
+            Setup();
+            var masterDetailPage = new MasterDetailPage
+            {
+                Master = new ContentPage
+                {
+                    Title = "Default"
+                }
+            };
+            Assert.That(masterDetailPage, Is.Not.Null);
+            navigationService.PresentPage(masterDetailPage, "FirstPage");
+            var detailPage = masterDetailPage?.Detail;
+            Assert.That(detailPage, Is.Not.Null);
+        }
+
         protected static INavigationService GetNavigationService()
         {
             return new NavigationServiceMock();
