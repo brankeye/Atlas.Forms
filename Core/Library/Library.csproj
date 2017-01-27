@@ -79,7 +79,7 @@
     <Compile Include="Navigation\NavigationProvider.cs" />
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
     <Compile Include="Navigation\PageNavigationStore.cs" />
-    <Compile Include="Navigation\PageProcessor.cs" />
+    <Compile Include="Pages\PageProcessor.cs" />
     <Compile Include="Navigation\PageStackController.cs" />
     <Compile Include="Pages\Populater.cs" />
     <Compile Include="Pages\Presenter.cs" />

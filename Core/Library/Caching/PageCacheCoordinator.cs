@@ -39,27 +39,39 @@ namespace Atlas.Forms.Caching
             return nextPage;
         }
 
-        public virtual Page TryGetCachedPage(string key, IParametersService parameters = null)
+        public virtual Page GetNewPage(string key)
         {
-            var pageContainer = TryGetCachedPageInternal(key);
-            if (pageContainer?.Page != null)
+            Type pageType;
+            GetPageNavigationStore().PageTypes.TryGetValue(key, out pageType);
+            var nextPage = Activator.CreateInstance(pageType) as Page;
+            IList<PageMapContainer> pageMapList;
+            GetPageCacheMap().Mappings.TryGetValue(key, out pageMapList);
+            var mapContainer = pageMapList?.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated);
+            if (mapContainer != null)
             {
-                if (!pageContainer.Initialized)
-                {
-                    PageActionInvoker.InvokeInitialize(pageContainer.Page, parameters);
-                    pageContainer.Initialized = true;
-                }
-                return pageContainer.Page;
+                AddPageToCache(key, nextPage, mapContainer, true);
             }
-            return null;
+            PageProcessor.Process(nextPage);
+            return nextPage;
+        }
+
+        public virtual PageCacheContainer TryGetCachedPage(string key)
+        {
+            PageCacheContainer container;
+            GetPageCacheStore().PageCache.TryGetValue(key, out container);
+            if (container?.CacheState == CacheState.Default)
+            {
+                GetPageCacheStore().PageCache.Remove(container.Key);
+            }
+            return container;
         }
 
         protected virtual Page GetCachedOrNewPageInternal(string key, IParametersService parameters = null)
         {
-            var cachedPage = TryGetCachedPage(key, parameters);
+            var cachedPage = TryGetCachedPage(key);
             if (cachedPage != null)
             {
-                return cachedPage;
+                return cachedPage.Page;
             }
 
             Type pageType;

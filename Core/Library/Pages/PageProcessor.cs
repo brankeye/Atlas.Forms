@@ -1,7 +1,7 @@
 ﻿using Atlas.Forms.Behaviors;
 using Xamarin.Forms;
 
-namespace Atlas.Forms.Navigation
+namespace Atlas.Forms.Pages
 {
     public class PageProcessor
     {

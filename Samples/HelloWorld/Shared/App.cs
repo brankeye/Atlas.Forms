@@ -24,12 +24,10 @@ namespace atlas.samples.helloworld.Shared
             //ns = NavigationService.Current.Navigation;
             //nslist = NavigationService.Current.NavigationStack;
 
-            //NavigationService.Current.SetMainPage("Dashboard");
-            //var mp = MainPage;
-            //var ns = NavigationService.Current.NavigationProvider.Navigation;
-            //var nslist = NavigationService.Current.NavigationStack;
-
-            MainPage = new Dashboard();
+            NavigationService.Current.SetMainPage("Dashboard");
+            var mp = MainPage;
+            var ns = NavigationService.Current.NavigationProvider.Navigation;
+            var nslist = NavigationService.Current.NavigationStack;
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)

@@ -36,7 +36,7 @@ namespace Atlas.Forms.Services
         public virtual void InsertPageBefore(string page, string before, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
+            var nextPage = GetCachedOrNewPage(page, paramService);
             TrySetManagers(nextPage);
             var navigationStack = PageStackController.NavigationStack;
             var beforeIndex = navigationStack.IndexOf(navigationStack.FirstOrDefault(x => x.Key == before));
@@ -130,7 +130,7 @@ namespace Atlas.Forms.Services
             {
                 CacheCoordinator.RemoveCachedPages(pageStack.Last().Key);
             }
-            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
+            var nextPage = GetCachedOrNewPage(page, paramService);
             TrySetManagers(nextPage);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             if (useModal)
@@ -164,9 +164,8 @@ namespace Atlas.Forms.Services
         public void SetMainPage(string page, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
+            var nextPage = GetCachedOrNewPage(page, paramService);
             NavigationProvider.TrySetNavigation(nextPage);
-            TrySetManagers(nextPage);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             ApplicationProvider.MainPage = nextPage;
             if (nextPage is NavigationPage)
@@ -177,22 +176,49 @@ namespace Atlas.Forms.Services
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
 
+        protected virtual Page GetCachedOrNewPage(string pageKey, IParametersService parameters)
+        {
+            Page page;
+            var pageCacheContainer = CacheCoordinator.TryGetCachedPage(pageKey);
+            if (pageCacheContainer != null)
+            {
+                page = pageCacheContainer.Page;
+                TrySetManagers(page);
+                if (!pageCacheContainer.Initialized)
+                {
+                    PageActionInvoker.InvokeInitialize(page, parameters);
+                }
+            }
+            else
+            {
+                page = CacheCoordinator.GetNewPage(pageKey);
+                TrySetManagers(page);
+                PageActionInvoker.InvokeInitialize(page, parameters);
+            }
+            return page;
+        }
+
         protected virtual void TrySetManagers(object pageArg)
         {
             var masterDetailPage = pageArg as MasterDetailPage;
             if (masterDetailPage != null)
             {
-                var manager = masterDetailPage as IMasterDetailPageManager;
-                if (manager != null)
+                var page = masterDetailPage as IMasterDetailPageManager;
+                if (page != null)
                 {
-                    manager.PageController = new Presenter(masterDetailPage, NavigationProvider, CacheCoordinator, PageStackController);
+                    page.PageController = GetNewPresenter(masterDetailPage);
                 }
                 var viewmodel = masterDetailPage.BindingContext as IMasterDetailPageManager;
                 if (viewmodel != null)
                 {
-                    viewmodel.PageController = new Presenter(masterDetailPage, NavigationProvider, CacheCoordinator, PageStackController);
+                    viewmodel.PageController = GetNewPresenter(masterDetailPage);
                 }
             }
+        }
+
+        protected virtual IPresenter GetNewPresenter(MasterDetailPage page)
+        {
+            return new Presenter(page, NavigationProvider, CacheCoordinator, PageStackController, TrySetManagers, GetCachedOrNewPage);
         }
     }
 }

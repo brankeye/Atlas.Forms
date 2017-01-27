@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using atlas.samples.helloworld.Shared.ViewModels;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
-    public partial class Dashboard : IMasterDetailPageManager
+    public partial class Dashboard : IMasterDetailPageManager, IInitializeAware
     {
         public Dashboard()
         {
             InitializeComponent();
             BindingContext = new ViewModels.Pages.Dashboard();
-
-            Detail = PageService.Current.GetCachedOrNewPage("About");
 
             var masterPageItems = new List<MasterPageItem>
             {
@@ -49,10 +48,16 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
 
         public IPresenter PageController { get; set; }
 
+        public void Initialize(IParametersService parameters)
+        {
+            (BindingContext as ViewModels.Pages.Dashboard)?.PresentPage("About");
+        }
+
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
         {
             var selectedItem = (MasterPageItem) selectedItemChangedEventArgs.SelectedItem;
-            Detail = PageService.Current.GetCachedOrNewPage(selectedItem.PageKey);
+            //Detail = PageService.Current.GetCachedOrNewPage(selectedItem.PageKey);
+            (BindingContext as ViewModels.Pages.Dashboard)?.PresentPage(selectedItem.PageKey);
             IsPresented = false;
         }
     }

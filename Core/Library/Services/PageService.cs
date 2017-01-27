@@ -26,14 +26,15 @@ namespace Atlas.Forms.Services
 
         public virtual Page GetCachedOrNewPage(string key, IParametersService parameters = null)
         {
-            var page = CacheCoordinator.GetCachedOrNewPage(key, parameters ?? new ParametersService());
+            var page = CacheCoordinator.TryGetCachedPage(key);
             NavigationProvider.TrySetNavigation(page);
-            return page;
+            return page.Page;
         }
 
         public virtual Page TryGetCachedPage(string key, IParametersService parameters = null)
         {
-            return CacheCoordinator.TryGetCachedPage(key, parameters ?? new ParametersService());
+            //return CacheCoordinator.TryGetCachedPage(key);
+            return null;
         }
 
         public virtual void AddPage(string key, PageMapContainer container, bool isInitialized = false)

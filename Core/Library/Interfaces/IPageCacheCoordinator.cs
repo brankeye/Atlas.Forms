@@ -7,11 +7,9 @@ namespace Atlas.Forms.Interfaces
 {
     public interface IPageCacheCoordinator
     {
-        //IList<Page> GetSegmentPages(string key, IParametersService parameters = null);
+        PageCacheContainer TryGetCachedPage(string key);
 
-        Page TryGetCachedPage(string key, IParametersService parameters = null);
-
-        Page GetCachedOrNewPage(string key, IParametersService parameters = null);
+        Page GetNewPage(string key);
 
         void RemoveCachedPages(string key);
 

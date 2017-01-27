@@ -17,24 +17,36 @@ namespace Atlas.Forms.Pages
 
         protected IPageStackController PageStackController { get; }
 
-        public Presenter(MasterDetailPage page, INavigationProvider navigationProvider, IPageCacheCoordinator cacheCoordinator, IPageStackController pageStackController)
+        protected Action<object> TrySetManagersAction { get; }
+
+        protected Func<string, IParametersService, Page> GetCachedOrNewPageFunc { get; }
+
+        public Presenter(
+            MasterDetailPage page, 
+            INavigationProvider navigationProvider, 
+            IPageCacheCoordinator cacheCoordinator, 
+            IPageStackController pageStackController, 
+            Action<object> trySetManagersAction,
+            Func<string, IParametersService, Page> getCachedOrNewPageFunc)
         {
             Page = page;
             NavigationProvider = navigationProvider;
             CacheCoordinator = cacheCoordinator;
             PageStackController = pageStackController;
+            TrySetManagersAction = trySetManagersAction;
+            GetCachedOrNewPageFunc = getCachedOrNewPageFunc;
         }
 
         public virtual void PresentPage(string page, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
+            var nextPage = GetCachedOrNewPageFunc?.Invoke(page, paramService);
             NavigationProvider.TrySetNavigation(nextPage);
-            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             PageStackController.AddPageToNavigationStack(page);
             Page.Detail = nextPage;
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
+            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
     }
 }

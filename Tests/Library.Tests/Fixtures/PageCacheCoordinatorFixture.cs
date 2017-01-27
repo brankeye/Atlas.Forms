@@ -83,7 +83,7 @@ namespace Library.Tests.Fixtures
             };
             cacheCoordinator.AddPageToCache("MainPage", container);
             var page = cacheCoordinator.TryGetCachedPage("MainPage");
-            Assert.That(page.Title, Is.EqualTo("ExistingPage"));
+            Assert.That(page.Page.Title, Is.EqualTo("ExistingPage"));
         }
 
         [Test]

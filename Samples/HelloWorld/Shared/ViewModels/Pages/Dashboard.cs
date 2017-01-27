@@ -8,5 +8,10 @@ namespace atlas.samples.helloworld.Shared.ViewModels.Pages
     public class Dashboard : IMasterDetailPageManager
     {
         public IPresenter PageController { get; set; }
+
+        public void PresentPage(string page)
+        {
+            PageController.PresentPage(page);
+        }
     }
 }
