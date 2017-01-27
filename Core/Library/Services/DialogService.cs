@@ -3,13 +3,13 @@ using Atlas.Forms.Interfaces;
 
 namespace Atlas.Forms.Services
 {
-    public class PageDialogService : IPageDialogService
+    public class DialogService : IDialogService
     {
-        public static IPageDialogService Current { get; internal set; }
+        public static IDialogService Current { get; internal set; }
 
         protected IApplicationProvider ApplicationProvider { get; }
 
-        public PageDialogService(IApplicationProvider applicationProvider)
+        public DialogService(IApplicationProvider applicationProvider)
         {
             ApplicationProvider = applicationProvider;
         }

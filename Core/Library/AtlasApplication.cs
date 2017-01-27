@@ -9,28 +9,31 @@ namespace Atlas.Forms
     {
         private IApplicationProvider ApplicationProvider { get; set; }
 
+        private INavigationProvider NavigationProvider { get; set; }
+
         private IPageCacheCoordinator CacheCoordinator { get; set; }
 
         protected override void Initialize()
         {
             ApplicationProvider = CreateApplicationProvider();
+            NavigationProvider = CreateNavigationProvider();
             CacheCoordinator = CreatePageCacheCoordinator();
             base.Initialize();
         }
 
         protected override INavigationService CreateNavigationService()
         {
-            return new NavigationService(ApplicationProvider, CacheCoordinator);
+            return new NavigationService(ApplicationProvider, NavigationProvider, CacheCoordinator, CreatePageStackController());
         }
 
-        protected override IPageCacheService CreatePageCacheService()
+        protected override IPageService CreatePageService()
         {
-            return new PageCacheService(CacheCoordinator);
+            return new PageService(CacheCoordinator, NavigationProvider);
         }
 
-        protected override IPageDialogService CreatePageDialogService()
+        protected override IDialogService CreateDialogService()
         {
-            return new PageDialogService(ApplicationProvider);
+            return new DialogService(ApplicationProvider);
         }
 
         protected override IPageNavigationRegistry CreatePageNavigationRegistry()
@@ -48,9 +51,19 @@ namespace Atlas.Forms
             return new ApplicationProvider();
         }
 
+        protected virtual INavigationProvider CreateNavigationProvider()
+        {
+            return new NavigationProvider();
+        }
+
         protected virtual IPageCacheCoordinator CreatePageCacheCoordinator()
         {
             return new PageCacheCoordinator();
+        }
+
+        protected virtual IPageStackController CreatePageStackController()
+        {
+            return new PageStackController();
         }
     }
 }

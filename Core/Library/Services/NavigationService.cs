@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
@@ -15,77 +13,78 @@ namespace Atlas.Forms.Services
     {
         public static INavigationService Current { get; internal set; }
 
-        public IReadOnlyList<IPageContainer> NavigationStack => NavigationStackInternal.ToList();
+        public IReadOnlyList<IPageContainer> NavigationStack => PageStackController.NavigationStack.ToList();
 
-        public IReadOnlyList<IPageContainer> ModalStack => ModalStackInternal.ToList();
+        public IReadOnlyList<IPageContainer> ModalStack => PageStackController.ModalStack.ToList();
 
-        protected IList<IPageContainer> NavigationStackInternal { get; } = new List<IPageContainer>();
-
-        protected IList<IPageContainer> ModalStackInternal { get; } = new List<IPageContainer>();
-
-        public INavigation Navigation { get; set; }
+        public INavigationProvider NavigationProvider { get; set; }
 
         protected IApplicationProvider ApplicationProvider { get; }
 
         protected IPageCacheCoordinator CacheCoordinator { get; }
 
-        public NavigationService(IApplicationProvider applicationProvider, IPageCacheCoordinator cacheCoordinator)
+        protected IPageStackController PageStackController { get; }
+
+        public NavigationService(IApplicationProvider applicationProvider, INavigationProvider navigationProvider, IPageCacheCoordinator cacheCoordinator, IPageStackController pageStackController)
         {
             ApplicationProvider = applicationProvider;
+            NavigationProvider = navigationProvider;
             CacheCoordinator = cacheCoordinator;
+            PageStackController = pageStackController;
         }
 
         public virtual void InsertPageBefore(string page, string before, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            var beforeIndex = NavigationStackInternal.IndexOf(NavigationStackInternal.FirstOrDefault(x => x.Key == before));
-            var beforePage = Navigation.NavigationStack.ElementAtOrDefault(beforeIndex);
-            Navigation.InsertPageBefore(nextPage, beforePage);
-            NavigationStackInternal.Insert(beforeIndex, new PageContainer(page, nextPage.GetType()));
+            TrySetManagers(nextPage);
+            var navigationStack = PageStackController.NavigationStack;
+            var beforeIndex = navigationStack.IndexOf(navigationStack.FirstOrDefault(x => x.Key == before));
+            var beforePage = NavigationProvider.Navigation.NavigationStack.ElementAtOrDefault(beforeIndex);
+            NavigationProvider.Navigation.InsertPageBefore(nextPage, beforePage);
+            navigationStack.Insert(beforeIndex, new PageContainer(page, nextPage.GetType()));
         }
 
         public virtual async Task<IPageContainer> PopAsync(IParametersService parameters = null)
         {
-            var pageContainer = await PopAsync(true);
-            return pageContainer;
+            return await PopAsync(true, parameters);
         }
 
         public virtual async Task<IPageContainer> PopAsync(bool animated, IParametersService parameters = null)
         {
-            return await PopInternalAsync(NavigationStackInternal, 
-                                          Navigation.NavigationStack,
-                                          navigation => navigation.PopAsync(animated),
-                                          animated, parameters);
+            return await PopInternalAsync(animated, parameters);
         }
 
         public virtual async Task<IPageContainer> PopModalAsync(IParametersService parameters = null)
         {
-            var pageContainer = await PopModalAsync(true);
-            return pageContainer;
+            return await PopModalAsync(true, parameters);
         }
 
         public virtual async Task<IPageContainer> PopModalAsync(bool animated, IParametersService parameters = null)
         {
-            return await PopInternalAsync(ModalStackInternal, 
-                                          Navigation.ModalStack, 
-                                          navigation => navigation.PopModalAsync(animated),
-                                          animated, parameters);
+            return await PopInternalAsync(animated, parameters, true);
         }
 
-        protected virtual async Task<IPageContainer> PopInternalAsync(IList<IPageContainer> stackInternal, IReadOnlyList<Page> pageStack, Func<INavigation, Task> func, bool animated, IParametersService parameters = null)
+        protected virtual async Task<IPageContainer> PopInternalAsync(bool animated, IParametersService parameters = null, bool useModal = false)
         {
-            if (stackInternal.Count > 0)
-            {
-                CacheCoordinator.RemoveCachedPages(stackInternal[stackInternal.Count - 1].Key);
-            }
+            var paramService = parameters ?? new ParametersService();
+            var pageStack = useModal ? PageStackController.ModalStack
+                                     : PageStackController.NavigationStack;
+            CacheCoordinator.RemoveCachedPages(pageStack[pageStack.Count - 1].Key);
             var currentPage = pageStack[pageStack.Count - 1];
-            PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
-            await func(Navigation);
-            var pageContainer = stackInternal.Last();
-            stackInternal.Remove(pageContainer);
-            PageActionInvoker.InvokeOnPageDisappeared(currentPage, parameters);
-            CacheCoordinator.LoadCachedPages(stackInternal.Last().Key, CacheOption.Appears);
+            PageActionInvoker.InvokeOnPageDisappearing(currentPage, paramService);
+            if (useModal)
+            {
+                await NavigationProvider.Navigation.PopModalAsync(animated);
+            }
+            else
+            {
+                await NavigationProvider.Navigation.PopAsync(animated);
+            }
+            var pageContainer = pageStack.Last();
+            pageStack.Remove(pageContainer);
+            PageActionInvoker.InvokeOnPageDisappeared(currentPage, paramService);
+            CacheCoordinator.LoadCachedPages(pageStack.Last().Key, CacheOption.Appears);
             return pageContainer;
         }
 
@@ -96,7 +95,7 @@ namespace Atlas.Forms.Services
 
         public virtual async Task PopToRootAsync(bool animated)
         {
-            while (Navigation.NavigationStack.Count > 1)
+            while (NavigationProvider.Navigation.NavigationStack.Count > 1)
             {
                 await PopAsync(animated);
             }
@@ -109,9 +108,7 @@ namespace Atlas.Forms.Services
 
         public virtual async Task PushAsync(string page, bool animated, IParametersService parameters = null)
         {
-            await PushInternalAsync(NavigationStackInternal,
-                                    (navigation, nextPage) => navigation.PushAsync(nextPage, animated),
-                                    page, animated, parameters);
+            await PushInternalAsync(page, animated, parameters);
         }
 
         public virtual async Task PushModalAsync(string page, IParametersService parameters = null)
@@ -121,59 +118,44 @@ namespace Atlas.Forms.Services
 
         public virtual async Task PushModalAsync(string page, bool animated, IParametersService parameters = null)
         {
-            await PushInternalAsync(ModalStackInternal, 
-                                    (navigation, nextPage) => navigation.PushModalAsync(nextPage, animated),
-                                    page, animated, parameters);
+            await PushInternalAsync(page, animated, parameters, true);
         }
 
-        protected virtual async Task PushInternalAsync(IList<IPageContainer> stackInternal, Func<INavigation, Page, Task> func, string page, bool animated, IParametersService parameters = null)
+        protected virtual async Task PushInternalAsync(string page, bool animated, IParametersService parameters = null, bool useModal = false)
         {
             var paramService = parameters ?? new ParametersService();
-            if (stackInternal.Count > 0)
+            var pageStack = useModal ? PageStackController.ModalStack
+                                     : PageStackController.NavigationStack;
+            if (pageStack.Count > 0)
             {
-                CacheCoordinator.RemoveCachedPages(stackInternal.Last().Key);
+                CacheCoordinator.RemoveCachedPages(pageStack.Last().Key);
             }
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            SetNavigation(nextPage);
+            TrySetManagers(nextPage);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
-            await func(Navigation, nextPage);
-            AddPageToStack(page, nextPage, stackInternal);
+            if (useModal)
+            {
+                await NavigationProvider.Navigation.PushModalAsync(nextPage, animated);
+                PageStackController.AddPageToModalStack(page);
+            }
+            else
+            {
+                await NavigationProvider.Navigation.PushAsync(nextPage, animated);
+                PageStackController.AddPageToNavigationStack(page);
+            }
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
-        }
-
-        public virtual void PresentPage(string page, IParametersService parameters = null)
-        {
-            var paramService = parameters ?? new ParametersService();
-            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            SetNavigation(nextPage);
-            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
-            PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
-            var currentPage = GetCurrentPage();
-            if (currentPage is MasterDetailPage)
-            {
-                ((MasterDetailPage) currentPage).Detail = nextPage;
-            }
-            else if (currentPage is TabbedPage)
-            {
-                var tabbedPage = (TabbedPage) currentPage;
-                tabbedPage.CurrentPage = tabbedPage.Children.FirstOrDefault(x => x.Title == page);
-            }
-            if (nextPage is NavigationPage)
-            {
-                AddPageToStack(page, nextPage, NavigationStackInternal);
-            }
-            PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
         }
 
         public void RemovePage(string page)
         {
-            for (var i = NavigationStackInternal.Count - 1; i >= 0; i--)
+            var navigationStack = PageStackController.NavigationStack;
+            for (var i = navigationStack.Count - 1; i >= 0; i--)
             {
-                if (NavigationStackInternal[i].Key == page)
+                if (navigationStack[i].Key == page)
                 {
-                    Navigation.RemovePage(Navigation.NavigationStack[i]);
-                    NavigationStackInternal.RemoveAt(i);
+                    NavigationProvider.Navigation.RemovePage(NavigationProvider.Navigation.NavigationStack[i]);
+                    navigationStack.RemoveAt(i);
                     break;
                 }
             }
@@ -183,61 +165,34 @@ namespace Atlas.Forms.Services
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
+            NavigationProvider.TrySetNavigation(nextPage);
+            TrySetManagers(nextPage);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
-            SetNavigation(nextPage);
             ApplicationProvider.MainPage = nextPage;
             if (nextPage is NavigationPage)
             {
-                AddPageToStack(page, nextPage, NavigationStackInternal);
+                PageStackController.AddPageToNavigationStack(page);
             }
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
 
-        protected virtual void AddPageToStack(string pageKey, Page page, IList<IPageContainer> stack)
+        protected virtual void TrySetManagers(object pageArg)
         {
-            if (PageKeyParser.IsSequence(pageKey))
+            var masterDetailPage = pageArg as MasterDetailPage;
+            if (masterDetailPage != null)
             {
-                var queue = PageKeyParser.GetPageKeysFromSequence(pageKey);
-                queue.Dequeue();
-                var innerPageKey = queue.Dequeue();
-                Type innerPageType;
-                PageNavigationStore.Current.PageTypes.TryGetValue(innerPageKey, out innerPageType);
-                if (innerPageType == null)
+                var manager = masterDetailPage as IMasterDetailPageManager;
+                if (manager != null)
                 {
-                    return;
+                    manager.PageController = new Presenter(masterDetailPage, NavigationProvider, CacheCoordinator, PageStackController);
                 }
-                stack.Add(new PageContainer(innerPageKey, innerPageType));
+                var viewmodel = masterDetailPage.BindingContext as IMasterDetailPageManager;
+                if (viewmodel != null)
+                {
+                    viewmodel.PageController = new Presenter(masterDetailPage, NavigationProvider, CacheCoordinator, PageStackController);
+                }
             }
-            else
-            {
-                stack.Add(new PageContainer(pageKey, PageNavigationStore.Current.PageTypes[pageKey]));
-            }
-        }
-
-        protected virtual void SetNavigation(Page page)
-        {
-            if (page is NavigationPage)
-            {
-                Navigation = page.Navigation;
-            }
-            else if (Navigation == null)
-            {
-                Navigation = page.Navigation;
-            }
-        }
-
-        protected virtual Page GetCurrentPage()
-        {
-            if (Navigation.NavigationStack.Count > 0)
-            {
-                return (Navigation.NavigationStack[0] as NavigationPage)?.CurrentPage;
-            }
-            if (Navigation.ModalStack.Count > 0)
-            {
-                return Navigation.ModalStack.Last();
-            }
-            return ApplicationProvider.MainPage;
         }
     }
 }

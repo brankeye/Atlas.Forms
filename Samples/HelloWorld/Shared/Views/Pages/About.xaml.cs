@@ -1,6 +1,7 @@
 ﻿using System;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Pages;
+using Atlas.Forms.Services;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
@@ -14,7 +15,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
 
         public void OnPageAppearing(IParametersService parameters = null)
         {
-
+            //PageDialogService.Current.DisplayAlert("Title", "Hey", "Ok");
         }
     }
 }

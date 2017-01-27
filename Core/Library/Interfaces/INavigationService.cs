@@ -10,7 +10,7 @@ namespace Atlas.Forms.Interfaces
 
         IReadOnlyList<IPageContainer> NavigationStack { get; }
 
-        INavigation Navigation { get; set; }
+        INavigationProvider NavigationProvider { get; set; }
 
         void InsertPageBefore(string page, string before, IParametersService parameters = null);
 
@@ -33,8 +33,6 @@ namespace Atlas.Forms.Interfaces
         Task PushModalAsync(string page, IParametersService parameters = null);
 
         Task PushModalAsync(string page, bool animated, IParametersService parameters = null);
-
-        void PresentPage(string page, IParametersService parameters = null);
 
         void RemovePage(string page);
 

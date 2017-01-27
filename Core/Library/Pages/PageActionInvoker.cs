@@ -13,15 +13,11 @@ namespace Atlas.Forms.Pages
             var canContinue = true;
             while (canContinue)
             {
-                var page = view as T;
+                var page = view as Page;
                 if (page != null)
                 {
                     ActionInvoker.Invoke(page, action);
-                    ActionInvoker.Invoke((page as Page)?.BindingContext, action);
-                }
-                else
-                {
-                    canContinue = false;
+                    ActionInvoker.Invoke(page.BindingContext, action);
                 }
 
                 if (page is NavigationPage)
@@ -40,6 +36,12 @@ namespace Atlas.Forms.Pages
                 {
                     var tabbedPage = page as TabbedPage;
                     view = tabbedPage.CurrentPage;
+                    continue;
+                }
+                if (page is CarouselPage)
+                {
+                    var carouselPage = page as CarouselPage;
+                    view = carouselPage.CurrentPage;
                     continue;
                 }
 

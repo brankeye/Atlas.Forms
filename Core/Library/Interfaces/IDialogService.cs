@@ -2,7 +2,7 @@
 
 namespace Atlas.Forms.Interfaces
 {
-    public interface IPageDialogService
+    public interface IDialogService
     {
         Task DisplayAlert(string title, string message, string cancel);
 

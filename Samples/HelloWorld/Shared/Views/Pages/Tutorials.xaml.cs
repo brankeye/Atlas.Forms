@@ -7,9 +7,9 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         public Tutorials()
         {
             InitializeComponent();
-            Children.Add(PageCacheService.Current.GetCachedOrNewPage("TutorialOne"));
-            Children.Add(PageCacheService.Current.GetCachedOrNewPage("TutorialTwo"));
-            Children.Add(PageCacheService.Current.GetCachedOrNewPage("TutorialThree"));
+            Children.Add(PageService.Current.GetCachedOrNewPage("NavigationPage/TutorialOne"));
+            Children.Add(PageService.Current.GetCachedOrNewPage("TutorialTwo"));
+            Children.Add(PageService.Current.GetCachedOrNewPage("TutorialThree"));
         }
     }
 }

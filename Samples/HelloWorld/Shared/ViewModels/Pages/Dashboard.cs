@@ -5,11 +5,8 @@ using Atlas.Forms.Services;
 
 namespace atlas.samples.helloworld.Shared.ViewModels.Pages
 {
-    public class Dashboard
+    public class Dashboard : IMasterDetailPageManager
     {
-        public void ChangePage(string page)
-        {
-            NavigationService.Current.PresentPage(page);
-        }
+        public IPresenter PageController { get; set; }
     }
 }

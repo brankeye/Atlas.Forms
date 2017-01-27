@@ -6,15 +6,18 @@ using Xamarin.Forms;
 
 namespace Atlas.Forms.Services
 {
-    public class PageCacheService : IPageCacheService
+    public class PageService : IPageService
     {
-        public static IPageCacheService Current { get; internal set; }
+        public static IPageService Current { get; internal set; }
 
         protected IPageCacheCoordinator CacheCoordinator { get; }
 
-        public PageCacheService(IPageCacheCoordinator cacheCoordinator)
+        protected INavigationProvider NavigationProvider { get; }
+
+        public PageService(IPageCacheCoordinator cacheCoordinator, INavigationProvider navigationProvider)
         {
             CacheCoordinator = cacheCoordinator;
+            NavigationProvider = navigationProvider;
         }
 
         public IReadOnlyDictionary<string, PageCacheContainer> CachedPages => PageCacheStore.Current.GetPageCache();
@@ -23,7 +26,9 @@ namespace Atlas.Forms.Services
 
         public virtual Page GetCachedOrNewPage(string key, IParametersService parameters = null)
         {
-            return CacheCoordinator.GetCachedOrNewPage(key, parameters ?? new ParametersService());
+            var page = CacheCoordinator.GetCachedOrNewPage(key, parameters ?? new ParametersService());
+            NavigationProvider.TrySetNavigation(page);
+            return page;
         }
 
         public virtual Page TryGetCachedPage(string key, IParametersService parameters = null)
