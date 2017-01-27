@@ -1,4 +1,5 @@
 ﻿using Atlas.Forms.Services;
+using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
@@ -10,6 +11,8 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
             Children.Add(PageService.Current.GetCachedOrNewPage("NavigationPage/TutorialOne"));
             Children.Add(PageService.Current.GetCachedOrNewPage("TutorialTwo"));
             Children.Add(PageService.Current.GetCachedOrNewPage("TutorialThree"));
+
+            
         }
     }
 }

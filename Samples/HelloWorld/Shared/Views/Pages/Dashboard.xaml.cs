@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using atlas.samples.helloworld.Shared.ViewModels;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
-    public partial class Dashboard : IMasterDetailPageManager, IInitializeAware
+    public partial class Dashboard : IMasterDetailPageProvider, IInitializeAware
     {
         public Dashboard()
         {
@@ -46,7 +47,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
             listView.ItemSelected += ListView_OnItemSelected;
         }
 
-        public IPresenter PageController { get; set; }
+        public IMasterDetailPageManager Manager { get; set; }
 
         public void Initialize(IParametersService parameters)
         {

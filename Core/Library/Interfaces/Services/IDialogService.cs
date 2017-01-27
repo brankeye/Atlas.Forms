@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Atlas.Forms.Interfaces
+namespace Atlas.Forms.Interfaces.Services
 {
     public interface IDialogService
     {

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
-using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
 using Library.Tests.Mocks;
 using Xamarin.Forms;

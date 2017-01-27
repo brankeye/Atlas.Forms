@@ -50,22 +50,22 @@
     <Compile Include="Enums\CacheOption.cs" />
     <Compile Include="Enums\CacheState.cs" />
     <Compile Include="FormsApplication.cs" />
-    <Compile Include="Interfaces\IMasterDetailPageManager.cs" />
+    <Compile Include="Interfaces\Managers\IMultiPageManager.cs" />
+    <Compile Include="Interfaces\Managers\IMultiPageProvider.cs" />
+    <Compile Include="Interfaces\Managers\IMasterDetailPageProvider.cs" />
     <Compile Include="Interfaces\INavigationProvider.cs" />
     <Compile Include="Interfaces\IPageCacheCoordinator.cs" />
-    <Compile Include="Interfaces\IDialogService.cs" />
+    <Compile Include="Interfaces\Services\IDialogService.cs" />
     <Compile Include="Interfaces\IPageStackController.cs" />
-    <Compile Include="Interfaces\IPopulater.cs" />
-    <Compile Include="Interfaces\IPresenter.cs" />
-    <Compile Include="Interfaces\ITabbedPageController.cs" />
+    <Compile Include="Interfaces\Managers\IMasterDetailPageManager.cs" />
     <Compile Include="Interfaces\ITargetPageApi.cs" />
     <Compile Include="Interfaces\ITriggerPageApi.cs" />
     <Compile Include="Interfaces\Pages\IPageCachedAware.cs" />
     <Compile Include="Interfaces\Pages\IInitializeAware.cs" />
     <Compile Include="Interfaces\Pages\IPageCachingAware.cs" />
     <Compile Include="Interfaces\IApplicationProvider.cs" />
-    <Compile Include="Interfaces\IPageService.cs" />
-    <Compile Include="Interfaces\INavigationService.cs" />
+    <Compile Include="Interfaces\Services\IPageService.cs" />
+    <Compile Include="Interfaces\Services\INavigationService.cs" />
     <Compile Include="Interfaces\IPageCacheRegistry.cs" />
     <Compile Include="Interfaces\IPageContainer.cs" />
     <Compile Include="Interfaces\IPageNavigationRegistry.cs" />
@@ -79,10 +79,12 @@
     <Compile Include="Navigation\NavigationProvider.cs" />
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
     <Compile Include="Navigation\PageNavigationStore.cs" />
+    <Compile Include="Pages\TabbedPageManager.cs" />
+    <Compile Include="Pages\CarouselPageManager.cs" />
+    <Compile Include="Pages\MultiPageManager.cs" />
     <Compile Include="Pages\PageProcessor.cs" />
     <Compile Include="Navigation\PageStackController.cs" />
-    <Compile Include="Pages\Populater.cs" />
-    <Compile Include="Pages\Presenter.cs" />
+    <Compile Include="Pages\MasterDetailPageManager.cs" />
     <Compile Include="Pages\TriggerPageApi.cs" />
     <Compile Include="Pages\TargetPageApi.cs" />
     <Compile Include="Pages\Containers\PageCacheContainer.cs" />
@@ -114,6 +116,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

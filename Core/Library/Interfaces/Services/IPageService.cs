@@ -2,7 +2,7 @@
 using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
-namespace Atlas.Forms.Interfaces
+namespace Atlas.Forms.Interfaces.Services
 {
     public interface IPageService
     {

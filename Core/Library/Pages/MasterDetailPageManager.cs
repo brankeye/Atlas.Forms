@@ -2,12 +2,13 @@
 using System.Linq;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Pages
 {
-    public class Presenter : IPresenter
+    public class MasterDetailPageManager : IMasterDetailPageManager
     {
         protected MasterDetailPage Page { get; set; }
 
@@ -21,7 +22,7 @@ namespace Atlas.Forms.Pages
 
         protected Func<string, IParametersService, Page> GetCachedOrNewPageFunc { get; }
 
-        public Presenter(
+        public MasterDetailPageManager(
             MasterDetailPage page, 
             INavigationProvider navigationProvider, 
             IPageCacheCoordinator cacheCoordinator, 

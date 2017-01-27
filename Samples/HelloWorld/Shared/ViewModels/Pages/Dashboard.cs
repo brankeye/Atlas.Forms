@@ -1,17 +1,15 @@
-﻿using System;
-using Atlas.Forms.Interfaces;
-using Atlas.Forms.Interfaces.Pages;
-using Atlas.Forms.Services;
+﻿using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Managers;
 
 namespace atlas.samples.helloworld.Shared.ViewModels.Pages
 {
-    public class Dashboard : IMasterDetailPageManager
+    public class Dashboard : IMasterDetailPageProvider
     {
-        public IPresenter PageController { get; set; }
+        public IMasterDetailPageManager Manager { get; set; }
 
         public void PresentPage(string page)
         {
-            PageController.PresentPage(page);
+            Manager.PresentPage(page);
         }
     }
 }
