@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace Atlas.Forms.Pages
 {
-    public class CarouselPageManager : MultiPageManager<ContentPage>
+    public class CarouselPageManager : MultiPageManager<ContentPage>, ICarouselPageManager
     {
         public CarouselPageManager(
             CarouselPage page,

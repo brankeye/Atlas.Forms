@@ -9,7 +9,7 @@ using Xamarin.Forms;
 
 namespace Atlas.Forms.Pages
 {
-    public class TabbedPageManager : MultiPageManager<Page>
+    public class TabbedPageManager : MultiPageManager<Page>, ITabbedPageManager
     {
         public TabbedPageManager(
             TabbedPage page,

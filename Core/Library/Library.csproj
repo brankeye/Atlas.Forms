@@ -55,6 +55,10 @@
     <Compile Include="Interfaces\Managers\IMasterDetailPageProvider.cs" />
     <Compile Include="Interfaces\INavigationProvider.cs" />
     <Compile Include="Interfaces\IPageCacheCoordinator.cs" />
+    <Compile Include="Interfaces\Managers\ICarouselPageManager.cs" />
+    <Compile Include="Interfaces\Managers\ITabbedPageManager.cs" />
+    <Compile Include="Interfaces\Managers\ICarouselPageProvider.cs" />
+    <Compile Include="Interfaces\Managers\ITabbedPageProvider.cs" />
     <Compile Include="Interfaces\Services\IDialogService.cs" />
     <Compile Include="Interfaces\IPageStackController.cs" />
     <Compile Include="Interfaces\Managers\IMasterDetailPageManager.cs" />
@@ -79,6 +83,7 @@
     <Compile Include="Navigation\NavigationProvider.cs" />
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
     <Compile Include="Navigation\PageNavigationStore.cs" />
+    <Compile Include="Pages\PagePropertyInjector.cs" />
     <Compile Include="Pages\TabbedPageManager.cs" />
     <Compile Include="Pages\CarouselPageManager.cs" />
     <Compile Include="Pages\MultiPageManager.cs" />
@@ -98,6 +103,7 @@
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\ParametersService.cs" />
     <Compile Include="Utilities\ActionInvoker.cs" />
+    <Compile Include="Utilities\PropertyInjector.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">

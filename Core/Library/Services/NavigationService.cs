@@ -7,6 +7,7 @@ using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Utilities;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Services
@@ -205,48 +206,24 @@ namespace Atlas.Forms.Services
             var masterDetailPage = pageArg as MasterDetailPage;
             if (masterDetailPage != null)
             {
-                var page = masterDetailPage as IMasterDetailPageProvider;
-                if (page != null)
-                {
-                    page.Manager = GetMasterDetailPageManager(masterDetailPage);
-                }
-                var viewmodel = masterDetailPage.BindingContext as IMasterDetailPageProvider;
-                if (viewmodel != null)
-                {
-                    viewmodel.Manager = GetMasterDetailPageManager(masterDetailPage);
-                }
+                var manager = GetMasterDetailPageManager(masterDetailPage);
+                PagePropertyInjector.InjectMasterDetailManager(masterDetailPage, manager);
                 return;
             }
 
             var tabbedPage = pageArg as TabbedPage;
             if (tabbedPage != null)
             {
-                var page = tabbedPage as IMultiPageProvider;
-                if (page != null)
-                {
-                    page.Manager = GetTabbedPageManager(tabbedPage);
-                }
-                var viewmodel = tabbedPage.BindingContext as IMultiPageProvider;
-                if (viewmodel != null)
-                {
-                    viewmodel.Manager = GetTabbedPageManager(tabbedPage);
-                }
+                var manager = GetTabbedPageManager(tabbedPage);
+                PagePropertyInjector.InjectTabbedPageManager(tabbedPage, manager);
                 return;
             }
 
             var carouselPage = pageArg as CarouselPage;
             if (carouselPage != null)
             {
-                var page = carouselPage as IMultiPageProvider;
-                if (page != null)
-                {
-                    page.Manager = GetCarouselPageManager(carouselPage);
-                }
-                var viewmodel = carouselPage.BindingContext as IMultiPageProvider;
-                if (viewmodel != null)
-                {
-                    viewmodel.Manager = GetCarouselPageManager(carouselPage);
-                }
+                var manager = GetCarouselPageManager(carouselPage);
+                PagePropertyInjector.InjectCarouselPageManager(carouselPage, manager);
             }
         }
 
@@ -255,12 +232,12 @@ namespace Atlas.Forms.Services
             return new MasterDetailPageManager(page, NavigationProvider, CacheCoordinator, PageStackController, TrySetManagers, GetCachedOrNewPage);
         }
 
-        protected virtual IMultiPageManager GetTabbedPageManager(TabbedPage page)
+        protected virtual ITabbedPageManager GetTabbedPageManager(TabbedPage page)
         {
             return new TabbedPageManager(page, NavigationProvider, CacheCoordinator, PageStackController, TrySetManagers, GetCachedOrNewPage);
         }
 
-        protected virtual IMultiPageManager GetCarouselPageManager(CarouselPage page)
+        protected virtual ICarouselPageManager GetCarouselPageManager(CarouselPage page)
         {
             return new CarouselPageManager(page, NavigationProvider, CacheCoordinator, PageStackController, TrySetManagers, GetCachedOrNewPage);
         }
