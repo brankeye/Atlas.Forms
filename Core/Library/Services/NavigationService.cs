@@ -39,8 +39,7 @@ namespace Atlas.Forms.Services
         public virtual void InsertPageBefore(string page, string before, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = GetCachedOrNewPage(page, paramService);
-            TrySetManagers(nextPage);
+            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
             var navigationStack = PageStackController.NavigationStack;
             var beforeIndex = navigationStack.IndexOf(navigationStack.FirstOrDefault(x => x.Key == before));
             var beforePage = NavigationProvider.Navigation.NavigationStack.ElementAtOrDefault(beforeIndex);
@@ -133,8 +132,7 @@ namespace Atlas.Forms.Services
             {
                 CacheCoordinator.RemoveCachedPages(pageStack.Last().Key);
             }
-            var nextPage = GetCachedOrNewPage(page, paramService);
-            TrySetManagers(nextPage);
+            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             if (useModal)
             {
@@ -167,7 +165,7 @@ namespace Atlas.Forms.Services
         public void SetMainPage(string page, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = GetCachedOrNewPage(page, paramService);
+            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
             NavigationProvider.TrySetNavigation(nextPage);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
             ApplicationProvider.MainPage = nextPage;
@@ -179,67 +177,24 @@ namespace Atlas.Forms.Services
             CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
         }
 
-        protected virtual Page GetCachedOrNewPage(string pageKey, IParametersService parameters)
-        {
-            Page page;
-            var pageCacheContainer = CacheCoordinator.TryGetCachedPage(pageKey);
-            if (pageCacheContainer != null)
-            {
-                page = pageCacheContainer.Page;
-                TrySetManagers(page);
-                if (!pageCacheContainer.Initialized)
-                {
-                    PageActionInvoker.InvokeInitialize(page, parameters);
-                }
-            }
-            else
-            {
-                page = CacheCoordinator.GetNewPage(pageKey);
-                TrySetManagers(page);
-                PageActionInvoker.InvokeInitialize(page, parameters);
-            }
-            return page;
-        }
-
-        protected virtual void TrySetManagers(object pageArg)
-        {
-            var masterDetailPage = pageArg as MasterDetailPage;
-            if (masterDetailPage != null)
-            {
-                var manager = GetMasterDetailPageManager(masterDetailPage);
-                PagePropertyInjector.InjectMasterDetailManager(masterDetailPage, manager);
-                return;
-            }
-
-            var tabbedPage = pageArg as TabbedPage;
-            if (tabbedPage != null)
-            {
-                var manager = GetTabbedPageManager(tabbedPage);
-                PagePropertyInjector.InjectTabbedPageManager(tabbedPage, manager);
-                return;
-            }
-
-            var carouselPage = pageArg as CarouselPage;
-            if (carouselPage != null)
-            {
-                var manager = GetCarouselPageManager(carouselPage);
-                PagePropertyInjector.InjectCarouselPageManager(carouselPage, manager);
-            }
-        }
-
-        protected virtual IMasterDetailPageManager GetMasterDetailPageManager(MasterDetailPage page)
-        {
-            return new MasterDetailPageManager(page, NavigationProvider, CacheCoordinator, PageStackController, TrySetManagers, GetCachedOrNewPage);
-        }
-
-        protected virtual ITabbedPageManager GetTabbedPageManager(TabbedPage page)
-        {
-            return new TabbedPageManager(page, NavigationProvider, CacheCoordinator, PageStackController, TrySetManagers, GetCachedOrNewPage);
-        }
-
-        protected virtual ICarouselPageManager GetCarouselPageManager(CarouselPage page)
-        {
-            return new CarouselPageManager(page, NavigationProvider, CacheCoordinator, PageStackController, TrySetManagers, GetCachedOrNewPage);
-        }
+        //protected virtual Page GetCachedOrNewPage(string pageKey, IParametersService parameters)
+        //{
+        //    Page page;
+        //    var pageCacheContainer = CacheCoordinator.TryGetCachedPage(pageKey);
+        //    if (pageCacheContainer != null)
+        //    {
+        //        page = pageCacheContainer.Page;
+        //        if (!pageCacheContainer.Initialized)
+        //        {
+        //            PageActionInvoker.InvokeInitialize(page, parameters);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        page = CacheCoordinator.GetNewPage(pageKey);
+        //        PageActionInvoker.InvokeInitialize(page, parameters);
+        //    }
+        //    return page;
+        //}
     }
 }

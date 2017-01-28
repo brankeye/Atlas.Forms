@@ -2,6 +2,7 @@
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
 
 namespace Atlas.Forms
@@ -14,8 +15,11 @@ namespace Atlas.Forms
 
         private IPageCacheCoordinator CacheCoordinator { get; set; }
 
+        private IPageStackController PageStackController { get; set; }
+
         protected override void Initialize()
         {
+            PageStackController = CreatePageStackController();
             ApplicationProvider = CreateApplicationProvider();
             NavigationProvider = CreateNavigationProvider();
             CacheCoordinator = CreatePageCacheCoordinator();
@@ -24,7 +28,7 @@ namespace Atlas.Forms
 
         protected override INavigationService CreateNavigationService()
         {
-            return new NavigationService(ApplicationProvider, NavigationProvider, CacheCoordinator, CreatePageStackController());
+            return new NavigationService(ApplicationProvider, NavigationProvider, CacheCoordinator, PageStackController);
         }
 
         protected override IPageService CreatePageService()
@@ -57,9 +61,14 @@ namespace Atlas.Forms
             return new NavigationProvider();
         }
 
+        protected virtual IPageProcessor CreatePageProcessor()
+        {
+            return new PageProcessor(NavigationProvider, PageStackController);
+        }
+
         protected virtual IPageCacheCoordinator CreatePageCacheCoordinator()
         {
-            return new PageCacheCoordinator();
+            return new PageCacheCoordinator(CreatePageProcessor());
         }
 
         protected virtual IPageStackController CreatePageStackController()

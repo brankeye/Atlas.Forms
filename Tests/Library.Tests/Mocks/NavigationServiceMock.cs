@@ -1,6 +1,7 @@
 ﻿using Atlas.Forms.Caching;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
 using Library.Tests.Helpers;
 using Moq;
@@ -27,7 +28,7 @@ namespace Library.Tests.Mocks
         protected static IPageCacheCoordinator CreatePageCacheCoordinatorMock()
         {
             StateManager.ResetAll();
-            return new PageCacheCoordinator();
+            return new PageCacheCoordinator(new PageProcessor(new NavigationProvider(), new PageStackController()));
         }
 
         protected static INavigationProvider CreateNavigationProviderMock()

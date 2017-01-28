@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
 using Library.Tests.Helpers;
 using Xamarin.Forms;
@@ -204,7 +205,7 @@ namespace Library.Tests.Fixtures
         public static PageCacheCoordinator GetPageCacheCoordinator()
         {
             StateManager.ResetAll();
-            return new PageCacheCoordinator();
+            return new PageCacheCoordinator(new PageProcessor(new NavigationProvider(), new PageStackController()));
         }
     }
 }

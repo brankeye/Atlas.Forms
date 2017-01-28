@@ -50,6 +50,7 @@
     <Compile Include="Enums\CacheOption.cs" />
     <Compile Include="Enums\CacheState.cs" />
     <Compile Include="FormsApplication.cs" />
+    <Compile Include="Interfaces\IPageProcessor.cs" />
     <Compile Include="Interfaces\Managers\IMultiPageManager.cs" />
     <Compile Include="Interfaces\Managers\IMultiPageProvider.cs" />
     <Compile Include="Interfaces\Managers\IMasterDetailPageProvider.cs" />

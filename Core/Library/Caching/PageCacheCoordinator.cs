@@ -13,6 +13,13 @@ namespace Atlas.Forms.Caching
 {
     public class PageCacheCoordinator : IPageCacheCoordinator
     {
+        protected IPageProcessor PageProcessor { get; }
+
+        public PageCacheCoordinator(IPageProcessor pageProcessor)
+        {
+            PageProcessor = pageProcessor;
+        }
+
         public virtual Page GetCachedOrNewPage(string key, IParametersService parameters = null)
         {
             Page nextPage;
@@ -30,7 +37,7 @@ namespace Atlas.Forms.Caching
                     nextPage.Title = innerPage.Title;
                     nextPage.Icon = innerPage.Icon;
                 }
-                PageProcessor.Process(nextPage);
+                PageProcessor.AddBehaviors(nextPage);
             }
             else
             {
@@ -51,7 +58,8 @@ namespace Atlas.Forms.Caching
             {
                 AddPageToCache(key, nextPage, mapContainer, true);
             }
-            PageProcessor.Process(nextPage);
+            PageProcessor.AddBehaviors(nextPage);
+            PageProcessor.AddManagers(nextPage, this);
             return nextPage;
         }
 
@@ -89,7 +97,8 @@ namespace Atlas.Forms.Caching
             {
                 AddPageToCache(key, nextPage, mapContainer, true);
             }
-            PageProcessor.Process(nextPage);
+            PageProcessor.AddBehaviors(nextPage);
+            PageProcessor.AddManagers(nextPage, this);
             return nextPage;
         }
 

@@ -19,10 +19,6 @@ namespace Atlas.Forms.Pages
 
         protected IPageStackController PageStackController { get; }
 
-        protected Action<object> TrySetManagersAction { get; }
-
-        protected Func<string, IParametersService, Page> GetCachedOrNewPageFunc { get; }
-
         public object SelectedItem => Page.SelectedItem;
 
         public IEnumerable ItemsSource => Page.ItemsSource;
@@ -39,21 +35,17 @@ namespace Atlas.Forms.Pages
             MultiPage<T> page,
             INavigationProvider navigationProvider,
             IPageCacheCoordinator cacheCoordinator,
-            IPageStackController pageStackController,
-            Action<object> trySetManagersAction,
-            Func<string, IParametersService, Page> getCachedOrNewPageFunc)
+            IPageStackController pageStackController)
         {
             Page = page;
             NavigationProvider = navigationProvider;
             CacheCoordinator = cacheCoordinator;
             PageStackController = pageStackController;
-            TrySetManagersAction = trySetManagersAction;
-            GetCachedOrNewPageFunc = getCachedOrNewPageFunc;
         }
 
         public void AddPage(string page, IParametersService parameters = null)
         {
-            var pageInstance = GetCachedOrNewPageFunc?.Invoke(page, parameters ?? new ParametersService());
+            var pageInstance = CacheCoordinator.GetCachedOrNewPage(page, parameters ?? new ParametersService());
             NavigationProvider.TrySetNavigation(pageInstance);
             Page.Children.Add(pageInstance as T);
             PageStackController.AddPageToNavigationStack(page);
@@ -115,7 +107,7 @@ namespace Atlas.Forms.Pages
 
         public void SetPageTemplate(string page, IParametersService parameters = null)
         {
-            var pageInstance = GetCachedOrNewPageFunc?.Invoke(page, parameters ?? new ParametersService());
+            var pageInstance = CacheCoordinator.GetCachedOrNewPage(page, parameters ?? new ParametersService());
             Page.ItemTemplate = new DataTemplate(() => pageInstance); 
         }
 

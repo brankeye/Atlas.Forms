@@ -15,10 +15,8 @@ namespace Atlas.Forms.Pages
             CarouselPage page,
             INavigationProvider navigationProvider,
             IPageCacheCoordinator cacheCoordinator,
-            IPageStackController pageStackController,
-            Action<object> trySetManagersAction,
-            Func<string, IParametersService, Page> getCachedOrNewPageFunc) 
-            : base(page, navigationProvider, cacheCoordinator, pageStackController, trySetManagersAction, getCachedOrNewPageFunc)
+            IPageStackController pageStackController) 
+            : base(page, navigationProvider, cacheCoordinator, pageStackController)
         {
 
         }
