@@ -79,7 +79,12 @@ namespace Atlas.Forms.Caching
             var cachedPage = TryGetCachedPage(key);
             if (cachedPage != null)
             {
-                return cachedPage.Page;
+                var page = cachedPage.Page;
+                if (!cachedPage.Initialized)
+                {
+                    PageActionInvoker.InvokeInitialize(page, parameters);
+                }
+                return page;
             }
 
             Type pageType;
@@ -89,6 +94,8 @@ namespace Atlas.Forms.Caching
                 return null;
             }
             var nextPage = Activator.CreateInstance(pageType) as Page;
+            PageProcessor.AddBehaviors(nextPage);
+            PageProcessor.AddManagers(nextPage, this);
             PageActionInvoker.InvokeInitialize(nextPage, parameters);
             IList<PageMapContainer> pageMapList;
             GetPageCacheMap().Mappings.TryGetValue(key, out pageMapList);
@@ -207,73 +214,5 @@ namespace Atlas.Forms.Caching
         {
             return PageNavigationStore.Current;
         }
-
-        //public IList<Page> GetSequencePages(string key, IParametersService parameters = null)
-        //{
-        //    IList<Page> list = new List<Page>();
-        //    if (PageKeyParser.IsSequence(key))
-        //    {
-        //        var queue = PageKeyParser.GetPageKeysFromSequence(key);
-        //        while (queue.Count > 0)
-        //        {
-        //            var pageKey = queue.Dequeue();
-        //            Type pageType;
-        //            GetPageNavigationStore().PageTypes.TryGetValue(pageKey, out pageType);
-        //            var constructorTakesPage =
-        //                pageType.GetTypeInfo().DeclaredConstructors
-        //                .FirstOrDefault(x => x.GetParameters()
-        //                .FirstOrDefault(y => y.ParameterType == typeof(Page)) != null)
-        //                != null;
-        //            if (constructorTakesPage)
-        //            {
-        //                var nextPageKey = queue.Dequeue();
-        //                Type nextPageType;
-        //                GetPageNavigationStore().PageTypes.TryGetValue(nextPageKey, out nextPageType);
-        //                var innerPage = GetCachedOrNewPageInternal(nextPageKey, parameters);
-        //                var nextPage = Activator.CreateInstance(pageType, innerPage) as Page;
-        //                list.Add(nextPage);
-        //                list.Add(innerPage);
-        //            }
-        //            else if (pageType.GetTypeInfo().IsSubclassOf(typeof(TabbedPage)))
-        //            {
-        //                if (queue.Count > 0)
-        //                {
-        //                    var nextPage = GetCachedOrNewPageInternal(pageKey, parameters);
-        //                    list.Add(nextPage);
-        //                }
-        //                else
-        //                {
-        //                    var nextPage = GetCachedOrNewPageInternal(pageKey, parameters);
-        //                    list.Add(nextPage);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                var nextPage = GetCachedOrNewPageInternal(pageKey, parameters);
-        //                list.Add(nextPage);
-        //            }
-        //        }
-
-        //        for (var i = 0; i < list.Count; i++)
-        //        {
-        //            var page = list[i];
-        //            if (page is MasterDetailPage && i < list.Count - 1)
-        //            {
-        //                var masterDetailPage = page as MasterDetailPage;
-        //                masterDetailPage.Detail = list[i + 1];
-        //            }
-        //            else if (page is TabbedPage)
-        //            {
-
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        var nextPage = GetCachedOrNewPageInternal(key, parameters);
-        //        list.Add(nextPage);
-        //    }
-        //    return list;
-        //}
     }
 }

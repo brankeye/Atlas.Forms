@@ -47,9 +47,17 @@
     <Compile Include="Caching\PageCacheCoordinator.cs" />
     <Compile Include="Caching\PageCacheRegistry.cs" />
     <Compile Include="Caching\PageCacheStore.cs" />
+    <Compile Include="Components\CacheController.cs" />
+    <Compile Include="Components\PageCacheController.cs" />
+    <Compile Include="Components\NavigationController.cs" />
+    <Compile Include="Components\PageFactory.cs" />
     <Compile Include="Enums\CacheOption.cs" />
     <Compile Include="Enums\CacheState.cs" />
     <Compile Include="FormsApplication.cs" />
+    <Compile Include="Interfaces\Components\ICacheController.cs" />
+    <Compile Include="Interfaces\Components\INavigationController.cs" />
+    <Compile Include="Interfaces\Components\IPageCacheController.cs" />
+    <Compile Include="Interfaces\Components\IPageFactory.cs" />
     <Compile Include="Interfaces\IPageProcessor.cs" />
     <Compile Include="Interfaces\Managers\IMultiPageManager.cs" />
     <Compile Include="Interfaces\Managers\IMultiPageProvider.cs" />

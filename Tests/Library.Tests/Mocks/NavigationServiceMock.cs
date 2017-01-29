@@ -1,5 +1,7 @@
 ﻿using Atlas.Forms.Caching;
+using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
@@ -12,7 +14,7 @@ namespace Library.Tests.Mocks
     public class NavigationServiceMock : NavigationService
     {
         public NavigationServiceMock() 
-            : base(CreateApplicationProviderMock(), CreateNavigationProviderMock(), CreatePageCacheCoordinatorMock(), CreatePageStackControllerMock()) {}
+            : base(CreateNavigationController(), CreatePageCacheController()) {}
 
         protected static IApplicationProvider CreateApplicationProviderMock()
         {
@@ -25,20 +27,15 @@ namespace Library.Tests.Mocks
             return mock.Object;
         }
 
-        protected static IPageCacheCoordinator CreatePageCacheCoordinatorMock()
+        protected static INavigationController CreateNavigationController()
+        {
+            return new NavigationController(new ApplicationProvider(), new NavigationProvider(), new PageStackController());
+        }
+
+        protected static IPageCacheController CreatePageCacheController()
         {
             StateManager.ResetAll();
-            return new PageCacheCoordinator(new PageProcessor(new NavigationProvider(), new PageStackController()));
-        }
-
-        protected static INavigationProvider CreateNavigationProviderMock()
-        {
-            return new NavigationProvider();
-        }
-
-        protected static IPageStackController CreatePageStackControllerMock()
-        {
-            return new PageStackController();
+            return new PageCacheController(new PageFactory(), new CacheController());
         }
     }
 }

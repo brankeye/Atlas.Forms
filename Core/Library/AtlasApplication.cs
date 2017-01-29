@@ -1,44 +1,39 @@
 ﻿using Atlas.Forms.Caching;
+using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
-using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
 
 namespace Atlas.Forms
 {
     public abstract class AtlasApplication : AtlasApplicationBase
     {
-        private IApplicationProvider ApplicationProvider { get; set; }
+        private INavigationController NavigationController { get; set; }
 
-        private INavigationProvider NavigationProvider { get; set; }
-
-        private IPageCacheCoordinator CacheCoordinator { get; set; }
-
-        private IPageStackController PageStackController { get; set; }
+        private IPageCacheController PageCacheController { get; set; }
 
         protected override void Initialize()
         {
-            PageStackController = CreatePageStackController();
-            ApplicationProvider = CreateApplicationProvider();
-            NavigationProvider = CreateNavigationProvider();
-            CacheCoordinator = CreatePageCacheCoordinator();
+            NavigationController = CreateNavigationController();
+            PageCacheController = CreatePageCacheController();
             base.Initialize();
         }
 
         protected override INavigationService CreateNavigationService()
         {
-            return new NavigationService(ApplicationProvider, NavigationProvider, CacheCoordinator, PageStackController);
+            return new NavigationService(NavigationController, PageCacheController);
         }
 
         protected override IPageService CreatePageService()
         {
-            return new PageService(CacheCoordinator, NavigationProvider);
+            return new PageService(NavigationController, PageCacheController);
         }
 
         protected override IDialogService CreateDialogService()
         {
-            return new DialogService(ApplicationProvider);
+            return new DialogService(new ApplicationProvider());
         }
 
         protected override IPageNavigationRegistry CreatePageNavigationRegistry()
@@ -51,24 +46,15 @@ namespace Atlas.Forms
             return new PageCacheRegistry();
         }
 
-        protected virtual IApplicationProvider CreateApplicationProvider()
+        protected virtual INavigationController CreateNavigationController()
         {
-            return new ApplicationProvider();
+            var pageStackController = CreatePageStackController();
+            return new NavigationController(new ApplicationProvider(), new NavigationProvider(), pageStackController);
         }
 
-        protected virtual INavigationProvider CreateNavigationProvider()
+        protected virtual IPageCacheController CreatePageCacheController()
         {
-            return new NavigationProvider();
-        }
-
-        protected virtual IPageProcessor CreatePageProcessor()
-        {
-            return new PageProcessor(NavigationProvider, PageStackController);
-        }
-
-        protected virtual IPageCacheCoordinator CreatePageCacheCoordinator()
-        {
-            return new PageCacheCoordinator(CreatePageProcessor());
+            return new PageCacheController(new PageFactory(), new CacheController());
         }
 
         protected virtual IPageStackController CreatePageStackController()

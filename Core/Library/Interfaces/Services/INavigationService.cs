@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Atlas.Forms.Interfaces.Services
 {
@@ -9,7 +10,7 @@ namespace Atlas.Forms.Interfaces.Services
 
         IReadOnlyList<IPageContainer> NavigationStack { get; }
 
-        INavigationProvider NavigationProvider { get; set; }
+        INavigation Navigation { get; }
 
         void InsertPageBefore(string page, string before, IParametersService parameters = null);
 

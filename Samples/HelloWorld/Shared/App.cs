@@ -26,7 +26,7 @@ namespace atlas.samples.helloworld.Shared
 
             NavigationService.Current.SetMainPage("Dashboard");
             var mp = MainPage;
-            var ns = NavigationService.Current.NavigationProvider.Navigation;
+            var ns = NavigationService.Current.Navigation;
             var nslist = NavigationService.Current.NavigationStack;
         }
 
