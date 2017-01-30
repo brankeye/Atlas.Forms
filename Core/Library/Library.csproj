@@ -43,6 +43,7 @@
     <Compile Include="AtlasApplication.cs" />
     <Compile Include="AtlasApplicationBase.cs" />
     <Compile Include="Behaviors\NavigationPageBackButtonBehavior.cs" />
+    <Compile Include="Behaviors\CarouselPagePresentationBehavior.cs" />
     <Compile Include="Behaviors\TabbedPagePresentationBehavior.cs" />
     <Compile Include="Caching\PageCacheRegistry.cs" />
     <Compile Include="Caching\PageCacheStore.cs" />
@@ -125,6 +126,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

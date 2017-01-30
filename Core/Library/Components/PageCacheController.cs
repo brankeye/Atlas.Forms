@@ -74,13 +74,18 @@ namespace Atlas.Forms.Components
                 var innerPageKey = queue.Dequeue();
                 Type outerPageType;
                 PageNavigationStore.Current.PageTypes.TryGetValue(outerPageKey, out outerPageType);
-                var innerPageInstance = TryGetCachedPage(innerPageKey, parameters);
+                var innerPageInstance = TryGetCachedPage(innerPageKey, parameters) as Page;
                 if (innerPageInstance == null)
                 {
-                    innerPageInstance = PageFactory.GetNewPage(innerPageKey);
+                    innerPageInstance = PageFactory.GetNewPage(innerPageKey) as Page;
                     PageActionInvoker.InvokeInitialize(innerPageInstance, parameters);
                 }
                 pageInstance = Activator.CreateInstance(outerPageType, innerPageInstance) as Page;
+                if (pageInstance is NavigationPage)
+                {
+                    pageInstance.Title = innerPageInstance.Title;
+                    pageInstance.Icon = innerPageInstance.Icon;
+                }
             }
             else
             {

@@ -24,7 +24,7 @@ namespace Atlas.Forms.Components
         {
             Type pageType;
             PageNavigationStore.Current.PageTypes.TryGetValue(key, out pageType);
-            var nextPage = Activator.CreateInstance(pageType) as Page;
+            var nextPage = Activator.CreateInstance(pageType);
             TryAddBehaviors(nextPage);
             TryAddManagers(nextPage);
             return nextPage;
@@ -34,6 +34,7 @@ namespace Atlas.Forms.Components
         {
             (page as NavigationPage)?.Behaviors.Add(new NavigationPageBackButtonBehavior());
             (page as TabbedPage)?.Behaviors.Add(new TabbedPagePresentationBehavior());
+            (page as CarouselPage)?.Behaviors.Add(new CarouselPagePresentationBehavior());
         }
 
         protected virtual void TryAddManagers(object page)
@@ -64,7 +65,7 @@ namespace Atlas.Forms.Components
 
         protected virtual IMasterDetailPageManager GetMasterDetailPageManager(MasterDetailPage page)
         {
-            return new MasterDetailPageManager(page, NavigationController, PageCacheController, this);
+            return new MasterDetailPageManager(page, NavigationController, PageCacheController);
         }
 
         protected virtual ITabbedPageManager GetTabbedPageManager(TabbedPage page)

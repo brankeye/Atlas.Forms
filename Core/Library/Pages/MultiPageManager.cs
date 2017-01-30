@@ -29,7 +29,7 @@ namespace Atlas.Forms.Pages
 
         protected IPageCacheController PageCacheController { get; set; }
 
-        protected IList<IPageContainer> ChildrenInternal { get; set; }
+        protected IList<IPageContainer> ChildrenInternal { get; set; } = new List<IPageContainer>();
 
         public MultiPageManager(
             MultiPage<T> page,
