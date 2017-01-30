@@ -1,111 +1,55 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 using Atlas.Forms.Caching;
+using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
+using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Services;
 using Library.Tests.Helpers;
 using Xamarin.Forms;
 
 namespace Library.Tests.Fixtures
 {
     [TestFixture]
-    public class PageCacheCoordinatorFixture
+    public class PageCacheControllerFixture
     {
-        [Test]
-        public void TryGetCachedPage_PageNotExists_ReturnsNull()
-        {
-            var cacheCoordinator = GetPageCacheCoordinator();
-            var page = cacheCoordinator.TryGetCachedPage("NonExistentPage");
-            Assert.That(page, Is.Null);
-        }
-
-        [Test]
-        public void TryGetCachedPage_PageExists_ReturnsPage()
-        {
-            var cacheCoordinator = GetPageCacheCoordinator();
-            PageCacheStore.Current.PageCache["MainPage"] = new PageCacheContainer
-            {
-                Key = "MainPage",
-                Page = new ContentPage()
-            };
-            var page = cacheCoordinator.TryGetCachedPage("MainPage");
-            Assert.That(page, Is.Not.Null);
-        }
-
         [Test]
         public void GetCachedOrNewPage_PageNotRegistered_ReturnsNull()
         {
-            var cacheCoordinator = GetPageCacheCoordinator();
-            var page = cacheCoordinator.GetCachedOrNewPage("MainPage");
+            var cacheCoordinator = GetPageCacheController();
+            var page = cacheCoordinator.TryGetCachedPage("MainPage", new ParametersService());
             Assert.That(page, Is.Null);
         }
 
         [Test]
         public void GetCachedOrNewPage_PageRegistered_ReturnsPage()
         {
-            var cacheCoordinator = GetPageCacheCoordinator();
+            var cacheCoordinator = GetPageCacheController();
             PageNavigationStore.Current.PageTypes["MainPage"] = typeof(ContentPage);
-            var page = cacheCoordinator.GetCachedOrNewPage("MainPage");
-            Assert.That(page, Is.Not.Null);
+            var page = cacheCoordinator.TryGetCachedPage("MainPage", new ParametersService());
+            Assert.That(page, Is.Null);
         }
 
         [Test]
         public void GetCachedOrNewPage_PageExists_ReturnsPage()
         {
-            var cacheCoordinator = GetPageCacheCoordinator();
+            var cacheCoordinator = GetPageCacheController();
             PageCacheStore.Current.PageCache["MainPage"] = new PageCacheContainer
             {
                 Key = "MainPage",
                 Page = new ContentPage()
             };
-            var page = cacheCoordinator.GetCachedOrNewPage("MainPage");
+            var page = cacheCoordinator.TryGetCachedPage("MainPage", new ParametersService());
             Assert.That(page, Is.Not.Null);
         }
 
         [Test]
-        public void AddPageToCache_PageExists_DoesNotAdd()
+        public void AddCachedPages_PagesLoaded_PagesAreLoaded()
         {
-            var cacheCoordinator = GetPageCacheCoordinator();
-            PageNavigationStore.Current.PageTypes["MainPage"] = typeof(ContentPage);
-            PageCacheStore.Current.PageCache["MainPage"] = new PageCacheContainer
-            {
-                Key = "MainPage",
-                Page = new ContentPage
-                {
-                    Title = "ExistingPage"
-                }
-            };
-            var container = new PageMapContainer
-            {
-                Key = "MainPage",
-                Type = typeof(ContentPage)
-            };
-            cacheCoordinator.AddPageToCache("MainPage", container);
-            var page = cacheCoordinator.TryGetCachedPage("MainPage");
-            Assert.That(page.Page.Title, Is.EqualTo("ExistingPage"));
-        }
-
-        [Test]
-        public void AddPageToCache_PageNotExists_DoesAdd()
-        {
-            var cacheCoordinator = GetPageCacheCoordinator();
-            PageNavigationStore.Current.PageTypes["MainPage"] = typeof(ContentPage);
-            var container = new PageMapContainer
-            {
-                Key = "MainPage",
-                Type = typeof(ContentPage)
-            };
-            cacheCoordinator.AddPageToCache("MainPage", container);
-            var page = cacheCoordinator.TryGetCachedPage("MainPage");
-            Assert.That(page, Is.Not.Null);
-        }
-
-        [Test]
-        public void LoadCachedPages_PagesLoaded_PagesAreLoaded()
-        {
-            var cacheCoordinator = GetPageCacheCoordinator();
+            var cacheCoordinator = GetPageCacheController();
             PageNavigationStore.Current.PageTypes["FirstPage"] = typeof(ContentPage);
             PageNavigationStore.Current.PageTypes["SecondPage"] = typeof(ContentPage);
             PageNavigationStore.Current.PageTypes["ThirdPage"] = typeof(ContentPage);
@@ -134,10 +78,11 @@ namespace Library.Tests.Fixtures
                 }
             };
             PageCacheMap.Current.Mappings["MainPage"] = list;
-            cacheCoordinator.LoadCachedPages("MainPage");
-            var pageOne = cacheCoordinator.TryGetCachedPage("FirstPage");
-            var pageTwo = cacheCoordinator.TryGetCachedPage("SecondPage");
-            var pageThree = cacheCoordinator.TryGetCachedPage("ThirdPage");
+            cacheCoordinator.AddCachedPages("MainPage");
+            PageCacheContainer pageOne, pageTwo, pageThree;
+            PageCacheStore.Current.PageCache.TryGetValue("FirstPage", out pageOne);
+            PageCacheStore.Current.PageCache.TryGetValue("SecondPage", out pageTwo);
+            PageCacheStore.Current.PageCache.TryGetValue("ThirdPage", out pageThree);
             Assert.That(pageOne, Is.Not.Null);
             Assert.That(pageTwo, Is.Not.Null);
             Assert.That(pageThree, Is.Not.Null);
@@ -146,7 +91,7 @@ namespace Library.Tests.Fixtures
         [Test]
         public void RemoveCachedPages_PagesExist_RemovesAllButSingleInstance()
         {
-            var cacheCoordinator = GetPageCacheCoordinator();
+            var cacheCoordinator = GetPageCacheController();
             var list = new List<PageMapContainer>
             {
                 new PageMapContainer
@@ -194,18 +139,19 @@ namespace Library.Tests.Fixtures
                 CacheState = CacheState.SingleInstance
             };
             cacheCoordinator.RemoveCachedPages("MainPage");
-            var pageOne = cacheCoordinator.TryGetCachedPage("FirstPage");
-            var pageTwo = cacheCoordinator.TryGetCachedPage("SecondPage");
-            var pageThree = cacheCoordinator.TryGetCachedPage("ThirdPage");
+            PageCacheContainer pageOne, pageTwo, pageThree;
+            PageCacheStore.Current.PageCache.TryGetValue("FirstPage", out pageOne);
+            PageCacheStore.Current.PageCache.TryGetValue("SecondPage", out pageTwo);
+            PageCacheStore.Current.PageCache.TryGetValue("ThirdPage", out pageThree);
             Assert.That(pageOne, Is.Null);
             Assert.That(pageTwo, Is.Null);
             Assert.That(pageThree, Is.Not.Null);
         }
 
-        public static PageCacheCoordinator GetPageCacheCoordinator()
+        public static IPageCacheController GetPageCacheController()
         {
             StateManager.ResetAll();
-            return new PageCacheCoordinator(new PageProcessor(new NavigationProvider(), new PageStackController()));
+            return new PageCacheController(new CacheController(), new NavigationController(new ApplicationProvider(), new NavigationProvider(), new PageStackController()));
         }
     }
 }

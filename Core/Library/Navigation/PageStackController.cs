@@ -25,6 +25,28 @@ namespace Atlas.Forms.Navigation
             AddPageToStack(pageKey, true);
         }
 
+        public virtual IPageContainer PopPageFromNavigationStack()
+        {
+            if (NavigationStack.Count > 0)
+            {
+                var pageContainer = NavigationStack[NavigationStack.Count - 1];
+                NavigationStack.RemoveAt(NavigationStack.Count - 1);
+                return pageContainer;
+            }
+            return null;
+        }
+
+        public virtual IPageContainer PopPageFromModalStack()
+        {
+            if (ModalStack.Count > 0)
+            {
+                var pageContainer = ModalStack[ModalStack.Count - 1];
+                ModalStack.RemoveAt(ModalStack.Count - 1);
+                return pageContainer;
+            }
+            return null;
+        }
+
         protected virtual void AddPageToStack(string pageKey, bool useModal = false)
         {
             PageContainer container;

@@ -2,6 +2,7 @@
 using System.Linq;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
@@ -12,34 +13,31 @@ namespace Atlas.Forms.Pages
     {
         protected MasterDetailPage Page { get; set; }
 
-        protected INavigationProvider NavigationProvider { get; set; }
+        protected INavigationController NavigationController { get; set; }
 
-        protected IPageCacheCoordinator CacheCoordinator { get; set; }
-
-        protected IPageStackController PageStackController { get; }
+        protected IPageCacheController PageCacheController { get; set; }
 
         public MasterDetailPageManager(
-            MasterDetailPage page, 
-            INavigationProvider navigationProvider, 
-            IPageCacheCoordinator cacheCoordinator, 
-            IPageStackController pageStackController)
+            MasterDetailPage page,
+            INavigationController navigationController,
+            IPageCacheController pageCacheController,
+            IPageFactory pageFactory)
         {
             Page = page;
-            NavigationProvider = navigationProvider;
-            CacheCoordinator = cacheCoordinator;
-            PageStackController = pageStackController;
+            NavigationController = navigationController;
+            PageCacheController = pageCacheController;
         }
 
         public virtual void PresentPage(string page, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = CacheCoordinator.GetCachedOrNewPage(page, paramService);
-            NavigationProvider.TrySetNavigation(nextPage);
+            var nextPage = PageCacheController.GetCachedOrNewPage(page, paramService) as Page;
+            NavigationController.TrySetNavigation(nextPage);
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
-            PageStackController.AddPageToNavigationStack(page);
+            NavigationController.AddPageToNavigationStack(page);
             Page.Detail = nextPage;
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
-            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
+            PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
         }
     }
 }

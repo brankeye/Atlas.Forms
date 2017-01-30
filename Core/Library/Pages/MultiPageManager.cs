@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
+using Atlas.Forms.Navigation;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -13,12 +15,6 @@ namespace Atlas.Forms.Pages
     public class MultiPageManager<T> : IMultiPageManager
         where T : Page
     {
-        protected INavigationProvider NavigationProvider { get; set; }
-
-        protected IPageCacheCoordinator CacheCoordinator { get; set; }
-
-        protected IPageStackController PageStackController { get; }
-
         public object SelectedItem => Page.SelectedItem;
 
         public IEnumerable ItemsSource => Page.ItemsSource;
@@ -29,27 +25,29 @@ namespace Atlas.Forms.Pages
 
         protected MultiPage<T> Page { get; set; }
 
+        protected INavigationController NavigationController { get; set; }
+
+        protected IPageCacheController PageCacheController { get; set; }
+
         protected IList<IPageContainer> ChildrenInternal { get; set; }
 
         public MultiPageManager(
             MultiPage<T> page,
-            INavigationProvider navigationProvider,
-            IPageCacheCoordinator cacheCoordinator,
-            IPageStackController pageStackController)
+            INavigationController navigationController,
+            IPageCacheController pageCacheController)
         {
             Page = page;
-            NavigationProvider = navigationProvider;
-            CacheCoordinator = cacheCoordinator;
-            PageStackController = pageStackController;
+            NavigationController = navigationController;
+            PageCacheController = pageCacheController;
         }
 
         public void AddPage(string page, IParametersService parameters = null)
         {
-            var pageInstance = CacheCoordinator.GetCachedOrNewPage(page, parameters ?? new ParametersService());
-            NavigationProvider.TrySetNavigation(pageInstance);
+            var pageInstance = PageCacheController.GetCachedOrNewPage(page, parameters ?? new ParametersService());
+            NavigationController.TrySetNavigation(pageInstance);
             Page.Children.Add(pageInstance as T);
-            PageStackController.AddPageToNavigationStack(page);
-            CacheCoordinator.LoadCachedPages(page, CacheOption.Appears);
+            NavigationController.AddPageToNavigationStack(page);
+            PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
             if (ChildrenInternal.Count == 1)
             {
                 CurrentPage = ChildrenInternal[0];
@@ -107,7 +105,7 @@ namespace Atlas.Forms.Pages
 
         public void SetPageTemplate(string page, IParametersService parameters = null)
         {
-            var pageInstance = CacheCoordinator.GetCachedOrNewPage(page, parameters ?? new ParametersService());
+            var pageInstance = PageCacheController.TryGetCachedPage(page, parameters ?? new ParametersService());
             Page.ItemTemplate = new DataTemplate(() => pageInstance); 
         }
 

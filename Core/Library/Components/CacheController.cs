@@ -67,6 +67,11 @@ namespace Atlas.Forms.Components
                 {
                     PageCacheStore.Current.PageCache.Remove(container.Key);
                 }
+                if (!container.Initialized)
+                {
+                    PageActionInvoker.InvokeInitialize(container.Page, parameters);
+                    container.Initialized = true;
+                }
                 return container.Page;
             }
             return null;

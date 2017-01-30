@@ -28,8 +28,7 @@ namespace Atlas.Forms.Services
 
         public virtual Page GetCachedOrNewPage(string key, IParametersService parameters = null)
         {
-            var page = PageCacheController.GetCachedOrNewPage(key, parameters) as Page;
-            //NavigationProvider.TrySetNavigation(page);
+            var page = PageCacheController.TryGetCachedPage(key, parameters) as Page;
             return page;
         }
 

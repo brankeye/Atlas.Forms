@@ -14,10 +14,13 @@ namespace Atlas.Forms
 
         private IPageCacheController PageCacheController { get; set; }
 
+        private IPageFactory PageFactory { get; set; }
+
         protected override void Initialize()
         {
             NavigationController = CreateNavigationController();
             PageCacheController = CreatePageCacheController();
+            
             base.Initialize();
         }
 
@@ -54,7 +57,7 @@ namespace Atlas.Forms
 
         protected virtual IPageCacheController CreatePageCacheController()
         {
-            return new PageCacheController(new PageFactory(), new CacheController());
+            return new PageCacheController(new CacheController(), NavigationController);
         }
 
         protected virtual IPageStackController CreatePageStackController()

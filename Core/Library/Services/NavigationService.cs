@@ -63,7 +63,9 @@ namespace Atlas.Forms.Services
         protected virtual async Task<IPageContainer> PopInternalAsync(bool animated, IParametersService parameters = null, bool useModal = false)
         {
             var paramService = parameters ?? new ParametersService();
-            var lastPage = NavigationStack.Last();
+            var pageStack = useModal ? ModalStack :
+                                       NavigationStack;
+            var lastPage = pageStack.Last();
             PageCacheController.RemoveCachedPages(lastPage.Key);
             var pageContainer = await NavigationController.PopPageAsync(animated, paramService, useModal);
             PageCacheController.AddCachedPagesWithOption(lastPage.Key, CacheOption.Appears);
@@ -77,7 +79,10 @@ namespace Atlas.Forms.Services
 
         public virtual async Task PopToRootAsync(bool animated)
         {
-            await NavigationController.PopToRootAsync(animated, new ParametersService());
+            while (Navigation.NavigationStack.Count > 1)
+            {
+                await PopAsync(animated);
+            }
         }
 
         public virtual async Task PushAsync(string page, IParametersService parameters = null)

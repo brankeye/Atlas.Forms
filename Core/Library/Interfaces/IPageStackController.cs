@@ -15,5 +15,9 @@ namespace Atlas.Forms.Interfaces
         void AddPageToNavigationStack(string pageKey);
 
         void AddPageToModalStack(string pageKey);
+
+        IPageContainer PopPageFromNavigationStack();
+
+        IPageContainer PopPageFromModalStack();
     }
 }

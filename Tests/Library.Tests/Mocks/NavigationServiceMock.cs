@@ -13,29 +13,7 @@ namespace Library.Tests.Mocks
 {
     public class NavigationServiceMock : NavigationService
     {
-        public NavigationServiceMock() 
-            : base(CreateNavigationController(), CreatePageCacheController()) {}
-
-        protected static IApplicationProvider CreateApplicationProviderMock()
-        {
-            var mock = new Mock<IApplicationProvider>();
-            var mainPage = new ContentPage
-            {
-                Title = "MainPage"
-            };
-            mock.SetupSet(x => x.MainPage = mainPage);
-            return mock.Object;
-        }
-
-        protected static INavigationController CreateNavigationController()
-        {
-            return new NavigationController(new ApplicationProvider(), new NavigationProvider(), new PageStackController());
-        }
-
-        protected static IPageCacheController CreatePageCacheController()
-        {
-            StateManager.ResetAll();
-            return new PageCacheController(new PageFactory(), new CacheController());
-        }
+        public NavigationServiceMock(INavigationController navigationController, IPageCacheController pageCacheController)
+            : base(navigationController, pageCacheController) { }
     }
 }

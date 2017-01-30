@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using Atlas.Forms.Components;
 using NUnit.Framework;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
+using Library.Tests.Helpers;
 using Library.Tests.Mocks;
 using Xamarin.Forms;
 
@@ -182,11 +184,14 @@ namespace Library.Tests.Fixtures
 
         protected static INavigationService GetNavigationService()
         {
-            return new NavigationServiceMock();
+            var navigationController = new NavigationController(new ApplicationProviderMock(), new NavigationProvider(), new PageStackController());
+            var pageCacheController = new PageCacheController(new CacheController(), navigationController);
+            return new NavigationServiceMock(navigationController, pageCacheController);
         }
 
         protected static void Setup()
         {
+            StateManager.ResetAll();
             var pageType = typeof(ContentPage);
             PageNavigationStore.Current.PageTypes["NavigationPage"] = typeof(NavigationPage);
             PageNavigationStore.Current.PageTypes["MainPage"] = pageType;

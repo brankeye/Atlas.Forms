@@ -25,5 +25,9 @@ namespace Atlas.Forms.Interfaces.Components
         Task PopToRootAsync(bool animated, IParametersService parameters);
 
         void RemovePage(string page);
+
+        void TrySetNavigation(object page);
+
+        void AddPageToNavigationStack(string page);
     }
 }

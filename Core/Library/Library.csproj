@@ -44,7 +44,6 @@
     <Compile Include="AtlasApplicationBase.cs" />
     <Compile Include="Behaviors\NavigationPageBackButtonBehavior.cs" />
     <Compile Include="Behaviors\TabbedPagePresentationBehavior.cs" />
-    <Compile Include="Caching\PageCacheCoordinator.cs" />
     <Compile Include="Caching\PageCacheRegistry.cs" />
     <Compile Include="Caching\PageCacheStore.cs" />
     <Compile Include="Components\CacheController.cs" />
@@ -58,12 +57,10 @@
     <Compile Include="Interfaces\Components\INavigationController.cs" />
     <Compile Include="Interfaces\Components\IPageCacheController.cs" />
     <Compile Include="Interfaces\Components\IPageFactory.cs" />
-    <Compile Include="Interfaces\IPageProcessor.cs" />
     <Compile Include="Interfaces\Managers\IMultiPageManager.cs" />
     <Compile Include="Interfaces\Managers\IMultiPageProvider.cs" />
     <Compile Include="Interfaces\Managers\IMasterDetailPageProvider.cs" />
     <Compile Include="Interfaces\INavigationProvider.cs" />
-    <Compile Include="Interfaces\IPageCacheCoordinator.cs" />
     <Compile Include="Interfaces\Managers\ICarouselPageManager.cs" />
     <Compile Include="Interfaces\Managers\ITabbedPageManager.cs" />
     <Compile Include="Interfaces\Managers\ICarouselPageProvider.cs" />
@@ -96,7 +93,6 @@
     <Compile Include="Pages\TabbedPageManager.cs" />
     <Compile Include="Pages\CarouselPageManager.cs" />
     <Compile Include="Pages\MultiPageManager.cs" />
-    <Compile Include="Pages\PageProcessor.cs" />
     <Compile Include="Navigation\PageStackController.cs" />
     <Compile Include="Pages\MasterDetailPageManager.cs" />
     <Compile Include="Pages\TriggerPageApi.cs" />

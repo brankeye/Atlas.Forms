@@ -60,8 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fixtures\NavigationServiceFixture.cs" />
-    <Compile Include="Fixtures\PageCacheCoordinatorFixture.cs" />
+    <Compile Include="Fixtures\PageCacheControllerFixture.cs" />
     <Compile Include="Helpers\StateManager.cs" />
+    <Compile Include="Mocks\ApplicationProviderMock.cs" />
     <Compile Include="Mocks\NavigationServiceMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

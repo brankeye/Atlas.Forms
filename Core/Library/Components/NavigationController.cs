@@ -74,16 +74,17 @@ namespace Atlas.Forms.Components
                                      : PageStackController.NavigationStack;
             var currentPage = pageStack[pageStack.Count - 1];
             PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
+            IPageContainer pageContainer;
             if (useModal)
             {
                 await NavigationProvider.Navigation.PopModalAsync(animated);
+                pageContainer = PageStackController.PopPageFromModalStack();
             }
             else
             {
                 await NavigationProvider.Navigation.PopAsync(animated);
+                pageContainer = PageStackController.PopPageFromNavigationStack();
             }
-            var pageContainer = pageStack.Last();
-            pageStack.Remove(pageContainer);
             PageActionInvoker.InvokeOnPageDisappeared(currentPage, parameters);
             return pageContainer;
         }
@@ -135,6 +136,16 @@ namespace Atlas.Forms.Components
         public INavigation GetNavigation()
         {
             return NavigationProvider.Navigation;
+        }
+
+        public void TrySetNavigation(object page)
+        {
+            NavigationProvider.TrySetNavigation(page);
+        }
+
+        public void AddPageToNavigationStack(string page)
+        {
+            PageStackController.AddPageToNavigationStack(page);
         }
     }
 }
