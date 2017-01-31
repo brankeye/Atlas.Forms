@@ -4,8 +4,6 @@
     {
         ITargetPageApi Appears();
 
-        ITargetPageApi Disappears();
-
         ITargetPageApi IsCreated();
     }
 }

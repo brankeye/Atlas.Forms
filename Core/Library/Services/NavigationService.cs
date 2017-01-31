@@ -27,6 +27,8 @@ namespace Atlas.Forms.Services
 
         protected IPageCacheController PageCacheController { get; }
 
+        protected IPageContainer MainPageContainer { get; set; }
+
         public NavigationService(INavigationController navigationController, IPageCacheController pageCacheController)
         {
             NavigationController = navigationController;
@@ -127,8 +129,13 @@ namespace Atlas.Forms.Services
 
         public virtual void SetMainPage(string page, IParametersService parameters = null)
         {
+            if (NavigationController.GetMainPage() != null)
+            {
+                PageCacheController.RemoveCachedPages(MainPageContainer.Key);
+            }
             var paramService = parameters ?? new ParametersService();
             var nextPage = PageCacheController.GetCachedOrNewPage(page, paramService);
+            MainPageContainer = new PageContainer(page, nextPage.GetType());
             NavigationController.SetMainPage(page, nextPage, paramService);
             PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
         }

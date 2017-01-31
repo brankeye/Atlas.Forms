@@ -22,5 +22,7 @@ namespace Atlas.Forms.Pages.Containers
         public CacheState CacheState { get; set; }
 
         public CacheOption CacheOption { get; set; }
+
+        public string LifetimePageKey { get; set; }
     }
 }

@@ -12,6 +12,12 @@ namespace Atlas.Forms.Interfaces
 
         void AsKeepAlive();
 
+        void AsLifetimeInstance();
+
+        void AsLifetimeInstance<TPage>() where TPage : Page;
+
+        void AsLifetimeInstance(string page);
+
         void AsSingleInstance();
     }
 }

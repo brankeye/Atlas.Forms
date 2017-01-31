@@ -44,9 +44,9 @@ namespace Atlas.Forms.Pages
 
         public void AddPage(string page, IParametersService parameters = null)
         {
-            var pageInstance = PageCacheController.GetCachedOrNewPage(page, parameters ?? new ParametersService());
+            var pageInstance = PageCacheController.GetCachedOrNewPage(page, parameters ?? new ParametersService()) as T;
             NavigationController.TrySetNavigation(pageInstance);
-            Page.Children.Add(pageInstance as T);
+            Page.Children.Add(pageInstance);
             NavigationController.AddPageToNavigationStack(page);
             PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
             if (ChildrenInternal.Count == 1)

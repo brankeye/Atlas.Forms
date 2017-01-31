@@ -55,6 +55,16 @@ namespace Atlas.Forms.Components
                     PageCacheStore.Current.PageCache.Remove(container.Key);
                 }
             }
+
+            var lists = PageCacheMap.Current.Mappings.Values;
+            foreach (var list in lists)
+            {
+                var sorted = list.Where(x => x.CacheState == CacheState.LifetimeInstance && x.LifetimePageKey == key).ToList();
+                foreach (var map in sorted)
+                {
+                    PageCacheStore.Current.PageCache.Remove(map.Key);
+                }
+            }
         }
 
         public virtual object TryGetCachedPage(string key, IParametersService parameters)

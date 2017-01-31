@@ -1,43 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using atlas.samples.helloworld.Shared.ViewModels;
-using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
-    public partial class Dashboard : IMasterDetailPageProvider, IInitializeAware
+    public partial class MainMasterDetailPage : IMasterDetailPageProvider, IInitializeAware
     {
-        public Dashboard()
+        public MainMasterDetailPage()
         {
             InitializeComponent();
-            BindingContext = new ViewModels.Pages.Dashboard();
+            BindingContext = new ViewModels.Pages.MainMasterDetailPage();
 
             var masterPageItems = new List<MasterPageItem>
             {
                 new MasterPageItem
                 {
-                    Title = "Tutorials",
-                    PageKey = "Tutorials"
+                    Title = "MyContentPage",
+                    PageKey = "MyContentPage"
                 },
                 new MasterPageItem
                 {
-                    Title = "About",
-                    PageKey = "About"
-                },
-                new MasterPageItem
-                {
-                    Title = "Changelog",
-                    PageKey = "Changelog"
-                },
-                new MasterPageItem
-                {
-                    Title = "Contact",
-                    PageKey = "Contact"
+                    Title = "MyTabbedPage",
+                    PageKey = "MyTabbedPage"
                 }
             };
 
@@ -52,14 +43,14 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
 
         public void Initialize(IParametersService parameters)
         {
-            (BindingContext as ViewModels.Pages.Dashboard)?.PresentPage("About");
+            (BindingContext as ViewModels.Pages.MainMasterDetailPage)?.PresentPage("MyContentPage");
         }
 
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
         {
-            var selectedItem = (MasterPageItem) selectedItemChangedEventArgs.SelectedItem;
+            var selectedItem = (MasterPageItem)selectedItemChangedEventArgs.SelectedItem;
             //Detail = PageService.Current.GetCachedOrNewPage(selectedItem.PageKey);
-            (BindingContext as ViewModels.Pages.Dashboard)?.PresentPage(selectedItem.PageKey);
+            (BindingContext as ViewModels.Pages.MainMasterDetailPage)?.PresentPage(selectedItem.PageKey);
             IsPresented = false;
         }
     }

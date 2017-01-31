@@ -4,6 +4,7 @@
     {
         Default,
         KeepAlive,
-        SingleInstance
+        SingleInstance,
+        LifetimeInstance
     }
 }

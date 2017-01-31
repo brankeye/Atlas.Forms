@@ -4,7 +4,6 @@
     {
         None,
         Appears,
-        Disappears,
         IsCreated
     }
 }

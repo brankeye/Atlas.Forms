@@ -22,12 +22,6 @@ namespace Atlas.Forms.Pages
             return new TargetPageApi(_triggerPage, _container);
         }
 
-        public ITargetPageApi Disappears()
-        {
-            _container.CacheOption = CacheOption.Disappears;
-            return new TargetPageApi(_triggerPage, _container);
-        }
-
         public ITargetPageApi IsCreated()
         {
             _container.CacheOption = CacheOption.IsCreated;

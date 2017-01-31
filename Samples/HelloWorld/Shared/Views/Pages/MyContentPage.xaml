@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="atlas.samples.helloworld.Shared.Views.Pages.MyContentPage"
+             Title="MyContentPage">
+  <StackLayout>
+    <Label x:Name="Label" VerticalOptions="Center" HorizontalOptions="Center"></Label>
+    <Button Text="Test DisplayAlert with Cancel" Clicked="Button_OnTestDisplayAlertWithCancel" HorizontalOptions="Center"></Button>
+    <Button Text="Test DisplayAlert with Accept/Cancel" Clicked="Button_OnTestDisplayAlertWithAcceptCancel" HorizontalOptions="Center"></Button>
+    <Button Text="Test DisplayActionSheet with Destruct" Clicked="Button_OnTestDisplayActionSheetWithDestruct" HorizontalOptions="Center"></Button>
+  </StackLayout>
+</ContentPage>

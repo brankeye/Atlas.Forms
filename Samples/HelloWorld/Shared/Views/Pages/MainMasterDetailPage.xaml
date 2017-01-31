@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="atlas.samples.helloworld.Shared.Views.Pages.Dashboard"
-             Title="MDTitle">
+             x:Class="atlas.samples.helloworld.Shared.Views.Pages.MainMasterDetailPage">
   <MasterDetailPage.Master>
     <ContentPage Title="Default">
       <StackLayout VerticalOptions="FillAndExpand">

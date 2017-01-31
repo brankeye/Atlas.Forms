@@ -1,4 +1,5 @@
-﻿using Atlas.Forms.Enums;
+﻿using System;
+using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
@@ -41,6 +42,24 @@ namespace Atlas.Forms.Pages
         public void AsSingleInstance()
         {
             _container.CacheState = CacheState.SingleInstance;
+        }
+
+        public void AsLifetimeInstance()
+        {
+            _container.CacheState = CacheState.LifetimeInstance;
+            _container.LifetimePageKey = _triggerPage;
+        }
+
+        public void AsLifetimeInstance<TPage>() where TPage : Page
+        {
+            _container.CacheState = CacheState.LifetimeInstance;
+            _container.LifetimePageKey = typeof(TPage).Name;
+        }
+
+        public void AsLifetimeInstance(string page)
+        {
+            _container.CacheState = CacheState.LifetimeInstance;
+            _container.LifetimePageKey = _triggerPage;
         }
     }
 }

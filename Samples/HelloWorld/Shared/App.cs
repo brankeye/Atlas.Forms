@@ -10,46 +10,27 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
-            //NavigationService.Current.SetMainPage("About");
-            //NavigationService.Current.PushModalAsync("Contact").Wait();
-            //NavigationService.Current.PushModalAsync("Changelog").Wait();
-
-            //var mp = MainPage;
-            //var ns = NavigationService.Current.Navigation;
-            //var nslist = NavigationService.Current.NavigationStack;
-
-            //NavigationService.Current.PopAsync().Wait();
-
-            //mp = MainPage;
-            //ns = NavigationService.Current.Navigation;
-            //nslist = NavigationService.Current.NavigationStack;
-
-            NavigationService.Current.SetMainPage("Dashboard");
-            var mp = MainPage;
-            var ns = NavigationService.Current.Navigation;
-            var nslist = NavigationService.Current.NavigationStack;
+            NavigationService.Current.SetMainPage("MainMasterDetailPage");
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)
         {
             registry.RegisterPage<NavigationPage>();
-            registry.RegisterPage<Views.Pages.Dashboard>();
-            registry.RegisterPage<Views.Pages.About>();
-            registry.RegisterPage<Views.Pages.Changelog>();
-            registry.RegisterPage<Views.Pages.Contact>();
-            registry.RegisterPage<Views.Pages.Tutorials>();
-            registry.RegisterPage<Views.Pages.TutorialOne>();
-            registry.RegisterPage<Views.Pages.TutorialTwo>();
-            registry.RegisterPage<Views.Pages.TutorialThree>();
-            registry.RegisterPage<Views.Pages.TestPage>();
+            registry.RegisterPage<Views.Pages.MainMasterDetailPage>();
+            registry.RegisterPage<Views.Pages.MyContentPage>();
+            registry.RegisterPage<Views.Pages.MyTabbedPage>();
+            registry.RegisterPage<Views.Pages.FirstTabPage>();
+            registry.RegisterPage<Views.Pages.SecondTabPage>();
+            registry.RegisterPage<Views.Pages.ThirdTabPage>();
         }
 
         protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
         {
-            registry.WhenPage<Tutorials>().IsCreated().CachePage().AsKeepAlive();
-            registry.WhenPage<About>().IsCreated().CachePage().AsKeepAlive();
-            registry.WhenPage<Changelog>().IsCreated().CachePage().AsKeepAlive();
-            registry.WhenPage<Contact>().IsCreated().CachePage().AsKeepAlive();
+            registry.WhenPage<MyContentPage>().IsCreated().CachePage().AsLifetimeInstance<MainMasterDetailPage>();
+            registry.WhenPage<MyTabbedPage>().IsCreated().CachePage().AsLifetimeInstance("MainMasterDetailPage");
+            registry.WhenPage<FirstTabPage>().IsCreated().CachePage().AsLifetimeInstance("MyTabbedPage");
+            registry.WhenPage<SecondTabPage>().IsCreated().CachePage().AsLifetimeInstance("MyTabbedPage");
+            registry.WhenPage<ThirdTabPage>().IsCreated().CachePage().AsLifetimeInstance("MyTabbedPage");
         }
 
         protected override void OnStart()
