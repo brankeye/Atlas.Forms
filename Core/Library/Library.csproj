@@ -66,7 +66,7 @@
     <Compile Include="Interfaces\Managers\ITabbedPageManager.cs" />
     <Compile Include="Interfaces\Managers\ICarouselPageProvider.cs" />
     <Compile Include="Interfaces\Managers\ITabbedPageProvider.cs" />
-    <Compile Include="Interfaces\Services\IDialogService.cs" />
+    <Compile Include="Interfaces\Services\IPageDialogService.cs" />
     <Compile Include="Interfaces\IPageStackController.cs" />
     <Compile Include="Interfaces\Managers\IMasterDetailPageManager.cs" />
     <Compile Include="Interfaces\ITargetPageApi.cs" />
@@ -75,12 +75,12 @@
     <Compile Include="Interfaces\Pages\IInitializeAware.cs" />
     <Compile Include="Interfaces\Pages\IPageCachingAware.cs" />
     <Compile Include="Interfaces\IApplicationProvider.cs" />
-    <Compile Include="Interfaces\Services\IPageService.cs" />
+    <Compile Include="Interfaces\Services\IPageCacheService.cs" />
     <Compile Include="Interfaces\Services\INavigationService.cs" />
     <Compile Include="Interfaces\IPageCacheRegistry.cs" />
     <Compile Include="Interfaces\IPageContainer.cs" />
     <Compile Include="Interfaces\IPageNavigationRegistry.cs" />
-    <Compile Include="Interfaces\IParametersService.cs" />
+    <Compile Include="Interfaces\Services\IParametersService.cs" />
     <Compile Include="Interfaces\Pages\IPageAppearedAware.cs" />
     <Compile Include="Interfaces\Pages\IPageAppearingAware.cs" />
     <Compile Include="Interfaces\Pages\IPageDisappearedAware.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Pages\TabbedPageManager.cs" />
     <Compile Include="Pages\CarouselPageManager.cs" />
     <Compile Include="Pages\MultiPageManager.cs" />
-    <Compile Include="Navigation\PageStackController.cs" />
+    <Compile Include="Components\PageStackController.cs" />
     <Compile Include="Pages\MasterDetailPageManager.cs" />
     <Compile Include="Pages\TriggerPageApi.cs" />
     <Compile Include="Pages\TargetPageApi.cs" />
@@ -105,8 +105,8 @@
     <Compile Include="Pages\PageActionInvoker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\PageService.cs" />
-    <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\PageCacheService.cs" />
+    <Compile Include="Services\PageDialogService.cs" />
     <Compile Include="Services\ParametersService.cs" />
     <Compile Include="Utilities\ActionInvoker.cs" />
     <Compile Include="Utilities\PropertyInjector.cs" />
@@ -126,7 +126,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

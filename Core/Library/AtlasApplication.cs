@@ -14,8 +14,6 @@ namespace Atlas.Forms
 
         private IPageCacheController PageCacheController { get; set; }
 
-        private IPageFactory PageFactory { get; set; }
-
         protected override void Initialize()
         {
             NavigationController = CreateNavigationController();
@@ -29,14 +27,14 @@ namespace Atlas.Forms
             return new NavigationService(NavigationController, PageCacheController);
         }
 
-        protected override IPageService CreatePageService()
+        protected override IPageCacheService CreatePageService()
         {
-            return new PageService(NavigationController, PageCacheController);
+            return new PageCacheService(NavigationController, PageCacheController);
         }
 
-        protected override IDialogService CreateDialogService()
+        protected override IPageDialogService CreateDialogService()
         {
-            return new DialogService(new ApplicationProvider());
+            return new PageDialogService(new ApplicationProvider());
         }
 
         protected override IPageNavigationRegistry CreatePageNavigationRegistry()

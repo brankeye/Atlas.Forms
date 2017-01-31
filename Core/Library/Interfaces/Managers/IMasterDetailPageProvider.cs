@@ -2,6 +2,6 @@
 {
     public interface IMasterDetailPageProvider
     {
-        IMasterDetailPageManager Manager { get; set; }
+        IMasterDetailPageManager PageManager { get; set; }
     }
 }

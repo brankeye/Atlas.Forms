@@ -7,6 +7,6 @@ namespace Atlas.Forms.Navigation
     {
         public static PageNavigationStore Current { get; set; } = new PageNavigationStore();
 
-        public Dictionary<string, Type> PageTypes { get; } = new Dictionary<string, Type>();
+        public IDictionary<string, Type> PageTypes { get; } = new Dictionary<string, Type>();
     }
 }

@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
-using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
-using Atlas.Forms.Navigation;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
-using Xamarin.Forms;
 
 namespace Atlas.Forms.Components
 {
     public class CacheController : ICacheController
     {
-        public void AddCachedPages(IList<PageCacheContainer> list)
+        public virtual void AddCachedPages(IList<PageCacheContainer> list)
         {
             foreach (var container in list)
             {
@@ -22,12 +20,12 @@ namespace Atlas.Forms.Components
                 PageCacheStore.Current.PageCache.TryGetValue(container.Key, out pageContainer);
                 if (pageContainer == null)
                 {
-                    AddPage(container.Key, container);
+                    TryAddPage(container.Key, container);
                 }
             }
         }
 
-        public void AddPage(string key, PageCacheContainer container)
+        public virtual bool TryAddPage(string key, PageCacheContainer container)
         {
             PageCacheContainer storedContainer;
             PageCacheStore.Current.PageCache.TryGetValue(key, out storedContainer);
@@ -36,10 +34,12 @@ namespace Atlas.Forms.Components
                 PageActionInvoker.InvokeOnPageCaching(container.Page);
                 PageCacheStore.Current.PageCache.Add(key, container);
                 PageActionInvoker.InvokeOnPageCached(container.Page);
+                return true;
             }
+            return false;
         }
 
-        public void RemoveCachedPages(string key)
+        public virtual void RemoveCachedPages(string key)
         {
             IList<PageMapContainer> containers;
             PageCacheMap.Current.Mappings.TryGetValue(key, out containers);
@@ -57,7 +57,7 @@ namespace Atlas.Forms.Components
             }
         }
 
-        public object TryGetCachedPage(string key, IParametersService parameters)
+        public virtual object TryGetCachedPage(string key, IParametersService parameters)
         {
             PageCacheContainer container;
             PageCacheStore.Current.PageCache.TryGetValue(key, out container);
@@ -75,6 +75,11 @@ namespace Atlas.Forms.Components
                 return container.Page;
             }
             return null;
+        }
+
+        public virtual bool RemovePageFromCache(string key)
+        {
+            return PageCacheStore.Current.PageCache.Remove(key);
         }
     }
 }

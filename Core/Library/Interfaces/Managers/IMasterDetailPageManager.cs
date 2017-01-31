@@ -1,4 +1,6 @@
-﻿namespace Atlas.Forms.Interfaces.Managers
+﻿using Atlas.Forms.Interfaces.Services;
+
+namespace Atlas.Forms.Interfaces.Managers
 {
     public interface IMasterDetailPageManager
     {

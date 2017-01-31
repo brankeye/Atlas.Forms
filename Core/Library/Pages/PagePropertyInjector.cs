@@ -27,17 +27,17 @@ namespace Atlas.Forms.Pages
 
         public static void InjectMasterDetailManager(MasterDetailPage page, IMasterDetailPageManager injectable)
         {
-            InjectProperty<IMasterDetailPageProvider, IMasterDetailPageManager>(page, injectable, (p, inj) => p.Manager = inj);
+            InjectProperty<IMasterDetailPageProvider, IMasterDetailPageManager>(page, injectable, (p, inj) => p.PageManager = inj);
         }
 
         public static void InjectTabbedPageManager(TabbedPage page, ITabbedPageManager injectable)
         {
-            InjectProperty<ITabbedPageProvider, ITabbedPageManager>(page, injectable, (p, inj) => p.Manager = inj);
+            InjectProperty<ITabbedPageProvider, ITabbedPageManager>(page, injectable, (p, inj) => p.PageManager = inj);
         }
 
         public static void InjectCarouselPageManager(CarouselPage page, ICarouselPageManager injectable)
         {
-            InjectProperty<ICarouselPageProvider, ICarouselPageManager>(page, injectable, (p, inj) => p.Manager = inj);
+            InjectProperty<ICarouselPageProvider, ICarouselPageManager>(page, injectable, (p, inj) => p.PageManager = inj);
         }
     }
 }

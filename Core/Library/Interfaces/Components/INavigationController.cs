@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Atlas.Forms.Interfaces.Services;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Interfaces.Components

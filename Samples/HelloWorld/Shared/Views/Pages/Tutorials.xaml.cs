@@ -1,9 +1,6 @@
-﻿using System;
-using Atlas.Forms.Interfaces;
-using Atlas.Forms.Interfaces.Managers;
+﻿using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
-using Atlas.Forms.Services;
-using Xamarin.Forms;
+using Atlas.Forms.Interfaces.Services;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
@@ -16,11 +13,11 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
 
         public void Initialize(IParametersService parameters)
         {
-            Manager.AddPage("NavigationPage/TutorialOne");
-            Manager.AddPage("TutorialTwo");
-            Manager.AddPage("TutorialThree");
+            PageManager.AddPage("NavigationPage/TutorialOne");
+            PageManager.AddPage("TutorialTwo");
+            PageManager.AddPage("TutorialThree");
         }
 
-        public IMultiPageManager Manager { get; set; }
+        public IMultiPageManager PageManager { get; set; }
     }
 }

@@ -5,11 +5,11 @@ namespace atlas.samples.helloworld.Shared.ViewModels.Pages
 {
     public class Dashboard : IMasterDetailPageProvider
     {
-        public IMasterDetailPageManager Manager { get; set; }
+        public IMasterDetailPageManager PageManager { get; set; }
 
         public void PresentPage(string page)
         {
-            Manager.PresentPage(page);
+            PageManager.PresentPage(page);
         }
     }
 }

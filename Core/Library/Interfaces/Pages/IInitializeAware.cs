@@ -1,4 +1,6 @@
-﻿namespace Atlas.Forms.Interfaces.Pages
+﻿using Atlas.Forms.Interfaces.Services;
+
+namespace Atlas.Forms.Interfaces.Pages
 {
     public interface IInitializeAware
     {

@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Services;
 
 namespace Atlas.Forms.Services
 {
     public class ParametersService : IParametersService
     {
-        protected Dictionary<string, object> Store { get; set; } = new Dictionary<string, object>();
+        protected IDictionary<string, object> Store { get; set; } = new Dictionary<string, object>();
 
-        public bool TryAdd(string key, object item)
+        public virtual bool TryAdd(string key, object item)
         {
             var canAddItem = item != null && !Store.ContainsKey(key);
             if (canAddItem)
@@ -17,7 +18,7 @@ namespace Atlas.Forms.Services
             return canAddItem;
         }
 
-        public TObject TryGet<TObject>(string key)
+        public virtual TObject TryGet<TObject>(string key)
         {
             object value;
             if (Store.TryGetValue(key, out value))
@@ -27,9 +28,14 @@ namespace Atlas.Forms.Services
             return default(TObject);
         }
 
-        public bool TryRemove(string key)
+        public virtual bool TryRemove(string key)
         {
             return Store.Remove(key);
+        }
+        
+        public virtual IDictionary<string, object> GetDictionary()
+        {
+            return Store;
         }
     }
 }

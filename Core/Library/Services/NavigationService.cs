@@ -17,11 +17,11 @@ namespace Atlas.Forms.Services
     {
         public static INavigationService Current { get; internal set; }
 
-        public IReadOnlyList<IPageContainer> NavigationStack => NavigationController.GetNavigationStack();
+        public virtual IReadOnlyList<IPageContainer> NavigationStack => NavigationController.GetNavigationStack();
 
-        public IReadOnlyList<IPageContainer> ModalStack => NavigationController.GetModalStack();
+        public virtual IReadOnlyList<IPageContainer> ModalStack => NavigationController.GetModalStack();
 
-        public INavigation Navigation => NavigationController.GetNavigation();
+        public virtual INavigation Navigation => NavigationController.GetNavigation();
 
         protected INavigationController NavigationController { get; set; }
 
@@ -120,12 +120,12 @@ namespace Atlas.Forms.Services
             PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
         }
 
-        public void RemovePage(string page)
+        public virtual void RemovePage(string page)
         {
             NavigationController.RemovePage(page);
         }
 
-        public void SetMainPage(string page, IParametersService parameters = null)
+        public virtual void SetMainPage(string page, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = PageCacheController.GetCachedOrNewPage(page, paramService);

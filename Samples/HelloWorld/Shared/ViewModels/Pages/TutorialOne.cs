@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Pages;
+using Atlas.Forms.Interfaces.Services;
 
 namespace atlas.samples.helloworld.Shared.ViewModels.Pages
 {

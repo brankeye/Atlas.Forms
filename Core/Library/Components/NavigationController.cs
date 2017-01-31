@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
 using Atlas.Forms.Services;
@@ -123,27 +124,27 @@ namespace Atlas.Forms.Components
             }
         }
 
-        public IReadOnlyList<IPageContainer> GetNavigationStack()
+        public virtual IReadOnlyList<IPageContainer> GetNavigationStack()
         {
             return PageStackController.NavigationStack.ToList();
         }
 
-        public IReadOnlyList<IPageContainer> GetModalStack()
+        public virtual IReadOnlyList<IPageContainer> GetModalStack()
         {
             return PageStackController.ModalStack.ToList();
         }
 
-        public INavigation GetNavigation()
+        public virtual INavigation GetNavigation()
         {
             return NavigationProvider.Navigation;
         }
 
-        public void TrySetNavigation(object page)
+        public virtual void TrySetNavigation(object page)
         {
             NavigationProvider.TrySetNavigation(page);
         }
 
-        public void AddPageToNavigationStack(string page)
+        public virtual void AddPageToNavigationStack(string page)
         {
             PageStackController.AddPageToNavigationStack(page);
         }

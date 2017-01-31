@@ -2,6 +2,6 @@
 {
     public interface IMultiPageProvider
     {
-        IMultiPageManager Manager { get; set; }
+        IMultiPageManager PageManager { get; set; }
     }
 }

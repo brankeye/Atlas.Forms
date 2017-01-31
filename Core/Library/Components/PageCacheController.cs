@@ -5,6 +5,7 @@ using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
@@ -24,7 +25,7 @@ namespace Atlas.Forms.Components
             PageFactory = CreatePageFactoryInternal(navigationController, this);
         }
 
-        public void AddCachedPages(string key)
+        public virtual void AddCachedPages(string key)
         {
             var pageMapContainers = GetMapContainers(key);
             IList<PageCacheContainer> pageCacheList = new List<PageCacheContainer>();
@@ -41,7 +42,7 @@ namespace Atlas.Forms.Components
             CacheController.AddCachedPages(pageCacheList);
         }
 
-        public void AddCachedPagesWithOption(string key, CacheOption cacheOption)
+        public virtual void AddCachedPagesWithOption(string key, CacheOption cacheOption)
         {
             var pageMapContainers = GetMapContainersWithOption(key, cacheOption);
             IList<PageCacheContainer> pageCacheList = new List<PageCacheContainer>();
@@ -62,6 +63,11 @@ namespace Atlas.Forms.Components
         {
             var page = CacheController.TryGetCachedPage(key, parameters) as Page;
             return page;
+        }
+
+        public virtual object GetNewPage(string key)
+        {
+            return PageFactory.GetNewPage(key);
         }
 
         public virtual object GetCachedOrNewPage(string key, IParametersService parameters)
@@ -135,6 +141,19 @@ namespace Atlas.Forms.Components
         public virtual void RemoveCachedPages(string key)
         {
             CacheController.RemoveCachedPages(key);
+        }
+
+        public virtual bool RemovePageFromCache(string key)
+        {
+            return CacheController.RemovePageFromCache(key);
+        }
+
+        public virtual bool TryAddCachedPage(string key, CacheState cacheState)
+        {
+            var pageInstance = PageFactory.GetNewPage(key) as Page;
+            var pageMapContainer = new PageMapContainer(cacheState, CacheOption.None, new PageContainer(key, pageInstance.GetType()));
+            var pageCacheContainer = new PageCacheContainer(pageInstance, pageMapContainer);
+            return CacheController.TryAddPage(key, pageCacheContainer);
         }
 
         private IPageFactory CreatePageFactoryInternal(INavigationController navigationController, IPageCacheController pageCacheController)

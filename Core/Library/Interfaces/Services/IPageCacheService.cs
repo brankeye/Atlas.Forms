@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Atlas.Forms.Interfaces.Services
 {
-    public interface IPageService
+    public interface IPageCacheService
     {
         IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap { get; }
 
@@ -14,6 +14,12 @@ namespace Atlas.Forms.Interfaces.Services
 
         Page TryGetCachedPage(string page, IParametersService parameters = null);
 
-        void AddPage(string key, PageMapContainer container, bool isInitialized = false);
+        bool TryAddPage(string key);
+
+        bool TryAddPageAsKeepAlive(string key);
+
+        bool TryAddPageAsSingleInstance(string key);
+
+        bool RemovePageFromCache(string key);
     }
 }

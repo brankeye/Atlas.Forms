@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
 
-namespace Atlas.Forms.Navigation
+namespace Atlas.Forms.Components
 {
     public class PageStackController : IPageStackController
     {

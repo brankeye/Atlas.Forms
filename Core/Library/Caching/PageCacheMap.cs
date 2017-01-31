@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Atlas.Forms.Pages.Containers;
 
 namespace Atlas.Forms.Caching
@@ -7,11 +9,11 @@ namespace Atlas.Forms.Caching
     {
         public static PageCacheMap Current { get; set; } = new PageCacheMap();
 
-        public Dictionary<string, IList<PageMapContainer>> Mappings { get; } = new Dictionary<string, IList<PageMapContainer>>();
+        public IDictionary<string, IList<PageMapContainer>> Mappings { get; } = new Dictionary<string, IList<PageMapContainer>>();
 
         public IReadOnlyDictionary<string, IList<PageMapContainer>> GetMappings()
         {
-            return Mappings;
+            return new ReadOnlyDictionary<string, IList<PageMapContainer>>(Mappings);
         }
     }
 }

@@ -4,6 +4,7 @@ using atlas.samples.helloworld.Shared.ViewModels;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -47,7 +48,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
             listView.ItemSelected += ListView_OnItemSelected;
         }
 
-        public IMasterDetailPageManager Manager { get; set; }
+        public IMasterDetailPageManager PageManager { get; set; }
 
         public void Initialize(IParametersService parameters)
         {
