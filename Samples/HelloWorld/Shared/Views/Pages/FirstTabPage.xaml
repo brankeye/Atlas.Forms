@@ -3,5 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="atlas.samples.helloworld.Shared.Views.Pages.FirstTabPage"
              Title="FirstTabPage">
-  <Label x:Name="Label" Text="FirstTabPage" VerticalOptions="Center" HorizontalOptions="Center" />
+  <StackLayout>
+    <Label x:Name="Label" Text="FirstTabPage" VerticalOptions="Center" HorizontalOptions="Center" />
+    <Button Text="Go to next page" Clicked="Button_OnClicked" VerticalOptions="Center" HorizontalOptions="Center" />
+  </StackLayout>
 </ContentPage>

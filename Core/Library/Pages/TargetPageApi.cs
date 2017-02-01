@@ -59,7 +59,7 @@ namespace Atlas.Forms.Pages
         public void AsLifetimeInstance(string page)
         {
             _container.CacheState = CacheState.LifetimeInstance;
-            _container.LifetimePageKey = _triggerPage;
+            _container.LifetimePageKey = page;
         }
     }
 }

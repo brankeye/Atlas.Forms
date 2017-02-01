@@ -8,5 +8,6 @@
     <Button Text="Test DisplayAlert with Cancel" Clicked="Button_OnTestDisplayAlertWithCancel" HorizontalOptions="Center"></Button>
     <Button Text="Test DisplayAlert with Accept/Cancel" Clicked="Button_OnTestDisplayAlertWithAcceptCancel" HorizontalOptions="Center"></Button>
     <Button Text="Test DisplayActionSheet with Destruct" Clicked="Button_OnTestDisplayActionSheetWithDestruct" HorizontalOptions="Center"></Button>
+    <Button Text="Go to next page" Clicked="Button_OnClicked"></Button>
   </StackLayout>
 </ContentPage>

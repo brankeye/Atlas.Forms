@@ -35,6 +35,10 @@ namespace Atlas.Forms.Components
                 PageCacheStore.Current.PageCache.TryGetValue(mapContainers.Key, out pageContainer);
                 if (pageContainer == null)
                 {
+                    if (mapContainers.Key == key && mapContainers.CacheOption == CacheOption.IsCreated)
+                    {
+                        continue;
+                    }
                     var page = PageFactory.GetNewPage(mapContainers.Key) as Page;
                     pageCacheList.Add(new PageCacheContainer(page, new PageMapContainer(mapContainers)));
                 }
@@ -48,6 +52,10 @@ namespace Atlas.Forms.Components
             IList<PageCacheContainer> pageCacheList = new List<PageCacheContainer>();
             foreach (var mapContainers in pageMapContainers)
             {
+                if (mapContainers.Key == key && mapContainers.CacheOption == CacheOption.IsCreated)
+                {
+                    continue;
+                }
                 PageCacheContainer pageContainer;
                 PageCacheStore.Current.PageCache.TryGetValue(mapContainers.Key, out pageContainer);
                 if (pageContainer == null)
@@ -93,6 +101,13 @@ namespace Atlas.Forms.Components
                     pageInstance.Title = innerPageInstance.Title;
                     pageInstance.Icon = innerPageInstance.Icon;
                 }
+                IList<PageMapContainer> mapContainers;
+                PageCacheMap.Current.Mappings.TryGetValue(innerPageKey, out mapContainers);
+                if (mapContainers != null)
+                {
+                    var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == innerPageKey);
+                    var result = CacheController.TryAddPage(innerPageKey, new PageCacheContainer(innerPageInstance, container) { Initialized = true });
+                }
             }
             else
             {
@@ -103,7 +118,15 @@ namespace Atlas.Forms.Components
                     PageActionInvoker.InvokeInitialize(pageInstance, parameters);
                     AddCachedPagesWithOption(key, CacheOption.IsCreated);
                 }
+                IList<PageMapContainer> mapContainers;
+                PageCacheMap.Current.Mappings.TryGetValue(key, out mapContainers);
+                if (mapContainers != null)
+                {
+                    var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == key);
+                    var result = CacheController.TryAddPage(key, new PageCacheContainer(pageInstance, container) { Initialized = true });
+                }
             }
+
             return pageInstance;
         }
 

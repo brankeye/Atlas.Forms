@@ -84,5 +84,10 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         {
             PageDialogService.Current.DisplayActionSheet("Alert", "Cancel", "Delete", "Save", "Edit");
         }
+
+        private void Button_OnClicked(object sender, EventArgs e)
+        {
+            NavigationService.Current.PushAsync("MyNextPage");
+        }
     }
 }

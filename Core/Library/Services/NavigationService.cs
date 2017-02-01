@@ -129,14 +129,21 @@ namespace Atlas.Forms.Services
 
         public virtual void SetMainPage(string page, IParametersService parameters = null)
         {
-            if (NavigationController.GetMainPage() != null)
+            if (NavigationController.GetMainPage() != null && MainPageContainer != null)
             {
                 PageCacheController.RemoveCachedPages(MainPageContainer.Key);
             }
             var paramService = parameters ?? new ParametersService();
             var nextPage = PageCacheController.GetCachedOrNewPage(page, paramService);
+            var key = page;
+            if (PageKeyParser.IsSequence(page))
+            {
+                var queue = PageKeyParser.GetPageKeysFromSequence(page);
+                queue.Dequeue();
+                key = queue.Dequeue();
+            }
             MainPageContainer = new PageContainer(page, nextPage.GetType());
-            NavigationController.SetMainPage(page, nextPage, paramService);
+            NavigationController.SetMainPage(key, nextPage, paramService);
             PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
         }
     }

@@ -23,7 +23,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
                 new MasterPageItem
                 {
                     Title = "MyContentPage",
-                    PageKey = "MyContentPage"
+                    PageKey = "MyNavigationContentPage"
                 },
                 new MasterPageItem
                 {
@@ -43,7 +43,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
 
         public void Initialize(IParametersService parameters)
         {
-            (BindingContext as ViewModels.Pages.MainMasterDetailPage)?.PresentPage("MyContentPage");
+            (BindingContext as ViewModels.Pages.MainMasterDetailPage)?.PresentPage("MyNavigationContentPage");
         }
 
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
