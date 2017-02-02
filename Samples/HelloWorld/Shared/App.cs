@@ -1,4 +1,8 @@
-﻿using atlas.samples.helloworld.Shared.Views.Pages;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using atlas.samples.helloworld.Shared.Views.Pages;
 using atlas.samples.helloworld.Shared.Views.Pages.NavigationPages;
 using Atlas.Forms;
 using Atlas.Forms.Interfaces;

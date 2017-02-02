@@ -9,8 +9,8 @@
     <projectUrl>https://github.com/brankeye/Atlas.Forms</projectUrl>
 	<iconUrl>http://i.imgur.com/pnFX6l9.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Atlas is a small library that provides a viewmodel-first navigation service, a page-cache service, automatic page-caching when navigating, as well as a page dialog service, all usable from view or viewmodel.</description>
-    <releaseNotes>Initial beta release.</releaseNotes>
+    <description>Atlas is a small library that provides a viewmodel-first navigation service, automatic page-caching when navigating, the ability to save multiple Navigation stacks, as well as a page dialog service, all usable from view or viewmodel.</description>
+    <releaseNotes>Updated beta release with changes to APIs. Please see the README on GitHub for more details.</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Xamarin Forms Xamarin.Forms Atlas Atlas.Forms navigation page caching page-caching library</tags>
 	
