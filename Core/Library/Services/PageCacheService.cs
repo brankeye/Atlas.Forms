@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
-using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
@@ -26,8 +25,6 @@ namespace Atlas.Forms.Services
         }
 
         public virtual IReadOnlyDictionary<string, PageCacheContainer> CachedPages => PageCacheStore.Current.GetPageCache();
-
-        public virtual IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.Current.GetMappings();
 
         public virtual Page GetNewPage(string key, IParametersService parameters = null)
         {
@@ -61,9 +58,64 @@ namespace Atlas.Forms.Services
             return PageCacheController.TryAddCachedPage(key, CacheState.SingleInstance);
         }
 
-        public bool RemovePageFromCache(string key)
+        public virtual bool TryAddPageAsLifetimeInstance(string key)
+        {
+            return PageCacheController.TryAddCachedPage(key, CacheState.LifetimeInstance);
+        }
+
+        public bool RemovePage(string key)
         {
             return PageCacheController.RemovePageFromCache(key);
+        }
+
+        public Page GetCachedOrNewPage<TClass>(IParametersService parameters = null)
+        {
+            return GetCachedOrNewPage(typeof(TClass).Name, parameters);
+        }
+
+        public Page GetNewPage<TClass>(IParametersService parameters = null)
+        {
+            return GetNewPage(typeof(TClass).Name, parameters);
+        }
+
+        public Page TryGetCachedPage<TClass>(IParametersService parameters = null)
+        {
+            return TryGetCachedPage(typeof(TClass).Name, parameters);
+        }
+
+        public bool TryAddPage(string key, Page page)
+        {
+            return false;
+        }
+
+        public bool TryAddPage<TClass>(Page page)
+        {
+            return TryAddPage(typeof(TClass).Name, page);
+        }
+
+        public bool TryAddPage<TClass>()
+        {
+            return TryAddPage(typeof(TClass).Name);
+        }
+
+        public bool TryAddPageAsKeepAlive<TClass>()
+        {
+            return TryAddPageAsKeepAlive(typeof(TClass).Name);
+        }
+
+        public bool TryAddPageAsSingleInstance<TClass>()
+        {
+            return TryAddPageAsSingleInstance(typeof(TClass).Name);
+        }
+
+        public bool TryAddPageAsLifetimeInstance<TClass>()
+        {
+            return TryAddPageAsLifetimeInstance(typeof(TClass).Name);
+        }
+
+        public bool RemovePage<TClass>()
+        {
+            return RemovePage(typeof(TClass).Name);
         }
     }
 }

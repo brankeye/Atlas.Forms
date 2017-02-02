@@ -6,6 +6,8 @@ namespace Atlas.Forms.Interfaces
 {
     public interface IPageCacheRegistry
     {
+        IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap { get; }
+
         ITriggerPageApi WhenPage(string pageKey);
 
         ITriggerPageApi WhenPage<TPage>() where TPage : Page;

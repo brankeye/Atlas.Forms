@@ -6,11 +6,11 @@ namespace Atlas.Forms.Interfaces.Services
 {
     public interface IPageCacheService
     {
-        IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap { get; }
-
         IReadOnlyDictionary<string, PageCacheContainer> CachedPages { get; }
 
         Page GetCachedOrNewPage(string page, IParametersService parameters = null);
+
+        Page GetNewPage(string page, IParametersService parameters = null);
 
         Page TryGetCachedPage(string page, IParametersService parameters = null);
 
@@ -20,6 +20,26 @@ namespace Atlas.Forms.Interfaces.Services
 
         bool TryAddPageAsSingleInstance(string key);
 
-        bool RemovePageFromCache(string key);
+        bool RemovePage(string key);
+
+        Page GetCachedOrNewPage<TClass>(IParametersService parameters = null);
+
+        Page GetNewPage<TClass>(IParametersService parameters = null);
+
+        Page TryGetCachedPage<TClass>(IParametersService parameters = null);
+
+        bool TryAddPage(string key, Page page);
+
+        bool TryAddPage<TClass>(Page page);
+
+        bool TryAddPage<TClass>();
+
+        bool TryAddPageAsKeepAlive<TClass>();
+
+        bool TryAddPageAsSingleInstance<TClass>();
+
+        bool TryAddPageAsLifetimeInstance<TClass>();
+
+        bool RemovePage<TClass>();
     }
 }

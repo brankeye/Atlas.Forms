@@ -8,7 +8,9 @@ namespace Atlas.Forms.Caching
 {
     public class PageCacheRegistry : IPageCacheRegistry
     {
-        public ITriggerPageApi WhenPage(string pageKey)
+        public virtual IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.Current.GetMappings();
+
+        public virtual ITriggerPageApi WhenPage(string pageKey)
         {
             var container = new PageMapContainer();
             IList<PageMapContainer> list;
@@ -22,19 +24,19 @@ namespace Atlas.Forms.Caching
             return new TriggerPageApi(pageKey, container);
         }
 
-        public ITriggerPageApi WhenPage<TPage>() where TPage : Page
+        public virtual ITriggerPageApi WhenPage<TPage>() where TPage : Page
         {
             return WhenPage(typeof(TPage).Name);
         }
 
-        public bool Remove(string pageKey, PageMapContainer container)
+        public virtual bool Remove(string pageKey, PageMapContainer container)
         {
             IList<PageMapContainer> list;
             PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
             return list != null && list.Remove(container);
         }
 
-        public IList<PageMapContainer> GetMappingsForKey(string pageKey)
+        public virtual IList<PageMapContainer> GetMappingsForKey(string pageKey)
         {
             IList<PageMapContainer> list;
             PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
