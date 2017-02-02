@@ -146,5 +146,40 @@ namespace Atlas.Forms.Services
             NavigationController.SetMainPage(key, nextPage, paramService);
             PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
         }
+
+        public virtual void InsertPageBefore<TClass, TBefore>(IParametersService parameters = null)
+        {
+            InsertPageBefore(typeof(TClass).Name, typeof(TBefore).Name, parameters);
+        }
+
+        public virtual Task PushAsync<TClass>(IParametersService parameters = null)
+        {
+            return PushAsync<TClass>(true, parameters);
+        }
+
+        public virtual Task PushAsync<TClass>(bool animated, IParametersService parameters = null)
+        {
+            return PushAsync(typeof(TClass).Name, animated, parameters);
+        }
+
+        public virtual Task PushModalAsync<TClass>(IParametersService parameters = null)
+        {
+            return PushModalAsync<TClass>(true, parameters);
+        }
+
+        public virtual Task PushModalAsync<TClass>(bool animated, IParametersService parameters = null)
+        {
+            return PushModalAsync(typeof(TClass).Name, animated, parameters);
+        }
+
+        public virtual void RemovePage<TClass>()
+        {
+            RemovePage(typeof(TClass).Name);
+        }
+
+        public virtual void SetMainPage<TClass>(IParametersService parameters = null)
+        {
+            SetMainPage(typeof(TClass).Name, parameters);
+        }
     }
 }

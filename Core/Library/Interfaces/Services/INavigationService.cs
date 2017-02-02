@@ -37,5 +37,19 @@ namespace Atlas.Forms.Interfaces.Services
         void RemovePage(string page);
 
         void SetMainPage(string page, IParametersService parameters = null);
+
+        void InsertPageBefore<TClass, TBefore>(IParametersService parameters = null);
+
+        Task PushAsync<TClass>(IParametersService parameters = null);
+
+        Task PushAsync<TClass>(bool animated, IParametersService parameters = null);
+
+        Task PushModalAsync<TClass>(IParametersService parameters = null);
+
+        Task PushModalAsync<TClass>(bool animated, IParametersService parameters = null);
+
+        void RemovePage<TClass>();
+
+        void SetMainPage<TClass>(IParametersService parameters = null);
     }
 }
