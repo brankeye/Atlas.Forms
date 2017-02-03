@@ -1,4 +1,5 @@
 ﻿using atlas.samples.helloworld.Shared.Views.Pages;
+using atlas.samples.helloworld.Shared.Views.Pages.NavigationPage;
 using Atlas.Forms;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Services;
@@ -15,7 +16,7 @@ namespace atlas.samples.helloworld.Shared
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)
         {
-            registry.RegisterPage<NavigationPage>();
+            registry.RegisterPage<CustomNavigationPage>("NavigationPage");
             registry.RegisterPage<Views.Pages.MainMasterDetailPage>();
             registry.RegisterPage<Views.Pages.MyContentPage>();
             registry.RegisterPage<Views.Pages.MyTabbedPage>();

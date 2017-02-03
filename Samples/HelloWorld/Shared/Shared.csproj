@@ -59,6 +59,7 @@
     <Compile Include="Views\Pages\MyTabbedPage.xaml.cs">
       <DependentUpon>MyTabbedPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Pages\NavigationPage\CustomNavigationPage.cs" />
     <Compile Include="Views\Pages\NextTabPage.xaml.cs">
       <DependentUpon>NextTabPage.xaml</DependentUpon>
     </Compile>
