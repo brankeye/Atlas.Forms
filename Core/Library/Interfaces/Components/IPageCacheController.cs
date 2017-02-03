@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
 
 namespace Atlas.Forms.Interfaces.Components
 {
     public interface IPageCacheController
     {
-        object GetCachedOrNewPage(string key, IParametersService parameters);
+        object GetCachedOrNewPage(NavigationInfo pageInfo, IParametersService parameters);
 
         object TryGetCachedPage(string key, IParametersService parameters);
 
-        object GetNewPage(string key);
+        object GetNewPage(NavigationInfo pageInfo);
 
-        bool TryAddCachedPage(string key, CacheState cacheState);
+        bool TryAddCachedPage(NavigationInfo pageInfo, CacheState cacheState);
 
         void AddCachedPages(string key);
 

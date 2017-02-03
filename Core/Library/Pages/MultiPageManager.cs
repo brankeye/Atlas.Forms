@@ -40,12 +40,12 @@ namespace Atlas.Forms.Pages
             PageCacheController = pageCacheController;
         }
 
-        public void AddPage(string page, IParametersService parameters = null)
+        public void AddPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            var pageInstance = PageCacheController.GetCachedOrNewPage(page, parameters ?? new ParametersService()) as T;
+            var pageInstance = PageCacheController.GetCachedOrNewPage(pageInfo, parameters ?? new ParametersService()) as T;
             NavigationController.TrySetNavigation(pageInstance);
             Page.Children.Add(pageInstance);
-            PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
+            PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
             var children = Children;
             if (children.Count == 1)
             {

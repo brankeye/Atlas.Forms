@@ -6,7 +6,6 @@ using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Services
@@ -31,11 +30,11 @@ namespace Atlas.Forms.Services
             PageCacheController = pageCacheController;
         }
 
-        public virtual void InsertPageBefore(string page, string before, IParametersService parameters = null)
+        public virtual void InsertPageBefore(NavigationInfo pageInfo, NavigationInfo before, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = PageCacheController.GetCachedOrNewPage(page, paramService);
-            NavigationController.InsertPageBefore(page, nextPage, before, paramService);
+            var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService);
+            NavigationController.InsertPageBefore(nextPage, before.Page, paramService);
         }
 
         public virtual async Task<IPageContainer> PopAsync(IParametersService parameters = null)
@@ -83,27 +82,27 @@ namespace Atlas.Forms.Services
             }
         }
 
-        public virtual async Task PushAsync(string page, IParametersService parameters = null)
+        public virtual async Task PushAsync(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            await PushAsync(page, true, parameters);
+            await PushAsync(pageInfo, true, parameters);
         }
 
-        public virtual async Task PushAsync(string page, bool animated, IParametersService parameters = null)
+        public virtual async Task PushAsync(NavigationInfo pageInfo, bool animated, IParametersService parameters = null)
         {
-            await PushInternalAsync(page, animated, parameters);
+            await PushInternalAsync(pageInfo, animated, parameters);
         }
 
-        public virtual async Task PushModalAsync(string page, IParametersService parameters = null)
+        public virtual async Task PushModalAsync(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            await PushModalAsync(page, true, parameters);
+            await PushModalAsync(pageInfo, true, parameters);
         }
 
-        public virtual async Task PushModalAsync(string page, bool animated, IParametersService parameters = null)
+        public virtual async Task PushModalAsync(NavigationInfo pageInfo, bool animated, IParametersService parameters = null)
         {
-            await PushInternalAsync(page, animated, parameters, true);
+            await PushInternalAsync(pageInfo, animated, parameters, true);
         }
 
-        protected virtual async Task PushInternalAsync(string page, bool animated, IParametersService parameters = null, bool useModal = false)
+        protected virtual async Task PushInternalAsync(NavigationInfo pageInfo, bool animated, IParametersService parameters = null, bool useModal = false)
         {
             var paramService = parameters ?? new ParametersService();
             var pageStack = useModal ? ModalStack :
@@ -113,68 +112,26 @@ namespace Atlas.Forms.Services
                 var lastPage = pageStack.Last();
                 PageCacheController.RemoveCachedPages(lastPage.Key);
             }
-            var nextPage = PageCacheController.GetCachedOrNewPage(page, paramService);
-            await NavigationController.PushPageAsync(page, nextPage, animated, paramService, useModal);
-            PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
+            var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService);
+            await NavigationController.PushPageAsync(nextPage, animated, paramService, useModal);
+            PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
         }
 
-        public virtual void RemovePage(string page)
+        public virtual void RemovePage(NavigationInfo pageInfo)
         {
-            NavigationController.RemovePage(page);
+            NavigationController.RemovePage(pageInfo.Page);
         }
 
-        public virtual void SetMainPage(string page, IParametersService parameters = null)
+        public virtual void SetMainPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
             //if (NavigationController.GetMainPage() != null && MainPageContainer != null)
             //{
             //    PageCacheController.RemoveCachedPages(MainPageContainer.Key);
             //}
             var paramService = parameters ?? new ParametersService();
-            var nextPage = PageCacheController.GetCachedOrNewPage(page, paramService);
-            var key = page;
-            if (PageKeyParser.IsSequence(page))
-            {
-                var queue = PageKeyParser.GetPageKeysFromSequence(page);
-                queue.Dequeue();
-                key = queue.Dequeue();
-            }
-            NavigationController.SetMainPage(key, nextPage, paramService);
-            PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
-        }
-
-        public virtual void InsertPageBefore<TClass, TBefore>(IParametersService parameters = null)
-        {
-            InsertPageBefore(typeof(TClass).Name, typeof(TBefore).Name, parameters);
-        }
-
-        public virtual Task PushAsync<TClass>(IParametersService parameters = null)
-        {
-            return PushAsync<TClass>(true, parameters);
-        }
-
-        public virtual Task PushAsync<TClass>(bool animated, IParametersService parameters = null)
-        {
-            return PushAsync(typeof(TClass).Name, animated, parameters);
-        }
-
-        public virtual Task PushModalAsync<TClass>(IParametersService parameters = null)
-        {
-            return PushModalAsync<TClass>(true, parameters);
-        }
-
-        public virtual Task PushModalAsync<TClass>(bool animated, IParametersService parameters = null)
-        {
-            return PushModalAsync(typeof(TClass).Name, animated, parameters);
-        }
-
-        public virtual void RemovePage<TClass>()
-        {
-            RemovePage(typeof(TClass).Name);
-        }
-
-        public virtual void SetMainPage<TClass>(IParametersService parameters = null)
-        {
-            SetMainPage(typeof(TClass).Name, parameters);
+            var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService);
+            NavigationController.SetMainPage(nextPage, paramService);
+            PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
         }
     }
 }

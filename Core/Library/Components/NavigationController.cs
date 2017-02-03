@@ -30,7 +30,7 @@ namespace Atlas.Forms.Components
             PageStackController = pageStackController;
         }
 
-        public virtual void SetMainPage(string pageKey, object page, IParametersService parameters)
+        public virtual void SetMainPage(object page, IParametersService parameters)
         {
             var pageInstance = page as Page;
             if (pageInstance != null)
@@ -47,7 +47,7 @@ namespace Atlas.Forms.Components
             return ApplicationProvider.MainPage;
         }
 
-        public virtual async Task PushPageAsync(string pageKey, object page, bool animated, IParametersService parameters, bool useModal)
+        public virtual async Task PushPageAsync(object page, bool animated, IParametersService parameters, bool useModal)
         {
             var nextPage = page as Page;
             PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
@@ -81,7 +81,7 @@ namespace Atlas.Forms.Components
             return pageContainer;
         }
 
-        public virtual void InsertPageBefore(string pageKey, object page, string before, IParametersService parameters)
+        public virtual void InsertPageBefore(object page, string before, IParametersService parameters)
         {
             var pageInstance = page as Page;
             if (pageInstance != null)

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Pages;
 
 namespace Atlas.Forms.Interfaces.Managers
 {
@@ -14,7 +15,7 @@ namespace Atlas.Forms.Interfaces.Managers
 
         IEnumerable ItemsSource { get; }
 
-        void AddPage(string page, IParametersService parameters = null);
+        void AddPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
         IPageContainer RemovePage(string page);
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Atlas.Forms.Pages;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Interfaces.Services
@@ -12,7 +13,7 @@ namespace Atlas.Forms.Interfaces.Services
 
         INavigation Navigation { get; }
 
-        void InsertPageBefore(string page, string before, IParametersService parameters = null);
+        void InsertPageBefore(NavigationInfo pageInfo, NavigationInfo before, IParametersService parameters = null);
 
         Task<IPageContainer> PopAsync(IParametersService parameters = null);
 
@@ -26,30 +27,16 @@ namespace Atlas.Forms.Interfaces.Services
 
         Task PopToRootAsync(bool animated);
 
-        Task PushAsync(string page, IParametersService parameters = null);
+        Task PushAsync(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        Task PushAsync(string page, bool animated, IParametersService parameters = null);
+        Task PushAsync(NavigationInfo pageInfo, bool animated, IParametersService parameters = null);
 
-        Task PushModalAsync(string page, IParametersService parameters = null);
+        Task PushModalAsync(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        Task PushModalAsync(string page, bool animated, IParametersService parameters = null);
+        Task PushModalAsync(NavigationInfo pageInfo, bool animated, IParametersService parameters = null);
 
-        void RemovePage(string page);
+        void RemovePage(NavigationInfo pageInfo);
 
-        void SetMainPage(string page, IParametersService parameters = null);
-
-        void InsertPageBefore<TClass, TBefore>(IParametersService parameters = null);
-
-        Task PushAsync<TClass>(IParametersService parameters = null);
-
-        Task PushAsync<TClass>(bool animated, IParametersService parameters = null);
-
-        Task PushModalAsync<TClass>(IParametersService parameters = null);
-
-        Task PushModalAsync<TClass>(bool animated, IParametersService parameters = null);
-
-        void RemovePage<TClass>();
-
-        void SetMainPage<TClass>(IParametersService parameters = null);
+        void SetMainPage(NavigationInfo pageInfo, IParametersService parameters = null);
     }
 }

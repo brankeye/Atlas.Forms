@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
 using Xamarin.Forms;
 
@@ -8,38 +9,16 @@ namespace Atlas.Forms.Interfaces.Services
     {
         IReadOnlyDictionary<string, PageCacheContainer> CachedPages { get; }
 
-        Page GetCachedOrNewPage(string page, IParametersService parameters = null);
+        Page GetCachedOrNewPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        Page GetNewPage(string page, IParametersService parameters = null);
+        Page GetNewPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        Page TryGetCachedPage(string page, IParametersService parameters = null);
+        Page TryGetCachedPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        bool TryAddPage(string key);
+        bool TryAddPage(NavigationInfo pageInfo);
 
-        bool TryAddPageAsKeepAlive(string key);
+        bool TryAddPageAsKeepAlive(NavigationInfo pageInfo);
 
-        bool TryAddPageAsSingleInstance(string key);
-
-        bool RemovePage(string key);
-
-        Page GetCachedOrNewPage<TClass>(IParametersService parameters = null);
-
-        Page GetNewPage<TClass>(IParametersService parameters = null);
-
-        Page TryGetCachedPage<TClass>(IParametersService parameters = null);
-
-        bool TryAddPage(string key, Page page);
-
-        bool TryAddPage<TClass>(Page page);
-
-        bool TryAddPage<TClass>();
-
-        bool TryAddPageAsKeepAlive<TClass>();
-
-        bool TryAddPageAsSingleInstance<TClass>();
-
-        bool TryAddPageAsLifetimeInstance<TClass>();
-
-        bool RemovePage<TClass>();
+        bool TryAddPageAsSingleInstance(NavigationInfo pageInfo);
     }
 }

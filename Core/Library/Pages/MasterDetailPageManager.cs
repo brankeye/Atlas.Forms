@@ -29,10 +29,10 @@ namespace Atlas.Forms.Pages
             PageCacheController = pageCacheController;
         }
 
-        public virtual void PresentPage(string page, IParametersService parameters = null)
+        public virtual void PresentPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = PageCacheController.GetCachedOrNewPage(page, paramService) as Page;
+            var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService) as Page;
             NavigationController.TrySetNavigation(nextPage);
             var lastPage = Page.Detail;
             if (lastPage != null)
@@ -46,7 +46,7 @@ namespace Atlas.Forms.Pages
                 PageActionInvoker.InvokeOnPageDisappeared(lastPage, paramService);
             }
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
-            PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
+            PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
         }
     }
 }

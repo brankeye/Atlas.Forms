@@ -2,8 +2,8 @@
 using atlas.samples.helloworld.Shared.Views.Pages.NavigationPage;
 using Atlas.Forms;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
-using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared
 {
@@ -11,13 +11,13 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
-            NavigationService.Current.SetMainPage("MainMasterDetailPage");
+            NavigationService.Current.SetMainPage(NavigationInfo.GetPage("MainMasterDetailPage").GetNavigationInfo());
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)
         {
             registry.RegisterPage<CustomNavigationPage>("NavigationPage");
-            registry.RegisterPage<Views.Pages.MainMasterDetailPage>();
+            registry.RegisterPage<Views.Pages.MainMasterDetailPage, ViewModels.Pages.MainMasterDetailPage>();
             registry.RegisterPage<Views.Pages.MyContentPage>();
             registry.RegisterPage<Views.Pages.MyTabbedPage>();
             registry.RegisterPage<Views.Pages.FirstTabPage>();

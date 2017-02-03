@@ -73,27 +73,29 @@ namespace Atlas.Forms.Components
             return page;
         }
 
-        public virtual object GetNewPage(string key)
+        public virtual object GetNewPage(NavigationInfo pageInfo)
         {
-            return PageFactory.GetNewPage(key);
+            var page = PageFactory.GetNewPage(pageInfo.Page);
+            if (pageInfo.HasWrapperPage)
+            {
+                return PageFactory.GetNewPage(pageInfo.WrapperPage, page);
+            }
+            return page;
         }
 
-        public virtual object GetCachedOrNewPage(string key, IParametersService parameters)
+        public virtual object GetCachedOrNewPage(NavigationInfo pageInfo, IParametersService parameters)
         {
             Page pageInstance;
-            if (PageKeyParser.IsSequence(key))
+            if (pageInfo.HasWrapperPage)
             {
-                var queue = PageKeyParser.GetPageKeysFromSequence(key);
-                var outerPageKey = queue.Dequeue();
-                var innerPageKey = queue.Dequeue();
                 Type outerPageType;
-                PageNavigationStore.Current.PageTypes.TryGetValue(outerPageKey, out outerPageType);
-                var innerPageInstance = TryGetCachedPage(innerPageKey, parameters) as Page;
+                PageNavigationStore.Current.PageTypes.TryGetValue(pageInfo.WrapperPage, out outerPageType);
+                var innerPageInstance = TryGetCachedPage(pageInfo.Page, parameters) as Page;
                 if (innerPageInstance == null)
                 {
-                    innerPageInstance = PageFactory.GetNewPage(innerPageKey) as Page;
+                    innerPageInstance = PageFactory.GetNewPage(pageInfo.Page) as Page;
                     PageActionInvoker.InvokeInitialize(innerPageInstance, parameters);
-                    AddCachedPagesWithOption(innerPageKey, CacheOption.IsCreated);
+                    AddCachedPagesWithOption(pageInfo.Page, CacheOption.IsCreated);
                 }
                 else
                 {
@@ -102,35 +104,35 @@ namespace Atlas.Forms.Components
                         return innerPageInstance.Parent;
                     }
                 }
-                pageInstance = PageFactory.GetNewPage(outerPageKey, innerPageInstance) as Page;
+                pageInstance = PageFactory.GetNewPage(pageInfo.WrapperPage, innerPageInstance) as Page;
                 if (pageInstance is NavigationPage)
                 {
                     pageInstance.Title = innerPageInstance.Title;
                     pageInstance.Icon = innerPageInstance.Icon;
                 }
                 IList<PageMapContainer> mapContainers;
-                PageCacheMap.Current.Mappings.TryGetValue(innerPageKey, out mapContainers);
+                PageCacheMap.Current.Mappings.TryGetValue(pageInfo.Page, out mapContainers);
                 if (mapContainers != null)
                 {
-                    var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == innerPageKey);
-                    var result = CacheController.TryAddPage(innerPageKey, new PageCacheContainer(innerPageInstance, container) { Initialized = true });
+                    var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == pageInfo.Page);
+                    var result = CacheController.TryAddPage(pageInfo.Page, new PageCacheContainer(innerPageInstance, container) { Initialized = true });
                 }
             }
             else
             {
-                pageInstance = TryGetCachedPage(key, parameters) as Page;
+                pageInstance = TryGetCachedPage(pageInfo.Page, parameters) as Page;
                 if (pageInstance == null)
                 {
-                    pageInstance = PageFactory.GetNewPage(key) as Page;
+                    pageInstance = PageFactory.GetNewPage(pageInfo.Page) as Page;
                     PageActionInvoker.InvokeInitialize(pageInstance, parameters);
-                    AddCachedPagesWithOption(key, CacheOption.IsCreated);
+                    AddCachedPagesWithOption(pageInfo.Page, CacheOption.IsCreated);
                 }
                 IList<PageMapContainer> mapContainers;
-                PageCacheMap.Current.Mappings.TryGetValue(key, out mapContainers);
+                PageCacheMap.Current.Mappings.TryGetValue(pageInfo.Page, out mapContainers);
                 if (mapContainers != null)
                 {
-                    var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == key);
-                    var result = CacheController.TryAddPage(key, new PageCacheContainer(pageInstance, container) { Initialized = true });
+                    var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == pageInfo.Page);
+                    var result = CacheController.TryAddPage(pageInfo.Page, new PageCacheContainer(pageInstance, container) { Initialized = true });
                 }
             }
 
@@ -180,12 +182,12 @@ namespace Atlas.Forms.Components
             return CacheController.RemovePageFromCache(key);
         }
 
-        public virtual bool TryAddCachedPage(string key, CacheState cacheState)
+        public virtual bool TryAddCachedPage(NavigationInfo pageInfo, CacheState cacheState)
         {
-            var pageInstance = PageFactory.GetNewPage(key) as Page;
-            var pageMapContainer = new PageMapContainer(cacheState, CacheOption.None, new PageContainer(key, pageInstance.GetType()));
+            var pageInstance = GetNewPage(pageInfo) as Page;
+            var pageMapContainer = new PageMapContainer(cacheState, CacheOption.None, new PageContainer(pageInfo.Page, pageInstance.GetType()));
             var pageCacheContainer = new PageCacheContainer(pageInstance, pageMapContainer);
-            return CacheController.TryAddPage(key, pageCacheContainer);
+            return CacheController.TryAddPage(pageInfo.Page, pageCacheContainer);
         }
 
         private IPageFactory CreatePageFactoryInternal(INavigationController navigationController, IPageCacheController pageCacheController)

@@ -40,6 +40,7 @@
     <DefineConstants>TEST</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Pages\NavigationInfo.cs" />
     <Compile Include="AtlasApplication.cs" />
     <Compile Include="AtlasApplicationBase.cs" />
     <Compile Include="Behaviors\NavigationPageBackButtonBehavior.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Enums\CacheOption.cs" />
     <Compile Include="Enums\CacheState.cs" />
     <Compile Include="FormsApplication.cs" />
+    <Compile Include="Interfaces\Api\INavigationApi.cs" />
     <Compile Include="Interfaces\Components\ICacheController.cs" />
     <Compile Include="Interfaces\Components\INavigationController.cs" />
     <Compile Include="Interfaces\Components\IPageCacheController.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="Interfaces\Pages\IPageDisappearingAware.cs" />
     <Compile Include="Navigation\ApplicationProvider.cs" />
     <Compile Include="Caching\PageCacheMap.cs" />
+    <Compile Include="Navigation\NavigationApi.cs" />
     <Compile Include="Navigation\NavigationProvider.cs" />
     <Compile Include="Navigation\PageKeyStore.cs" />
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
@@ -129,7 +132,9 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Api\" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.3.180\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

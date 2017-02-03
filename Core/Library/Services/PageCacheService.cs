@@ -26,96 +26,46 @@ namespace Atlas.Forms.Services
 
         public virtual IReadOnlyDictionary<string, PageCacheContainer> CachedPages => PageCacheStore.Current.GetPageCache();
 
-        public virtual Page GetNewPage(string key, IParametersService parameters = null)
+        public virtual Page GetNewPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            var pageInstance = PageCacheController.GetNewPage(key) as Page;
+            var pageInstance = PageCacheController.GetNewPage(pageInfo) as Page;
             PageActionInvoker.InvokeInitialize(pageInstance, parameters ?? new ParametersService());
             return pageInstance;
         }
 
-        public virtual Page GetCachedOrNewPage(string key, IParametersService parameters = null)
+        public virtual Page GetCachedOrNewPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            return PageCacheController.GetCachedOrNewPage(key, parameters ?? new ParametersService()) as Page;
+            return PageCacheController.GetCachedOrNewPage(pageInfo, parameters ?? new ParametersService()) as Page;
         }
 
-        public virtual Page TryGetCachedPage(string key, IParametersService parameters = null)
+        public virtual Page TryGetCachedPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            return PageCacheController.TryGetCachedPage(key, parameters ?? new ParametersService()) as Page;
+            return PageCacheController.TryGetCachedPage(pageInfo.Page, parameters ?? new ParametersService()) as Page;
         }
 
-        public virtual bool TryAddPage(string key)
+        public virtual bool TryAddPage(NavigationInfo pageInfo)
         {
-            return PageCacheController.TryAddCachedPage(key, CacheState.Default);
+            return PageCacheController.TryAddCachedPage(pageInfo, CacheState.Default);
         }
 
-        public virtual bool TryAddPageAsKeepAlive(string key)
+        public virtual bool TryAddPageAsKeepAlive(NavigationInfo pageInfo)
         {
-            return PageCacheController.TryAddCachedPage(key, CacheState.KeepAlive);
+            return PageCacheController.TryAddCachedPage(pageInfo, CacheState.KeepAlive);
         }
 
-        public virtual bool TryAddPageAsSingleInstance(string key)
+        public virtual bool TryAddPageAsSingleInstance(NavigationInfo pageInfo)
         {
-            return PageCacheController.TryAddCachedPage(key, CacheState.SingleInstance);
+            return PageCacheController.TryAddCachedPage(pageInfo, CacheState.SingleInstance);
         }
 
-        public virtual bool TryAddPageAsLifetimeInstance(string key)
+        public virtual bool TryAddPageAsLifetimeInstance(NavigationInfo pageInfo)
         {
-            return PageCacheController.TryAddCachedPage(key, CacheState.LifetimeInstance);
+            return PageCacheController.TryAddCachedPage(pageInfo, CacheState.LifetimeInstance);
         }
 
-        public bool RemovePage(string key)
+        public bool RemovePage(NavigationInfo pageInfo)
         {
-            return PageCacheController.RemovePageFromCache(key);
-        }
-
-        public Page GetCachedOrNewPage<TClass>(IParametersService parameters = null)
-        {
-            return GetCachedOrNewPage(typeof(TClass).Name, parameters);
-        }
-
-        public Page GetNewPage<TClass>(IParametersService parameters = null)
-        {
-            return GetNewPage(typeof(TClass).Name, parameters);
-        }
-
-        public Page TryGetCachedPage<TClass>(IParametersService parameters = null)
-        {
-            return TryGetCachedPage(typeof(TClass).Name, parameters);
-        }
-
-        public bool TryAddPage(string key, Page page)
-        {
-            return false;
-        }
-
-        public bool TryAddPage<TClass>(Page page)
-        {
-            return TryAddPage(typeof(TClass).Name, page);
-        }
-
-        public bool TryAddPage<TClass>()
-        {
-            return TryAddPage(typeof(TClass).Name);
-        }
-
-        public bool TryAddPageAsKeepAlive<TClass>()
-        {
-            return TryAddPageAsKeepAlive(typeof(TClass).Name);
-        }
-
-        public bool TryAddPageAsSingleInstance<TClass>()
-        {
-            return TryAddPageAsSingleInstance(typeof(TClass).Name);
-        }
-
-        public bool TryAddPageAsLifetimeInstance<TClass>()
-        {
-            return TryAddPageAsLifetimeInstance(typeof(TClass).Name);
-        }
-
-        public bool RemovePage<TClass>()
-        {
-            return RemovePage(typeof(TClass).Name);
+            return PageCacheController.RemovePageFromCache(pageInfo.Page);
         }
     }
 }
