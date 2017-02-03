@@ -46,22 +46,25 @@ protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
 	
 	// Cache the Contact page when it appears as a SingleInstance.
 	registry.WhenPage<Contact>().Appears().CachePage().AsSingleInstance();
+	
+	// Cache the MyContentPage when it is created and only remove it when the MyMasterDetailPage is removed.
+	registry.WhenPage<MyContentPage>().IsCreated().CachePage().AsLifetimeInstance<MyMasterDetailPage>();
 }
 ```
 
-#### There are three triggers that control when pages are automatically cached. These are:
+#### There are two triggers that control when pages are automatically cached. These are:
 
 	Appears - When the page appears, cache the chosen page.
 	
-	Disappears - When the page disappears, cache the chosen page.
-	
 	IsCreated - When the page is first created, cache the chosen page.
 
-#### There are three options for how page lifetime is handled. These are:
+#### There are four options for how page lifetime is handled. These are:
 
 	Default - Removed from cache after first retrieval (means same instance is never used twice).
 	
 	KeepAlive - Removed from cache when navigating forward or backward (ideal for MasterDetailPage).
+	
+	LifetimeInstance - Removes page X when page Y is removed.
 	
 	SingleInstance - Never removed from cache. Yours to manage.
 
@@ -81,8 +84,6 @@ public class App : AtlasApplication
 ```
 
 When navigating, the service will first look for a page with the same key in the page-cache, if not found, a new instance will be created.
-
-All ```MasterDetailPage``` implementations must set the ```Detail``` in the constructor using the ```PageCacheService```.
 
 Then use ```PushAsync``` to navigate, with optional parameters to be passed to the ```OnPageAppearing/OnPageAppeared``` functions.
 ```csharp
@@ -106,7 +107,13 @@ public class MainPageViewModel : IPageAppearingAware, IPageAppearedAware
 	}
 }
 
-public class NextPageViewModel : IInitializeAware, IPageAppearingAware, IPageAppearedAware
+public class NextPageViewModel : IInitializeAware, 
+				 IPageAppearingAware, 
+				 IPageAppearedAware,
+				 IPageDisappearingAware,
+				 IPageDisappearedAware,
+				 IPageCachingAware,
+				 IPageCachedAware
 {
 	private void BackButton_OnClicked()
 	{
@@ -130,11 +137,95 @@ public class NextPageViewModel : IInitializeAware, IPageAppearingAware, IPageApp
 	{
 		var id = parameters.TryGet<int>("Id"); // Id = 1
 	}
+	
+	public void OnPageAppearing(IParametersService parameters)
+	{
+		var id = parameters.TryGet<int>("Id"); // Id = 1}
+	}
+	
+	public void OnPageDisappearing(IParametersService parameters) {}
+	
+	public void OnPageDisappeared(IParametersService parameters) {}
+	
+	public void OnPageCaching() {}
+
+        public void OnPageCached() {}
+```
+
+### Navigating in a MasterDetailPage
+
+In your view or viewmodel, inherit from ```IMasterDetailPageProvider``` to gain access to the ```PageManager```.
+
+Do not use the PageManager in the view or viewmodel constructor.
+
+```
+public class MainMasterDetailPage : IMasterDetailPageProvider, IInitializeAware
+{
+	public IMasterDetailPageManager PageManager { get; set; }
+
+	public void Initialize(IParametersService parameters)
+	{
+	    PageManager.PresentPage("StartingPage");
+	}
+
+	public void PresentPage(string page)
+	{
+	    PageManager.PresentPage(page);
+	}
 }
 ```
 
+### Navigating in a TabbedPage or CarouselPage
+
+In your view or viewmodel, inherit from ```ITabbedPageProvider``` or ```ICarouselPageProvider``` to gain access to the ```PageManager```.
+
+Do not use the PageManager in the view or viewmodel constructor.
+
+```
+public class MyTabbedPage : ITabbedPageProvider, IInitializeAware
+{
+	public IMultiPageManager PageManager { get; set; }
+
+        public MyTabbedPage()
+        {
+            InitializeComponent();
+        }
+
+        public void Initialize(IParametersService parameters)
+        {
+            PageManager.AddPage("NavigationPage/FirstTabPage");
+            PageManager.AddPage("SecondTabPage");
+            PageManager.AddPage("ThirdTabPage");
+        }
+}
+```
+
+### How to cache and use multiple Navigation stacks
+
+To save a Navigation stack, wrap your page in a NavigationPage like so:
+
+```
+public class MyNavigationContentPage : NavigationPage
+{
+	public MyNavigationContentPage() : base(new MyContentPage())
+	{
+	    Title = "MyContentPage";
+	}
+}
+```
+
+With your newly wrapped page, register its type, then register it for the cache using your choice of cache state (LifetimeInstance, SingleInstance, etc).
+
+```
+registry.RegisterPage<MyNavigationContentPage>();
+registry.WhenPage<MyNavigationContentPage>().IsCreated().CachePage().AsSingleInstance();
+```
+
+Now whenever you navigate to this page, using either ```SetMainPage("MyNavigationContentPage")``` or ```PushAsync("MyNavigationContentPage")```, the same navigation stack will always be used (saving navigation history even when switching pages).
+
 ### How to use dialog pages from viewmodels.
 
+```
 public class MainPageViewModel
 {
 	private void DisplayAlert()
@@ -173,6 +264,8 @@ public interface INavigationService
 	IReadOnlyList<IPageContainer> ModalStack { get; }
 
 	IReadOnlyList<IPageContainer> NavigationStack { get; }
+	
+	INavigation Navigation { get; }
 
 	void InsertPageBefore(string page, string before, IParametersService parameters = null);
 
@@ -195,8 +288,6 @@ public interface INavigationService
 	Task PushModalAsync(string page, IParametersService parameters = null);
 
 	Task PushModalAsync(string page, bool animated, IParametersService parameters = null);
-
-	void PresentPage(string page, IParametersService parameters = null);
 
 	void RemovePage(string page);
 
