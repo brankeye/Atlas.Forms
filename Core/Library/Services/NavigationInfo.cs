@@ -1,21 +1,20 @@
-﻿using System;
-using Atlas.Forms.Interfaces.Api;
-using Atlas.Forms.Interfaces.Services;
-
-namespace Atlas.Forms.Pages
+﻿namespace Atlas.Forms.Services
 {
-    public class NavigationInfo
+    public class Nav
     {
-        public static NavigationInfoFluent GetPage(string key)
+        public static NavigationInfoFluent Get(string key)
         {
             return new NavigationInfoFluent(new NavigationInfo(key));
         }
 
-        public static NavigationInfoFluent GetPage<TClass>()
+        public static NavigationInfoFluent Get<TClass>()
         {
-            return GetPage(typeof(TClass).Name);
+            return Get(typeof(TClass).Name);
         }
+    }
 
+    public class NavigationInfo
+    {
         public NavigationInfo() { }
 
         public NavigationInfo(string key)
@@ -64,7 +63,7 @@ namespace Atlas.Forms.Pages
             return this;
         }
 
-        public virtual NavigationInfo GetNavigationInfo()
+        public virtual NavigationInfo Info()
         {
             return _navigationInfo;
         }

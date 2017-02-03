@@ -18,7 +18,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
 
         private void Button_OnClicked(object sender, EventArgs e)
         {
-            NavigationService.Current.PushAsync("NextTabPage");
+            NavigationService.Current.PushAsync(Nav.Get("NextTabPage").Info());
         }
     }
 }

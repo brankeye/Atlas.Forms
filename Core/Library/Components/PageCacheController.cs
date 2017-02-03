@@ -9,6 +9,7 @@ using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Components
@@ -146,12 +147,6 @@ namespace Atlas.Forms.Components
 
         protected virtual IList<PageMapContainer> GetAllMapContainers(string key)
         {
-            if (PageKeyParser.IsSequence(key))
-            {
-                var queue = PageKeyParser.GetPageKeysFromSequence(key);
-                var outerPageKey = queue.Dequeue();
-                key = queue.Dequeue();
-            }
             IList<PageMapContainer> containers;
             PageCacheMap.Current.Mappings.TryGetValue(key, out containers);
             if (containers == null)

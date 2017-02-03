@@ -11,7 +11,7 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
-            NavigationService.Current.SetMainPage(NavigationInfo.GetPage("MainMasterDetailPage").GetNavigationInfo());
+            NavigationService.Current.SetMainPage(Nav.Get<MainMasterDetailPage>().Info());
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)

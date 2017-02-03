@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Interfaces.Services

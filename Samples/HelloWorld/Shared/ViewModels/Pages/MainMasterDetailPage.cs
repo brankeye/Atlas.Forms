@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Services;
 
 namespace atlas.samples.helloworld.Shared.ViewModels.Pages
 {
@@ -15,12 +16,12 @@ namespace atlas.samples.helloworld.Shared.ViewModels.Pages
 
         public void Initialize(IParametersService parameters)
         {
-            PageManager.PresentPage("NavigationPage/MyContentPage");
+            PageManager.PresentPage(Nav.Get("MyContentPage").AsNavigationPage().Info());
         }
 
-        public void PresentPage(string page)
+        public void PresentPage(NavigationInfo pageInfo)
         {
-            PageManager.PresentPage(page);
+            PageManager.PresentPage(pageInfo);
         }
     }
 }

@@ -3,6 +3,7 @@ using Atlas.Forms.Components;
 using NUnit.Framework;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Services;
 using Library.Tests.Helpers;
 using Library.Tests.Mocks;
 using Xamarin.Forms;
@@ -17,7 +18,7 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage("NavigationPage/MainPage");
+            navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
             var mainPageContainer = navigationService.NavigationStack[0];
             Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
         }
@@ -27,9 +28,9 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage("NavigationPage/MainPage");
-            navigationService.PushAsync("FirstPage").Wait();
-            navigationService.PushAsync("SecondPage").Wait();
+            navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
+            navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
+            navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
             var mainPageContainer = navigationService.NavigationStack[0];
             var firstPageContainer = navigationService.NavigationStack[1];
             var secondPageContainer = navigationService.NavigationStack[2];
@@ -45,9 +46,9 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage("MainPage");
-            navigationService.PushModalAsync("FirstPage").Wait();
-            navigationService.PushModalAsync("SecondPage").Wait();
+            navigationService.SetMainPage(Nav.Get("MainPage").Info());
+            navigationService.PushModalAsync(Nav.Get("FirstPage").Info()).Wait();
+            navigationService.PushModalAsync(Nav.Get("SecondPage").Info()).Wait();
             var firstPageContainer = navigationService.ModalStack[0];
             var secondPageContainer = navigationService.ModalStack[1];
             Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
@@ -61,9 +62,9 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage("NavigationPage/MainPage");
-            navigationService.PushAsync("FirstPage").Wait();
-            navigationService.PushAsync("SecondPage").Wait();
+            navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
+            navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
+            navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
             var mainPageContainer = navigationService.NavigationStack[0];
             var firstPageContainer = navigationService.NavigationStack[1];
             var secondPageContainer = navigationService.NavigationStack[2];
@@ -88,9 +89,9 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage("MainPage");
-            navigationService.PushModalAsync("FirstPage").Wait();
-            navigationService.PushModalAsync("SecondPage").Wait();
+            navigationService.SetMainPage(Nav.Get("MainPage").Info());
+            navigationService.PushModalAsync(Nav.Get("FirstPage").Info()).Wait();
+            navigationService.PushModalAsync(Nav.Get("SecondPage").Info()).Wait();
             var firstPageContainer = navigationService.ModalStack[0];
             var secondPageContainer = navigationService.ModalStack[1];
             Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
@@ -108,16 +109,16 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage("NavigationPage/MainPage");
-            navigationService.PushAsync("FirstPage").Wait();
-            navigationService.PushAsync("ThirdPage").Wait();
+            navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
+            navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
+            navigationService.PushAsync(Nav.Get("ThirdPage").Info()).Wait();
             var mainPageContainer = navigationService.NavigationStack[0];
             var firstPageContainer = navigationService.NavigationStack[1];
             var thirdPageContainer = navigationService.NavigationStack[2];
             Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
             Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
             Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
-            navigationService.InsertPageBefore("SecondPage", "ThirdPage");
+            navigationService.InsertPageBefore(Nav.Get("SecondPage").Info(), Nav.Get("ThirdPage").Info());
             firstPageContainer = navigationService.NavigationStack[1];
             var secondPageContainer = navigationService.NavigationStack[2];
             thirdPageContainer = navigationService.NavigationStack[3];
@@ -133,10 +134,10 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage("NavigationPage/MainPage");
-            navigationService.PushAsync("FirstPage").Wait();
-            navigationService.PushAsync("SecondPage").Wait();
-            navigationService.PushAsync("ThirdPage").Wait();
+            navigationService.SetMainPage(Nav.Get("MainPage").Info());
+            navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
+            navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
+            navigationService.PushAsync(Nav.Get("ThirdPage").Info()).Wait();
             var mainPageContainer = navigationService.NavigationStack[0];
             var firstPageContainer = navigationService.NavigationStack[1];
             var secondPageContainer = navigationService.NavigationStack[2];
@@ -145,12 +146,12 @@ namespace Library.Tests.Fixtures
             Assert.That(firstPageContainer.Key, Is.EqualTo("FirstPage"));
             Assert.That(secondPageContainer.Key, Is.EqualTo("SecondPage"));
             Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
-            navigationService.RemovePage("ThirdPage");
+            navigationService.RemovePage(Nav.Get("ThirdPage").Info());
             Assert.That(navigationService.NavigationStack.Last().Key, Is.EqualTo("SecondPage"));
-            navigationService.PushAsync("ThirdPage").Wait();
+            navigationService.PushAsync(Nav.Get("ThirdPage").Info()).Wait();
             thirdPageContainer = navigationService.NavigationStack[3];
             Assert.That(thirdPageContainer.Key, Is.EqualTo("ThirdPage"));
-            navigationService.RemovePage("SecondPage");
+            navigationService.RemovePage(Nav.Get("SecondPage").Info());
             Assert.That(navigationService.NavigationStack[1].Key, Is.EqualTo("FirstPage"));
             Assert.That(navigationService.NavigationStack[2].Key, Is.EqualTo("ThirdPage"));
             var stackCount = navigationService.Navigation.NavigationStack.Count;
@@ -162,10 +163,10 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage("NavigationPage/MainPage");
-            navigationService.PushAsync("FirstPage").Wait();
-            navigationService.PushAsync("SecondPage").Wait();
-            navigationService.PushAsync("ThirdPage").Wait();
+            navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
+            navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
+            navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
+            navigationService.PushAsync(Nav.Get("ThirdPage").Info()).Wait();
             var mainPageContainer = navigationService.NavigationStack[0];
             var firstPageContainer = navigationService.NavigationStack[1];
             var secondPageContainer = navigationService.NavigationStack[2];

@@ -7,6 +7,7 @@ using atlas.samples.helloworld.Shared.ViewModels;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
@@ -23,12 +24,12 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
                 new MasterPageItem
                 {
                     Title = "MyContentPage",
-                    PageKey = "NavigationPage/MyContentPage"
+                    PageInfo = Nav.Get("MyContentPage").AsNavigationPage().Info()
                 },
                 new MasterPageItem
                 {
                     Title = "MyTabbedPage",
-                    PageKey = "MyTabbedPage"
+                    PageInfo = Nav.Get("MyTabbedPage").Info()
                 }
             };
 
@@ -45,7 +46,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         {
             var selectedItem = (MasterPageItem)selectedItemChangedEventArgs.SelectedItem;
             //Detail = PageService.Current.GetCachedOrNewPage(selectedItem.PageKey);
-            (BindingContext as ViewModels.Pages.MainMasterDetailPage)?.PresentPage(selectedItem.PageKey);
+            (BindingContext as ViewModels.Pages.MainMasterDetailPage)?.PresentPage(selectedItem.PageInfo);
             IsPresented = false;
         }
     }

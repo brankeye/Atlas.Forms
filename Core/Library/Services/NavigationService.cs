@@ -5,7 +5,6 @@ using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Pages;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Services

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
@@ -19,9 +20,9 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
 
         public void Initialize(IParametersService parameters)
         {
-            PageManager.AddPage("NavigationPage/FirstTabPage");
-            PageManager.AddPage("SecondTabPage");
-            PageManager.AddPage("ThirdTabPage");
+            PageManager.AddPage(Nav.Get("FirstTabPage").AsNavigationPage().Info());
+            PageManager.AddPage(Nav.Get("SecondTabPage").Info());
+            PageManager.AddPage(Nav.Get("ThirdTabPage").Info());
         }
 
         public IMultiPageManager PageManager { get; set; }
