@@ -69,7 +69,7 @@ namespace Atlas.Forms.Pages
 
         public IPageContainer RemovePageAt(int index)
         {
-            var pageContainer = PageNavigationStore.Current.GetPageContainer(Page.Children[index]);
+            var pageContainer = PageKeyStore.Current.GetPageContainer(Page.Children[index]);
             Page.Children.RemoveAt(index);
             return pageContainer;
         }
@@ -78,7 +78,7 @@ namespace Atlas.Forms.Pages
         {
             if (index < Page.Children.Count)
             {
-                var pageContainer = PageNavigationStore.Current.GetPageContainer(Page.Children[index]);
+                var pageContainer = PageKeyStore.Current.GetPageContainer(Page.Children[index]);
                 Page.CurrentPage = Page.Children[index];
                 CurrentPage = pageContainer;
                 return pageContainer;
@@ -122,7 +122,7 @@ namespace Atlas.Forms.Pages
             var children = new List<IPageContainer>();
             foreach (var child in Page.Children)
             {
-                children.Add(PageNavigationStore.Current.GetPageContainer(child));
+                children.Add(PageKeyStore.Current.GetPageContainer(child));
             }
             return children;
         }

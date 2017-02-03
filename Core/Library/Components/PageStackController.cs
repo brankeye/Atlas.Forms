@@ -35,15 +35,12 @@ namespace Atlas.Forms.Components
         {
             var currentStack = isModal ? NavigationProvider.Navigation.ModalStack 
                                    : NavigationProvider.Navigation.NavigationStack;
-            var pageStack = new List<IPageContainer>();
             if (currentStack != null)
             {
-                foreach (var page in currentStack)
-                {
-                    pageStack.Add(PageNavigationStore.Current.GetPageContainer(page));
-                }
+                var stack = PageKeyStore.Current.GetPageContainers(currentStack.ToList());
+                return stack;
             }
-            return pageStack;
+            return new List<IPageContainer>();
         }
     }
 }

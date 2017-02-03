@@ -69,7 +69,7 @@ namespace Atlas.Forms.Components
             var pageStack = useModal ? NavigationProvider.Navigation.ModalStack
                                      : NavigationProvider.Navigation.NavigationStack;
             var currentPage = pageStack[pageStack.Count - 1];
-            var pageContainer = PageNavigationStore.Current.GetPageContainer(currentPage);
+            var pageContainer = PageKeyStore.Current.GetPageContainer(currentPage);
             PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
             if (useModal)
             {

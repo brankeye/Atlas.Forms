@@ -88,6 +88,7 @@
     <Compile Include="Navigation\ApplicationProvider.cs" />
     <Compile Include="Caching\PageCacheMap.cs" />
     <Compile Include="Navigation\NavigationProvider.cs" />
+    <Compile Include="Navigation\PageKeyStore.cs" />
     <Compile Include="Navigation\PageNavigationRegistry.cs" />
     <Compile Include="Navigation\PageNavigationStore.cs" />
     <Compile Include="Pages\PagePropertyInjector.cs" />
