@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using atlas.samples.helloworld.Shared.Views.Pages;
+﻿using atlas.samples.helloworld.Shared.Views.Pages;
 using atlas.samples.helloworld.Shared.Views.Pages.NavigationPages;
 using Atlas.Forms;
 using Atlas.Forms.Interfaces;
@@ -15,7 +11,7 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
-            NavigationService.Current.SetMainPage("MainMasterDetailPage");
+            NavigationService.Current.SetMainPage("NavigationPage/MyContentPage");
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)

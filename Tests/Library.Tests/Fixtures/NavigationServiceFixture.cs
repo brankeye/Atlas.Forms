@@ -193,11 +193,11 @@ namespace Library.Tests.Fixtures
         {
             StateManager.ResetAll();
             var pageType = typeof(ContentPage);
-            PageNavigationStore.Current.PageTypes["NavigationPage"] = typeof(NavigationPage);
-            PageNavigationStore.Current.PageTypes["MainPage"] = pageType;
-            PageNavigationStore.Current.PageTypes["FirstPage"] = pageType;
-            PageNavigationStore.Current.PageTypes["SecondPage"] = pageType;
-            PageNavigationStore.Current.PageTypes["ThirdPage"] = pageType;
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("NavigationPage", typeof(NavigationPage));
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("MainPage", pageType);
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("FirstPage", pageType);
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("SecondPage", pageType);
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("ThirdPage", pageType);
         }
     }
 }

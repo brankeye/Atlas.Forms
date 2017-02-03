@@ -95,7 +95,7 @@ namespace Atlas.Forms.Components
                     PageActionInvoker.InvokeInitialize(innerPageInstance, parameters);
                     AddCachedPagesWithOption(innerPageKey, CacheOption.IsCreated);
                 }
-                pageInstance = Activator.CreateInstance(outerPageType, innerPageInstance) as Page;
+                pageInstance = PageFactory.GetNewPage(outerPageKey, innerPageInstance) as Page;
                 if (pageInstance is NavigationPage)
                 {
                     pageInstance.Title = innerPageInstance.Title;

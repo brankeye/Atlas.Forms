@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using Atlas.Forms.Interfaces;
 using Xamarin.Forms;
 
@@ -18,7 +20,7 @@ namespace Atlas.Forms.Navigation
 
         public virtual void RegisterPage<TPage>(string key) where TPage : Page
         {
-            PageNavigationStore.Current.PageTypes[key] = typeof(TPage);
+            PageNavigationStore.Current.AddTypeAndConstructorInfo(key, typeof(TPage));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Atlas.Forms.Behaviors;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
@@ -20,11 +21,20 @@ namespace Atlas.Forms.Components
             PageCacheController = pageCacheController;
         }
 
-        public virtual object GetNewPage(string key)
+        public virtual object GetNewPage(string key, object pageArg = null)
         {
-            Type pageType;
-            PageNavigationStore.Current.PageTypes.TryGetValue(key, out pageType);
-            var nextPage = Activator.CreateInstance(pageType);
+            ConstructorInfo constructor;
+            PageNavigationStore.Current.PageConstructors.TryGetValue(key, out constructor);
+            object[] parameters;
+            if (pageArg != null)
+            {
+                parameters = new[] { pageArg };
+            }
+            else
+            {
+                parameters = new object[] {};
+            }
+            var nextPage = constructor?.Invoke(parameters);
             TryAddBehaviors(nextPage);
             TryAddManagers(nextPage);
             return nextPage;

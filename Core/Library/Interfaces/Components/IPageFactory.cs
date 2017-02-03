@@ -2,6 +2,6 @@
 {
     public interface IPageFactory
     {
-        object GetNewPage(string key);
+        object GetNewPage(string key, object pageArg = null);
     }
 }

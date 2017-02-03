@@ -15,7 +15,7 @@ namespace atlas.samples.helloworld.Shared.ViewModels.Pages
 
         public void Initialize(IParametersService parameters)
         {
-            PageManager.PresentPage("StartingPage");
+            PageManager.PresentPage("MyNavigationContentPage");
         }
 
         public void PresentPage(string page)
