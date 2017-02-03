@@ -40,7 +40,6 @@ namespace Atlas.Forms.Pages
                 PageActionInvoker.InvokeOnPageDisappearing(lastPage, paramService);
             }
             PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
-            NavigationController.AddPageToNavigationStack(page);
             Page.Detail = nextPage;
             if (lastPage != null)
             {

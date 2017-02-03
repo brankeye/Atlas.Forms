@@ -22,15 +22,13 @@ namespace Atlas.Forms.Pages
 
         public IPageContainer CurrentPage { get; protected set; }
 
-        public IReadOnlyList<IPageContainer> Children => ChildrenInternal.ToList();
+        public IReadOnlyList<IPageContainer> Children => CreateChildren().ToList();
 
         protected MultiPage<T> Page { get; set; }
 
         protected INavigationController NavigationController { get; set; }
 
         protected IPageCacheController PageCacheController { get; set; }
-
-        protected IList<IPageContainer> ChildrenInternal { get; set; } = new List<IPageContainer>();
 
         public MultiPageManager(
             MultiPage<T> page,
@@ -47,19 +45,20 @@ namespace Atlas.Forms.Pages
             var pageInstance = PageCacheController.GetCachedOrNewPage(page, parameters ?? new ParametersService()) as T;
             NavigationController.TrySetNavigation(pageInstance);
             Page.Children.Add(pageInstance);
-            NavigationController.AddPageToNavigationStack(page);
             PageCacheController.AddCachedPagesWithOption(page, CacheOption.Appears);
-            if (ChildrenInternal.Count == 1)
+            var children = Children;
+            if (children.Count == 1)
             {
-                CurrentPage = ChildrenInternal[0];
+                CurrentPage = children[0];
             }
         }
 
         public IPageContainer RemovePage(string page)
         {
-            for (var i = 0; i < ChildrenInternal.Count; i++)
+            var children = Children;
+            for (var i = 0; i < children.Count; i++)
             {
-                var container = ChildrenInternal[i];
+                var container = children[i];
                 if (container.Key == page)
                 {
                     return RemovePageAt(i);
@@ -70,32 +69,29 @@ namespace Atlas.Forms.Pages
 
         public IPageContainer RemovePageAt(int index)
         {
-            if (index < ChildrenInternal.Count)
-            {
-                var container = ChildrenInternal[index];
-                ChildrenInternal.RemoveAt(index);
-                Page.Children.RemoveAt(index);
-                return container;
-            }
-            return null;
+            var pageContainer = PageNavigationStore.Current.GetPageContainer(Page.Children[index]);
+            Page.Children.RemoveAt(index);
+            return pageContainer;
         }
 
         public IPageContainer SetCurrentPage(int index)
         {
-            if (index < ChildrenInternal.Count)
+            if (index < Page.Children.Count)
             {
-                var container = ChildrenInternal[index];
+                var pageContainer = PageNavigationStore.Current.GetPageContainer(Page.Children[index]);
                 Page.CurrentPage = Page.Children[index];
-                CurrentPage = container;
+                CurrentPage = pageContainer;
+                return pageContainer;
             }
             return null;
         }
 
         public IPageContainer SetCurrentPage(string page)
         {
-            for (var i = 0; i < ChildrenInternal.Count; i++)
+            var children = Children;
+            for (var i = 0; i < children.Count; i++)
             {
-                var container = ChildrenInternal[i];
+                var container = children[i];
                 if (container.Key == page)
                 {
                     return SetCurrentPage(i);
@@ -119,6 +115,16 @@ namespace Atlas.Forms.Pages
                 return Page.SelectedItem;
             }
             return null;
+        }
+
+        public IList<IPageContainer> CreateChildren()
+        {
+            var children = new List<IPageContainer>();
+            foreach (var child in Page.Children)
+            {
+                children.Add(PageNavigationStore.Current.GetPageContainer(child));
+            }
+            return children;
         }
     }
 }

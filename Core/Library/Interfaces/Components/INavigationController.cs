@@ -28,7 +28,5 @@ namespace Atlas.Forms.Interfaces.Components
         void RemovePage(string page);
 
         void TrySetNavigation(object page);
-
-        void AddPageToNavigationStack(string page);
     }
 }

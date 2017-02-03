@@ -8,16 +8,12 @@ namespace Atlas.Forms.Interfaces
 {
     public interface IPageStackController
     {
-        IList<IPageContainer> NavigationStack { get; }
+        IReadOnlyList<IPageContainer> NavigationStack { get; }
 
-        IList<IPageContainer> ModalStack { get; }
+        IReadOnlyList<IPageContainer> ModalStack { get; }
 
-        void AddPageToNavigationStack(string pageKey);
+        IList<IPageContainer> CreateNavigationStack();
 
-        void AddPageToModalStack(string pageKey);
-
-        IPageContainer PopPageFromNavigationStack();
-
-        IPageContainer PopPageFromModalStack();
+        IList<IPageContainer> CreateModalStack();
     }
 }

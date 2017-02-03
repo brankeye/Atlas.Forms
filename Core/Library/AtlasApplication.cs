@@ -49,8 +49,9 @@ namespace Atlas.Forms
 
         protected virtual INavigationController CreateNavigationController()
         {
-            var pageStackController = CreatePageStackController();
-            return new NavigationController(new ApplicationProvider(), new NavigationProvider(), pageStackController);
+            var navigationProvider = new NavigationProvider();
+            var pageStackController = CreatePageStackController(navigationProvider);
+            return new NavigationController(new ApplicationProvider(), navigationProvider, pageStackController);
         }
 
         protected virtual IPageCacheController CreatePageCacheController()
@@ -58,9 +59,9 @@ namespace Atlas.Forms
             return new PageCacheController(new CacheController(), NavigationController);
         }
 
-        protected virtual IPageStackController CreatePageStackController()
+        protected virtual IPageStackController CreatePageStackController(INavigationProvider navigationProvider)
         {
-            return new PageStackController();
+            return new PageStackController(navigationProvider);
         }
     }
 }

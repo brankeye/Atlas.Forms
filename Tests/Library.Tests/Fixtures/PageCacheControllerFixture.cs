@@ -50,9 +50,9 @@ namespace Library.Tests.Fixtures
         public void AddCachedPages_PagesLoaded_PagesAreLoaded()
         {
             var cacheCoordinator = GetPageCacheController();
-            PageNavigationStore.Current.PageTypes["FirstPage"] = typeof(ContentPage);
-            PageNavigationStore.Current.PageTypes["SecondPage"] = typeof(ContentPage);
-            PageNavigationStore.Current.PageTypes["ThirdPage"] = typeof(ContentPage);
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("SecondPage", typeof(ContentPage));
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("ThirdPage", typeof(ContentPage));
             var list = new List<PageMapContainer>
             {
                 new PageMapContainer
@@ -151,7 +151,8 @@ namespace Library.Tests.Fixtures
         public static IPageCacheController GetPageCacheController()
         {
             StateManager.ResetAll();
-            return new PageCacheController(new CacheController(), new NavigationController(new ApplicationProvider(), new NavigationProvider(), new PageStackController()));
+            var navigationProvider = new NavigationProvider();
+            return new PageCacheController(new CacheController(), new NavigationController(new ApplicationProvider(), navigationProvider, new PageStackController(navigationProvider)));
         }
     }
 }

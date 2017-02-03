@@ -35,6 +35,8 @@ namespace Atlas.Forms.Components
                 parameters = new object[] {};
             }
             var nextPage = constructor?.Invoke(parameters);
+            var page = nextPage as Page;
+            PageNavigationStore.Current.PageKeys.Add(page, key);
             TryAddBehaviors(nextPage);
             TryAddManagers(nextPage);
             return nextPage;

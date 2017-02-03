@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Containers;
 using Atlas.Forms.Services;
@@ -34,10 +35,6 @@ namespace Atlas.Forms.Components
             var pageInstance = page as Page;
             if (pageInstance != null)
             {
-                if (pageInstance is NavigationPage)
-                {
-                    PageStackController.AddPageToNavigationStack(pageKey);
-                }
                 NavigationProvider.TrySetNavigation(pageInstance);
                 PageActionInvoker.InvokeOnPageAppearing(pageInstance, parameters);
                 ApplicationProvider.MainPage = pageInstance;
@@ -59,32 +56,28 @@ namespace Atlas.Forms.Components
             if (useModal)
             {
                 await NavigationProvider.Navigation.PushModalAsync(nextPage, animated);
-                PageStackController.AddPageToModalStack(pageKey);
             }
             else
             {
                 await NavigationProvider.Navigation.PushAsync(nextPage, animated);
-                PageStackController.AddPageToNavigationStack(pageKey);
             }
             PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
         }
 
         public virtual async Task<IPageContainer> PopPageAsync(bool animated, IParametersService parameters, bool useModal)
         {
-            var pageStack = useModal ? PageStackController.ModalStack
-                                     : PageStackController.NavigationStack;
+            var pageStack = useModal ? NavigationProvider.Navigation.ModalStack
+                                     : NavigationProvider.Navigation.NavigationStack;
             var currentPage = pageStack[pageStack.Count - 1];
+            var pageContainer = PageNavigationStore.Current.GetPageContainer(currentPage);
             PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
-            IPageContainer pageContainer;
             if (useModal)
             {
                 await NavigationProvider.Navigation.PopModalAsync(animated);
-                pageContainer = PageStackController.PopPageFromModalStack();
             }
             else
             {
                 await NavigationProvider.Navigation.PopAsync(animated);
-                pageContainer = PageStackController.PopPageFromNavigationStack();
             }
             PageActionInvoker.InvokeOnPageDisappeared(currentPage, parameters);
             return pageContainer;
@@ -95,10 +88,11 @@ namespace Atlas.Forms.Components
             var pageInstance = page as Page;
             if (pageInstance != null)
             {
-                var beforeIndex = PageStackController.NavigationStack.IndexOf(PageStackController.NavigationStack.FirstOrDefault(x => x.Key == before));
+                var navStack = PageStackController.NavigationStack.ToList();
+                var beforeElement = navStack.FirstOrDefault(x => x.Key == before);
+                var beforeIndex = navStack.IndexOf(beforeElement);
                 var beforePage = NavigationProvider.Navigation.NavigationStack.ElementAtOrDefault(beforeIndex);
                 NavigationProvider.Navigation.InsertPageBefore(pageInstance, beforePage);
-                PageStackController.NavigationStack.Insert(beforeIndex, new PageContainer(pageKey, pageInstance.GetType()));
             }
         }
 
@@ -118,7 +112,6 @@ namespace Atlas.Forms.Components
                 if (navigationStack[i].Key == pageKey)
                 {
                     NavigationProvider.Navigation.RemovePage(NavigationProvider.Navigation.NavigationStack[i]);
-                    navigationStack.RemoveAt(i);
                     break;
                 }
             }
@@ -142,11 +135,6 @@ namespace Atlas.Forms.Components
         public virtual void TrySetNavigation(object page)
         {
             NavigationProvider.TrySetNavigation(page);
-        }
-
-        public virtual void AddPageToNavigationStack(string page)
-        {
-            PageStackController.AddPageToNavigationStack(page);
         }
     }
 }
