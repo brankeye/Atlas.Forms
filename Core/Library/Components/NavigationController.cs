@@ -49,8 +49,6 @@ namespace Atlas.Forms.Components
 
         public virtual async Task PushPageAsync(string pageKey, object page, bool animated, IParametersService parameters, bool useModal)
         {
-            var pageStack = useModal ? PageStackController.ModalStack
-                                     : PageStackController.NavigationStack;
             var nextPage = page as Page;
             PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
             if (useModal)

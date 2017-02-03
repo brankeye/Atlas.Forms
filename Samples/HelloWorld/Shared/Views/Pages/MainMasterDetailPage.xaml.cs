@@ -11,7 +11,7 @@ using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {
-    public partial class MainMasterDetailPage : IMasterDetailPageProvider, IInitializeAware
+    public partial class MainMasterDetailPage : IMasterDetailPageProvider
     {
         public MainMasterDetailPage()
         {
@@ -23,7 +23,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
                 new MasterPageItem
                 {
                     Title = "MyContentPage",
-                    PageKey = "MyNavigationContentPage"
+                    PageKey = "NavigationPage/MyContentPage"
                 },
                 new MasterPageItem
                 {
@@ -40,11 +40,6 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         }
 
         public IMasterDetailPageManager PageManager { get; set; }
-
-        public void Initialize(IParametersService parameters)
-        {
-            (BindingContext as ViewModels.Pages.MainMasterDetailPage)?.PresentPage("MyNavigationContentPage");
-        }
 
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
         {

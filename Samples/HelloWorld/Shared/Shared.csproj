@@ -53,7 +53,6 @@
     <Compile Include="Views\Pages\MyContentPage.xaml.cs">
       <DependentUpon>MyContentPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\NavigationPages\MyNavigationContentPage.cs" />
     <Compile Include="Views\Pages\MyNextPage.xaml.cs">
       <DependentUpon>MyNextPage.xaml</DependentUpon>
     </Compile>
