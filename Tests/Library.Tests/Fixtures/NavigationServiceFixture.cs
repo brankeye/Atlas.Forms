@@ -134,7 +134,7 @@ namespace Library.Tests.Fixtures
         {
             var navigationService = GetNavigationService();
             Setup();
-            navigationService.SetMainPage(Nav.Get("MainPage").Info());
+            navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
             navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
             navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
             navigationService.PushAsync(Nav.Get("ThirdPage").Info()).Wait();

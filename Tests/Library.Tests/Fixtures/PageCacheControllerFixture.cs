@@ -28,7 +28,7 @@ namespace Library.Tests.Fixtures
         public void GetCachedOrNewPage_PageRegistered_ReturnsPage()
         {
             var cacheCoordinator = GetPageCacheController();
-            PageNavigationStore.Current.PageTypes["MainPage"] = typeof(ContentPage);
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("MainPage", typeof(ContentPage));
             var page = cacheCoordinator.TryGetCachedPage("MainPage", new ParametersService());
             Assert.That(page, Is.Null);
         }

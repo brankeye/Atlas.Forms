@@ -89,8 +89,6 @@ namespace Atlas.Forms.Components
             Page pageInstance;
             if (pageInfo.HasWrapperPage)
             {
-                Type outerPageType;
-                PageNavigationStore.Current.PageTypes.TryGetValue(pageInfo.WrapperPage, out outerPageType);
                 var innerPageInstance = TryGetCachedPage(pageInfo.Page, parameters) as Page;
                 if (innerPageInstance == null)
                 {

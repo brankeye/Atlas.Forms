@@ -10,13 +10,17 @@ namespace Atlas.Forms.Navigation
     {
         public static PageNavigationStore Current { get; set; } = new PageNavigationStore();
 
-        public IDictionary<string, Type> PageTypes { get; } = new Dictionary<string, Type>();
-
         public IDictionary<string, ConstructorInfo> PageConstructors { get; } = new Dictionary<string, ConstructorInfo>();
+
+        public Type GetPageType(string key)
+        {
+            ConstructorInfo constructorInfo;
+            PageConstructors.TryGetValue(key, out constructorInfo);
+            return constructorInfo?.DeclaringType;
+        }
 
         public void AddTypeAndConstructorInfo(string key, Type type)
         {
-            PageTypes[key] = type;
             PageConstructors[key] = GetConstructor(type);
         }
 
@@ -41,6 +45,7 @@ namespace Atlas.Forms.Navigation
                     }
                 }
             }
+
             return pageParamConstructor ?? defaultConstructor;
         }
     }
