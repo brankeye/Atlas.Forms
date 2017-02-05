@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using atlas.samples.helloworld.Shared.ViewModels;
+using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;

@@ -14,13 +14,10 @@ namespace Atlas.Forms.Services
     {
         public static IPageCacheService Current { get; internal set; }
 
-        protected INavigationController NavigationController { get; set; }
-
         protected IPageCacheController PageCacheController { get; }
 
-        public PageCacheService(INavigationController navigationController, IPageCacheController pageCacheController)
+        public PageCacheService(IPageCacheController pageCacheController)
         {
-            NavigationController = navigationController;
             PageCacheController = pageCacheController;
         }
 

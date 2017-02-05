@@ -20,10 +20,10 @@ namespace Atlas.Forms.Components
 
         protected IPageFactory PageFactory { get; set; }
 
-        public PageCacheController(ICacheController cacheController, INavigationController navigationController)
+        public PageCacheController(ICacheController cacheController, IPageFactory pageFactory)
         {
             CacheController = cacheController;
-            PageFactory = CreatePageFactoryInternal(navigationController, this);
+            PageFactory = pageFactory;
         }
 
         public virtual void AddCachedPages(string key)
@@ -181,16 +181,6 @@ namespace Atlas.Forms.Components
             var pageMapContainer = new PageMapContainer(cacheState, CacheOption.None, new PageContainer(pageInfo.Page, pageInstance.GetType()));
             var pageCacheContainer = new PageCacheContainer(pageInstance, pageMapContainer);
             return CacheController.TryAddPage(pageInfo.Page, pageCacheContainer);
-        }
-
-        private IPageFactory CreatePageFactoryInternal(INavigationController navigationController, IPageCacheController pageCacheController)
-        {
-            return CreatePageFactory(navigationController, pageCacheController);
-        }
-
-        protected virtual IPageFactory CreatePageFactory(INavigationController navigationController, IPageCacheController pageCacheController)
-        {
-            return new PageFactory(navigationController, pageCacheController);
         }
     }
 }

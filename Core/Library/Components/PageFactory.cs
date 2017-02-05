@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using Atlas.Forms.Behaviors;
+using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Xamarin.Forms;
@@ -11,14 +13,11 @@ namespace Atlas.Forms.Components
 {
     public class PageFactory : IPageFactory
     {
-        protected INavigationController NavigationController { get; set; }
+        protected IServiceFactoryImp ServiceFactory { get; set; }
 
-        protected IPageCacheController PageCacheController { get; set; }
-
-        public PageFactory(INavigationController navigationController, IPageCacheController pageCacheController)
+        public PageFactory(IServiceFactoryImp serviceFactory)
         {
-            NavigationController = navigationController;
-            PageCacheController = pageCacheController;
+            ServiceFactory = serviceFactory;
         }
 
         public virtual object GetNewPage(string key, object pageArg = null)
@@ -37,9 +36,20 @@ namespace Atlas.Forms.Components
             var nextPage = constructor?.Invoke(parameters);
             var page = nextPage as Page;
             PageKeyStore.Current.PageKeys.Add(page, key);
+            TryAddServices(nextPage);
             TryAddBehaviors(nextPage);
             TryAddManagers(nextPage);
             return nextPage;
+        }
+
+        protected virtual void TryAddServices(object page)
+        {
+            var pageInstance = page as Page;
+            if (pageInstance != null)
+            {
+                var navigationService = ServiceFactory.CreateNavigationService(pageInstance.Navigation);
+                PagePropertyInjector.InjectProperty<INavigationServiceProvider, INavigationService>(pageInstance, navigationService, (x, arg) => x.NavigationService = arg);
+            }
         }
 
         protected virtual void TryAddBehaviors(object page)
@@ -77,17 +87,17 @@ namespace Atlas.Forms.Components
 
         protected virtual IMasterDetailPageManager GetMasterDetailPageManager(MasterDetailPage page)
         {
-            return new MasterDetailPageManager(page, NavigationController, PageCacheController);
+            return new MasterDetailPageManager(page, ServiceFactory.CreateNavigationController(page.Navigation), ServiceFactory.CreatePageCacheController());
         }
 
         protected virtual ITabbedPageManager GetTabbedPageManager(TabbedPage page)
         {
-            return new TabbedPageManager(page, NavigationController, PageCacheController);
+            return new TabbedPageManager(page, ServiceFactory.CreateNavigationController(page.Navigation), ServiceFactory.CreatePageCacheController());
         }
 
         protected virtual ICarouselPageManager GetCarouselPageManager(CarouselPage page)
         {
-            return new CarouselPageManager(page, NavigationController, PageCacheController);
+            return new CarouselPageManager(page, ServiceFactory.CreateNavigationController(page.Navigation), ServiceFactory.CreatePageCacheController());
         }
     }
 }

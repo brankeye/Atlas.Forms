@@ -7,6 +7,11 @@ namespace Atlas.Forms.Navigation
     {
         public INavigation Navigation { get; set; }
 
+        public NavigationProvider(INavigation navigation)
+        {
+            Navigation = navigation;
+        }
+
         public void TrySetNavigation(object pageArg)
         {
             var page = pageArg as Page;

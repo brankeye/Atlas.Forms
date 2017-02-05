@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using atlas.samples.helloworld.Shared.Testers;
+using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Services;
@@ -17,8 +18,11 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
                                          IPageAppearingAware,
                                          IPageAppearedAware,
                                          IPageDisappearingAware,
-                                         IPageDisappearedAware
+                                         IPageDisappearedAware,
+                                         INavigationServiceProvider
     {
+        public INavigationService NavigationService { get; set; }
+
         public MyContentPage()
         {
             InitializeComponent();
@@ -87,7 +91,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
 
         private void Button_OnClicked(object sender, EventArgs e)
         {
-            NavigationService.Current.PushAsync(Nav.Get("MyNextPage").Info());
+            NavigationService.PushAsync(Nav.Get("MyNextPage").Info());
         }
     }
 }

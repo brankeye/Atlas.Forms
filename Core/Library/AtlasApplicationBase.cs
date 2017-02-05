@@ -23,14 +23,12 @@ namespace Atlas.Forms
 
         protected virtual void Initialize()
         {
-            NavigationService.Current = CreateNavigationService();
-            PageCacheService.Current = CreatePageService();
             PageDialogService.Current = CreateDialogService();
             RegisterPagesForNavigation(CreatePageNavigationRegistry());
             RegisterPagesForCaching(CreatePageCacheRegistry());
         }
 
-        protected abstract INavigationService CreateNavigationService();
+        protected abstract INavigationService CreateNavigationService(INavigation navigation = null);
 
         protected abstract IPageCacheService CreatePageService();
 
