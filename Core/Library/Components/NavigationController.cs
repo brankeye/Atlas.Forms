@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
@@ -7,8 +6,6 @@ using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
-using Atlas.Forms.Services;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Components
@@ -57,7 +54,7 @@ namespace Atlas.Forms.Components
             PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
         }
 
-        public virtual async Task<IPageContainer> PopPageAsync(bool animated, IParametersService parameters, bool useModal)
+        public virtual async Task<IPageInfo> PopPageAsync(bool animated, IParametersService parameters, bool useModal)
         {
             var pageStack = useModal ? NavigationProvider.Navigation.ModalStack
                                      : NavigationProvider.Navigation.NavigationStack;
@@ -110,12 +107,12 @@ namespace Atlas.Forms.Components
             }
         }
 
-        public virtual IReadOnlyList<IPageContainer> GetNavigationStack()
+        public virtual IReadOnlyList<IPageInfo> GetNavigationStack()
         {
             return PageStackController.NavigationStack.ToList();
         }
 
-        public virtual IReadOnlyList<IPageContainer> GetModalStack()
+        public virtual IReadOnlyList<IPageInfo> GetModalStack()
         {
             return PageStackController.ModalStack.ToList();
         }

@@ -5,15 +5,17 @@ using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages.Info;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Services
 {
     public class NavigationService : INavigationService
     {
-        public virtual IReadOnlyList<IPageContainer> NavigationStack => NavigationController.GetNavigationStack();
+        public virtual IReadOnlyList<IPageInfo> NavigationStack => NavigationController.GetNavigationStack();
 
-        public virtual IReadOnlyList<IPageContainer> ModalStack => NavigationController.GetModalStack();
+        public virtual IReadOnlyList<IPageInfo> ModalStack => NavigationController.GetModalStack();
 
         public virtual INavigation Navigation => NavigationController.GetNavigation();
 
@@ -34,27 +36,27 @@ namespace Atlas.Forms.Services
             NavigationController.InsertPageBefore(nextPage, before.Page, paramService);
         }
 
-        public virtual async Task<IPageContainer> PopAsync(IParametersService parameters = null)
+        public virtual async Task<IPageInfo> PopAsync(IParametersService parameters = null)
         {
             return await PopAsync(true, parameters);
         }
 
-        public virtual async Task<IPageContainer> PopAsync(bool animated, IParametersService parameters = null)
+        public virtual async Task<IPageInfo> PopAsync(bool animated, IParametersService parameters = null)
         {
             return await PopInternalAsync(animated, parameters);
         }
 
-        public virtual async Task<IPageContainer> PopModalAsync(IParametersService parameters = null)
+        public virtual async Task<IPageInfo> PopModalAsync(IParametersService parameters = null)
         {
             return await PopModalAsync(true, parameters);
         }
 
-        public virtual async Task<IPageContainer> PopModalAsync(bool animated, IParametersService parameters = null)
+        public virtual async Task<IPageInfo> PopModalAsync(bool animated, IParametersService parameters = null)
         {
             return await PopInternalAsync(animated, parameters, true);
         }
 
-        protected virtual async Task<IPageContainer> PopInternalAsync(bool animated, IParametersService parameters = null, bool useModal = false)
+        protected virtual async Task<IPageInfo> PopInternalAsync(bool animated, IParametersService parameters = null, bool useModal = false)
         {
             var paramService = parameters ?? new ParametersService();
             var pageStack = useModal ? ModalStack :
@@ -63,6 +65,17 @@ namespace Atlas.Forms.Services
             PageCacheController.RemoveCachedPages(lastPage.Key);
             var pageContainer = await NavigationController.PopPageAsync(animated, paramService, useModal);
             PageCacheController.AddCachedPagesWithOption(lastPage.Key, CacheOption.Appears);
+            var currentPage = Navigation.NavigationStack.ToList().LastOrDefault();
+            if (currentPage != null)
+            {
+                var pageInfo = PageKeyStore.Current.GetPageContainer(currentPage);
+                var mapInfo = PageCacheController.GetMapContainersWithOption(pageInfo.Key, CacheOption.Appears)
+                .FirstOrDefault(x => x.Key == pageInfo.Key);
+                if (mapInfo != null)
+                {
+                    PageCacheController.TryAddCachedPage(currentPage, mapInfo);
+                }
+            }
             return pageContainer;
         }
 
@@ -111,6 +124,12 @@ namespace Atlas.Forms.Services
             }
             var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService);
             await NavigationController.PushPageAsync(nextPage, animated, paramService, useModal);
+            var mapInfo = PageCacheController.GetMapContainersWithOption(pageInfo.Page, CacheOption.Appears)
+                .FirstOrDefault(x => x.Key == pageInfo.Page);
+            if (mapInfo != null)
+            {
+                PageCacheController.TryAddCachedPage(nextPage as Page, mapInfo);
+            }
             PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
         }
 
@@ -128,6 +147,12 @@ namespace Atlas.Forms.Services
             var paramService = parameters ?? new ParametersService();
             var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService);
             NavigationController.SetMainPage(nextPage, paramService);
+            var mapInfo = PageCacheController.GetMapContainersWithOption(pageInfo.Page, CacheOption.Appears)
+                .FirstOrDefault(x => x.Key == pageInfo.Page);
+            if (mapInfo != null)
+            {
+                PageCacheController.TryAddCachedPage(nextPage as Page, mapInfo);
+            }
             PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
         }
     }

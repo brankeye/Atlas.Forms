@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using atlas.samples.helloworld.Shared.Testers;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Services;
-using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared.Views.Pages
 {

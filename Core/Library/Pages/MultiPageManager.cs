@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Enums;
@@ -20,9 +19,9 @@ namespace Atlas.Forms.Pages
 
         public IEnumerable ItemsSource => Page.ItemsSource;
 
-        public IPageContainer CurrentPage { get; protected set; }
+        public IPageInfo CurrentPage { get; protected set; }
 
-        public IReadOnlyList<IPageContainer> Children => CreateChildren().ToList();
+        public IReadOnlyList<IPageInfo> Children => CreateChildren().ToList();
 
         protected MultiPage<T> Page { get; set; }
 
@@ -52,7 +51,7 @@ namespace Atlas.Forms.Pages
             }
         }
 
-        public IPageContainer RemovePage(string page)
+        public IPageInfo RemovePage(string page)
         {
             var children = Children;
             for (var i = 0; i < children.Count; i++)
@@ -66,14 +65,14 @@ namespace Atlas.Forms.Pages
             return null;
         }
 
-        public IPageContainer RemovePageAt(int index)
+        public IPageInfo RemovePageAt(int index)
         {
             var pageContainer = PageKeyStore.Current.GetPageContainer(Page.Children[index]);
             Page.Children.RemoveAt(index);
             return pageContainer;
         }
 
-        public IPageContainer SetCurrentPage(int index)
+        public IPageInfo SetCurrentPage(int index)
         {
             if (index < Page.Children.Count)
             {
@@ -85,7 +84,7 @@ namespace Atlas.Forms.Pages
             return null;
         }
 
-        public IPageContainer SetCurrentPage(string page)
+        public IPageInfo SetCurrentPage(string page)
         {
             var children = Children;
             for (var i = 0; i < children.Count; i++)
@@ -116,9 +115,9 @@ namespace Atlas.Forms.Pages
             return null;
         }
 
-        public IList<IPageContainer> CreateChildren()
+        public IList<IPageInfo> CreateChildren()
         {
-            var children = new List<IPageContainer>();
+            var children = new List<IPageInfo>();
             foreach (var child in Page.Children)
             {
                 children.Add(PageKeyStore.Current.GetPageContainer(child));

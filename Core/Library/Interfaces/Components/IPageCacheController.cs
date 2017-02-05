@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Pages.Info;
 using Atlas.Forms.Services;
+using Xamarin.Forms;
 
 namespace Atlas.Forms.Interfaces.Components
 {
@@ -17,15 +17,17 @@ namespace Atlas.Forms.Interfaces.Components
 
         bool TryAddCachedPage(NavigationInfo pageInfo, CacheState cacheState);
 
+        bool TryAddCachedPage(Page pageInstance, PageMapInfo mapInfo);
+
         void AddCachedPages(string key);
 
         void AddCachedPagesWithOption(string key, CacheOption cacheOption);
 
-        IList<PageMapContainer> GetMapContainers(string key);
+        IList<PageMapInfo> GetMapContainers(string key);
 
-        IList<PageMapContainer> GetMapContainersWithOption(string key, CacheOption cacheOption);
+        IList<PageMapInfo> GetMapContainersWithOption(string key, CacheOption cacheOption);
 
-        void AddCacheContainers(string key, IList<PageCacheContainer> list);
+        void AddCacheContainers(string key, IList<PageCacheInfo> list);
 
         void RemoveCachedPages(string key);
 

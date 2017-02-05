@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Navigation;
-using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
 
 namespace Atlas.Forms.Components
 {
     public class PageStackController : IPageStackController
     {
-        public IReadOnlyList<IPageContainer> NavigationStack => CreateNavigationStack().ToList();
+        public IReadOnlyList<IPageInfo> NavigationStack => CreateNavigationStack().ToList();
 
-        public IReadOnlyList<IPageContainer> ModalStack => CreateModalStack().ToList();
+        public IReadOnlyList<IPageInfo> ModalStack => CreateModalStack().ToList();
 
         protected INavigationProvider NavigationProvider { get; }
 
@@ -21,17 +18,17 @@ namespace Atlas.Forms.Components
             NavigationProvider = navigationProvider;
         }
 
-        public virtual IList<IPageContainer> CreateNavigationStack()
+        public virtual IList<IPageInfo> CreateNavigationStack()
         {
             return CreateStack(false);
         }
 
-        public virtual IList<IPageContainer> CreateModalStack()
+        public virtual IList<IPageInfo> CreateModalStack()
         {
             return CreateStack(true);
         }
 
-        protected virtual IList<IPageContainer> CreateStack(bool isModal)
+        protected virtual IList<IPageInfo> CreateStack(bool isModal)
         {
             var currentStack = isModal ? NavigationProvider.Navigation.ModalStack 
                                    : NavigationProvider.Navigation.NavigationStack;
@@ -40,7 +37,7 @@ namespace Atlas.Forms.Components
                 var stack = PageKeyStore.Current.GetPageContainers(currentStack.ToList());
                 return stack;
             }
-            return new List<IPageContainer>();
+            return new List<IPageInfo>();
         }
     }
 }

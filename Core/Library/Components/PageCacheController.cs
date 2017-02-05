@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
-using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Pages.Info;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -28,44 +26,32 @@ namespace Atlas.Forms.Components
 
         public virtual void AddCachedPages(string key)
         {
-            var pageMapContainers = GetMapContainers(key);
-            IList<PageCacheContainer> pageCacheList = new List<PageCacheContainer>();
-            foreach (var mapContainers in pageMapContainers)
-            {
-                PageCacheContainer pageContainer;
-                PageCacheStore.Current.PageCache.TryGetValue(mapContainers.Key, out pageContainer);
-                if (pageContainer == null)
-                {
-                    if (mapContainers.Key == key && mapContainers.CacheOption == CacheOption.IsCreated)
-                    {
-                        continue;
-                    }
-                    var page = PageFactory.GetNewPage(mapContainers.Key) as Page;
-                    pageCacheList.Add(new PageCacheContainer(page, new PageMapContainer(mapContainers)));
-                }
-            }
+            var pageMapContainers = GetMapContainers(key).Where(x => x.Key != key);
+            var pageCacheList = AddCachedPages(pageMapContainers.ToList());
             CacheController.AddCachedPages(pageCacheList);
         }
 
         public virtual void AddCachedPagesWithOption(string key, CacheOption cacheOption)
         {
-            var pageMapContainers = GetMapContainersWithOption(key, cacheOption);
-            IList<PageCacheContainer> pageCacheList = new List<PageCacheContainer>();
-            foreach (var mapContainers in pageMapContainers)
+            var pageMapContainers = GetMapContainersWithOption(key, cacheOption).Where(x => x.Key != key);
+            var pageCacheList = AddCachedPages(pageMapContainers.ToList());
+            CacheController.AddCachedPages(pageCacheList);
+        }
+
+        protected virtual IList<PageCacheInfo> AddCachedPages(IList<PageMapInfo> list)
+        {
+            var pageCacheList = new List<PageCacheInfo>();
+            foreach (var mapContainers in list)
             {
-                if (mapContainers.Key == key && mapContainers.CacheOption == CacheOption.IsCreated)
-                {
-                    continue;
-                }
-                PageCacheContainer pageContainer;
-                PageCacheStore.Current.PageCache.TryGetValue(mapContainers.Key, out pageContainer);
-                if (pageContainer == null)
+                PageCacheInfo pageInfo;
+                PageCacheStore.Current.PageCache.TryGetValue(mapContainers.Key, out pageInfo);
+                if (pageInfo == null)
                 {
                     var page = PageFactory.GetNewPage(mapContainers.Key) as Page;
-                    pageCacheList.Add(new PageCacheContainer(page, new PageMapContainer(mapContainers)));
+                    pageCacheList.Add(new PageCacheInfo(page, new PageMapInfo(mapContainers)));
                 }
             }
-            CacheController.AddCachedPages(pageCacheList);
+            return pageCacheList;
         }
 
         public virtual object TryGetCachedPage(string key, IParametersService parameters)
@@ -86,41 +72,12 @@ namespace Atlas.Forms.Components
 
         public virtual object GetCachedOrNewPage(NavigationInfo pageInfo, IParametersService parameters)
         {
+            Page pageInstance;
             if (pageInfo.NewInstanceRequested)
             {
-                return GetNewPage(pageInfo);
-            }
-
-            Page pageInstance;
-            if (pageInfo.HasWrapperPage)
-            {
-                var innerPageInstance = TryGetCachedPage(pageInfo.Page, parameters) as Page;
-                if (innerPageInstance == null)
-                {
-                    innerPageInstance = PageFactory.GetNewPage(pageInfo.Page) as Page;
-                    PageActionInvoker.InvokeInitialize(innerPageInstance, parameters);
-                    AddCachedPagesWithOption(pageInfo.Page, CacheOption.IsCreated);
-                }
-                else
-                {
-                    if (innerPageInstance.Parent is NavigationPage)
-                    {
-                        return innerPageInstance.Parent;
-                    }
-                }
-                pageInstance = PageFactory.GetNewPage(pageInfo.WrapperPage, innerPageInstance) as Page;
-                if (pageInstance is NavigationPage)
-                {
-                    pageInstance.Title = innerPageInstance.Title;
-                    pageInstance.Icon = innerPageInstance.Icon;
-                }
-                IList<PageMapContainer> mapContainers;
-                PageCacheMap.Current.Mappings.TryGetValue(pageInfo.Page, out mapContainers);
-                if (mapContainers != null)
-                {
-                    var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == pageInfo.Page);
-                    var result = CacheController.TryAddPage(pageInfo.Page, new PageCacheContainer(innerPageInstance, container) { Initialized = true });
-                }
+                pageInstance = GetNewPage(pageInfo) as Page;
+                PageActionInvoker.InvokeInitialize(pageInstance, parameters);
+                AddCachedPagesWithOption(pageInfo.Page, CacheOption.IsCreated);
             }
             else
             {
@@ -131,41 +88,54 @@ namespace Atlas.Forms.Components
                     PageActionInvoker.InvokeInitialize(pageInstance, parameters);
                     AddCachedPagesWithOption(pageInfo.Page, CacheOption.IsCreated);
                 }
-                IList<PageMapContainer> mapContainers;
+                IList<PageMapInfo> mapContainers;
                 PageCacheMap.Current.Mappings.TryGetValue(pageInfo.Page, out mapContainers);
                 if (mapContainers != null)
                 {
                     var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == pageInfo.Page);
-                    var result = CacheController.TryAddPage(pageInfo.Page, new PageCacheContainer(pageInstance, container) { Initialized = true });
+                    var result = CacheController.TryAddPage(pageInfo.Page, new PageCacheInfo(pageInstance, container) { Initialized = true });
+                }
+                if (pageInfo.HasWrapperPage)
+                {
+                    if (pageInstance?.Parent is NavigationPage)
+                    {
+                        return pageInstance.Parent;
+                    }
+                    var innerPageInstance = pageInstance;
+                    pageInstance = PageFactory.GetNewPage(pageInfo.WrapperPage, innerPageInstance) as Page;
+                    if (pageInstance is NavigationPage)
+                    {
+                        pageInstance.Title = innerPageInstance?.Title;
+                        pageInstance.Icon = innerPageInstance?.Icon;
+                    }
                 }
             }
-
             return pageInstance;
         }
 
-        public virtual IList<PageMapContainer> GetMapContainers(string key)
+        public virtual IList<PageMapInfo> GetMapContainers(string key)
         {
             return GetAllMapContainers(key);
         }
 
-        protected virtual IList<PageMapContainer> GetAllMapContainers(string key)
+        protected virtual IList<PageMapInfo> GetAllMapContainers(string key)
         {
-            IList<PageMapContainer> containers;
+            IList<PageMapInfo> containers;
             PageCacheMap.Current.Mappings.TryGetValue(key, out containers);
             if (containers == null)
             {
-                return new List<PageMapContainer>();
+                return new List<PageMapInfo>();
             }
             return containers;
         }
 
-        public virtual IList<PageMapContainer> GetMapContainersWithOption(string key, CacheOption cacheOption)
+        public virtual IList<PageMapInfo> GetMapContainersWithOption(string key, CacheOption cacheOption)
         {
             var containers = GetAllMapContainers(key).ToList().Where(x => x.CacheOption == cacheOption).ToList();
             return containers;
         }
 
-        public virtual void AddCacheContainers(string key, IList<PageCacheContainer> list)
+        public virtual void AddCacheContainers(string key, IList<PageCacheInfo> list)
         {
             CacheController.AddCachedPages(list);
         }
@@ -183,9 +153,16 @@ namespace Atlas.Forms.Components
         public virtual bool TryAddCachedPage(NavigationInfo pageInfo, CacheState cacheState)
         {
             var pageInstance = GetNewPage(pageInfo) as Page;
-            var pageMapContainer = new PageMapContainer(cacheState, CacheOption.None, new PageContainer(pageInfo.Page, pageInstance.GetType()));
-            var pageCacheContainer = new PageCacheContainer(pageInstance, pageMapContainer);
+            var pageMapContainer = new PageMapInfo(cacheState, CacheOption.None, new PageInfo(pageInfo.Page, pageInstance.GetType()));
+            var pageCacheContainer = new PageCacheInfo(pageInstance, pageMapContainer);
             return CacheController.TryAddPage(pageInfo.Page, pageCacheContainer);
+        }
+
+        public virtual bool TryAddCachedPage(Page pageInstance, PageMapInfo mapInfo)
+        {
+            var pageKey = PageKeyStore.Current.GetPageContainer(pageInstance);
+            var pageCacheContainer = new PageCacheInfo(pageInstance, mapInfo);
+            return CacheController.TryAddPage(pageKey.Key, pageCacheContainer);
         }
     }
 }

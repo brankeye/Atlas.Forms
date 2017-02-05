@@ -2,7 +2,7 @@
 
 namespace Atlas.Forms.Interfaces
 {
-    public interface IPageContainer
+    public interface IPageInfo
     {
         string Key { get; set; }
 

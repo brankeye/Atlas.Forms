@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Atlas.Forms.Interfaces
 {
     public interface IPageStackController
     {
-        IReadOnlyList<IPageContainer> NavigationStack { get; }
+        IReadOnlyList<IPageInfo> NavigationStack { get; }
 
-        IReadOnlyList<IPageContainer> ModalStack { get; }
+        IReadOnlyList<IPageInfo> ModalStack { get; }
 
-        IList<IPageContainer> CreateNavigationStack();
+        IList<IPageInfo> CreateNavigationStack();
 
-        IList<IPageContainer> CreateModalStack();
+        IList<IPageInfo> CreateModalStack();
     }
 }

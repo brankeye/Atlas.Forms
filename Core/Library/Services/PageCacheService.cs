@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Pages.Info;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Services
@@ -21,7 +20,7 @@ namespace Atlas.Forms.Services
             PageCacheController = pageCacheController;
         }
 
-        public virtual IReadOnlyDictionary<string, PageCacheContainer> CachedPages => PageCacheStore.Current.GetPageCache();
+        public virtual IReadOnlyDictionary<string, PageCacheInfo> CachedPages => PageCacheStore.Current.GetPageCache();
 
         public virtual Page GetNewPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {

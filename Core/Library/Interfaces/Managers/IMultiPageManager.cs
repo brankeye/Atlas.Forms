@@ -1,16 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
 
 namespace Atlas.Forms.Interfaces.Managers
 {
     public interface IMultiPageManager
     {
-        IReadOnlyList<IPageContainer> Children { get; }
+        IReadOnlyList<IPageInfo> Children { get; }
 
-        IPageContainer CurrentPage { get; }
+        IPageInfo CurrentPage { get; }
 
         object SelectedItem { get; }
 
@@ -18,15 +17,15 @@ namespace Atlas.Forms.Interfaces.Managers
 
         void AddPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        IPageContainer RemovePage(string page);
+        IPageInfo RemovePage(string page);
 
-        IPageContainer RemovePageAt(int index);
+        IPageInfo RemovePageAt(int index);
 
         void SetPageTemplate(string page, IParametersService parameters = null);
 
-        IPageContainer SetCurrentPage(string page);
+        IPageInfo SetCurrentPage(string page);
 
-        IPageContainer SetCurrentPage(int index);
+        IPageInfo SetCurrentPage(int index);
 
         object SetSelectedItem(int index);
     }

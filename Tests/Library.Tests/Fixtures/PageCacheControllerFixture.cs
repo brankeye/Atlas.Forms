@@ -5,8 +5,7 @@ using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Navigation;
-using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Pages.Info;
 using Atlas.Forms.Services;
 using Library.Tests.Helpers;
 using Xamarin.Forms;
@@ -37,7 +36,7 @@ namespace Library.Tests.Fixtures
         public void GetCachedOrNewPage_PageExists_ReturnsPage()
         {
             var cacheCoordinator = GetPageCacheController();
-            PageCacheStore.Current.PageCache["MainPage"] = new PageCacheContainer
+            PageCacheStore.Current.PageCache["MainPage"] = new PageCacheInfo
             {
                 Key = "MainPage",
                 Page = new ContentPage()
@@ -53,23 +52,23 @@ namespace Library.Tests.Fixtures
             PageNavigationStore.Current.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));
             PageNavigationStore.Current.AddTypeAndConstructorInfo("SecondPage", typeof(ContentPage));
             PageNavigationStore.Current.AddTypeAndConstructorInfo("ThirdPage", typeof(ContentPage));
-            var list = new List<PageMapContainer>
+            var list = new List<PageMapInfo>
             {
-                new PageMapContainer
+                new PageMapInfo
                 {
                     Key = "FirstPage",
                     Type = typeof(ContentPage),
                     CacheOption = CacheOption.Appears,
                     CacheState = CacheState.Default
                 },
-                new PageMapContainer
+                new PageMapInfo
                 {
                     Key = "SecondPage",
                     Type = typeof(ContentPage),
                     CacheOption = CacheOption.Appears,
                     CacheState = CacheState.KeepAlive
                 },
-                new PageMapContainer
+                new PageMapInfo
                 {
                     Key = "ThirdPage",
                     Type = typeof(ContentPage),
@@ -79,7 +78,7 @@ namespace Library.Tests.Fixtures
             };
             PageCacheMap.Current.Mappings["MainPage"] = list;
             cacheCoordinator.AddCachedPages("MainPage");
-            PageCacheContainer pageOne, pageTwo, pageThree;
+            PageCacheInfo pageOne, pageTwo, pageThree;
             PageCacheStore.Current.PageCache.TryGetValue("FirstPage", out pageOne);
             PageCacheStore.Current.PageCache.TryGetValue("SecondPage", out pageTwo);
             PageCacheStore.Current.PageCache.TryGetValue("ThirdPage", out pageThree);
@@ -92,23 +91,23 @@ namespace Library.Tests.Fixtures
         public void RemoveCachedPages_PagesExist_RemovesAllButSingleInstance()
         {
             var cacheCoordinator = GetPageCacheController();
-            var list = new List<PageMapContainer>
+            var list = new List<PageMapInfo>
             {
-                new PageMapContainer
+                new PageMapInfo
                 {
                     Key = "FirstPage",
                     Type = typeof(ContentPage),
                     CacheOption = CacheOption.Appears,
                     CacheState = CacheState.Default
                 },
-                new PageMapContainer
+                new PageMapInfo
                 {
                     Key = "SecondPage",
                     Type = typeof(ContentPage),
                     CacheOption = CacheOption.Appears,
                     CacheState = CacheState.KeepAlive
                 },
-                new PageMapContainer
+                new PageMapInfo
                 {
                     Key = "ThirdPage",
                     Type = typeof(ContentPage),
@@ -117,21 +116,21 @@ namespace Library.Tests.Fixtures
                 }
             };
             PageCacheMap.Current.Mappings["MainPage"] = list;
-            PageCacheStore.Current.PageCache["FirstPage"] = new PageCacheContainer
+            PageCacheStore.Current.PageCache["FirstPage"] = new PageCacheInfo
             {
                 Page = new ContentPage(),
                 Type = typeof(ContentPage),
                 CacheOption = CacheOption.Appears,
                 CacheState = CacheState.Default
             };
-            PageCacheStore.Current.PageCache["SecondPage"] = new PageCacheContainer
+            PageCacheStore.Current.PageCache["SecondPage"] = new PageCacheInfo
             {
                 Page = new ContentPage(),
                 Type = typeof(ContentPage),
                 CacheOption = CacheOption.Appears,
                 CacheState = CacheState.KeepAlive
             };
-            PageCacheStore.Current.PageCache["ThirdPage"] = new PageCacheContainer
+            PageCacheStore.Current.PageCache["ThirdPage"] = new PageCacheInfo
             {
                 Page = new ContentPage(),
                 Type = typeof(ContentPage),
@@ -139,7 +138,7 @@ namespace Library.Tests.Fixtures
                 CacheState = CacheState.SingleInstance
             };
             cacheCoordinator.RemoveCachedPages("MainPage");
-            PageCacheContainer pageOne, pageTwo, pageThree;
+            PageCacheInfo pageOne, pageTwo, pageThree;
             PageCacheStore.Current.PageCache.TryGetValue("FirstPage", out pageOne);
             PageCacheStore.Current.PageCache.TryGetValue("SecondPage", out pageTwo);
             PageCacheStore.Current.PageCache.TryGetValue("ThirdPage", out pageThree);

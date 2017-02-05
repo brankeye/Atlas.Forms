@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using Atlas.Forms.Interfaces;
+﻿using Atlas.Forms.Interfaces;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Navigation

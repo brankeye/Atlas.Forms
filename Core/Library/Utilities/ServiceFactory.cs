@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Interfaces.Components;
 
 namespace Atlas.Forms.Utilities
 {
@@ -18,12 +17,13 @@ namespace Atlas.Forms.Utilities
             return service?.Invoke(args) as T;
         }
 
-        public virtual void AddService(Type type, Func<object[], object> service)
+        public virtual bool AddService(Type type, Func<object[], object> service)
         {
             if (!Locker)
             {
                 Services.Add(type, service);
             }
+            return !Locker;
         }
 
         public virtual void Lock()

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Pages.Info;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Navigation
@@ -12,16 +12,16 @@ namespace Atlas.Forms.Navigation
 
         public ConditionalWeakTable<Page, string> PageKeys { get; } = new ConditionalWeakTable<Page, string>();
 
-        public IPageContainer GetPageContainer(Page pageInstance)
+        public IPageInfo GetPageContainer(Page pageInstance)
         {
             string pageKey;
             PageKeys.TryGetValue(pageInstance, out pageKey);
-            return new PageContainer(pageKey, pageInstance.GetType());
+            return new PageInfo(pageKey, pageInstance.GetType());
         }
 
-        public IList<IPageContainer> GetPageContainers(IList<Page> pages)
+        public IList<IPageInfo> GetPageContainers(IList<Page> pages)
         {
-            var pageContainers = new List<IPageContainer>();
+            var pageContainers = new List<IPageInfo>();
             foreach (var page in pages)
             {
                 pageContainers.Add(GetPageContainer(page));

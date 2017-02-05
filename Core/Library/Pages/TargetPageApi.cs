@@ -1,19 +1,18 @@
-﻿using System;
-using Atlas.Forms.Enums;
+﻿using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Pages.Info;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Pages
 {
     public class TargetPageApi : ITargetPageApi
     {
-        private readonly PageMapContainer _container;
+        private readonly PageMapInfo _info;
         private readonly string _triggerPage;
 
-        public TargetPageApi(string triggerPage, PageMapContainer mapContainer)
+        public TargetPageApi(string triggerPage, PageMapInfo mapInfo)
         {
-            _container = mapContainer;
+            _info = mapInfo;
             _triggerPage = triggerPage;
         }
 
@@ -24,7 +23,7 @@ namespace Atlas.Forms.Pages
 
         public ITargetPageApi CachePage(string key)
         {
-            _container.Key = key;
+            _info.Key = key;
             return this;
         }
 
@@ -36,30 +35,30 @@ namespace Atlas.Forms.Pages
 
         public void AsKeepAlive()
         {
-            _container.CacheState = CacheState.KeepAlive;
+            _info.CacheState = CacheState.KeepAlive;
         }
 
         public void AsSingleInstance()
         {
-            _container.CacheState = CacheState.SingleInstance;
+            _info.CacheState = CacheState.SingleInstance;
         }
 
         public void AsLifetimeInstance()
         {
-            _container.CacheState = CacheState.LifetimeInstance;
-            _container.LifetimePageKey = _triggerPage;
+            _info.CacheState = CacheState.LifetimeInstance;
+            _info.LifetimePageKey = _triggerPage;
         }
 
         public void AsLifetimeInstance<TPage>() where TPage : Page
         {
-            _container.CacheState = CacheState.LifetimeInstance;
-            _container.LifetimePageKey = typeof(TPage).Name;
+            _info.CacheState = CacheState.LifetimeInstance;
+            _info.LifetimePageKey = typeof(TPage).Name;
         }
 
         public void AsLifetimeInstance(string page)
         {
-            _container.CacheState = CacheState.LifetimeInstance;
-            _container.LifetimePageKey = page;
+            _info.CacheState = CacheState.LifetimeInstance;
+            _info.LifetimePageKey = page;
         }
     }
 }

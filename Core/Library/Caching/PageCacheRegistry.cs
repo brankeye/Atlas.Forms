@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Pages.Info;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Caching
 {
     public class PageCacheRegistry : IPageCacheRegistry
     {
-        public virtual IReadOnlyDictionary<string, IList<PageMapContainer>> CacheMap => PageCacheMap.Current.GetMappings();
+        public virtual IReadOnlyDictionary<string, IList<PageMapInfo>> CacheMap => PageCacheMap.Current.GetMappings();
 
         public virtual ITriggerPageApi WhenPage(string pageKey)
         {
-            var container = new PageMapContainer();
-            IList<PageMapContainer> list;
+            var container = new PageMapInfo();
+            IList<PageMapInfo> list;
             PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
             if (list == null)
             {
-                list = new List<PageMapContainer>();
+                list = new List<PageMapInfo>();
                 PageCacheMap.Current.Mappings[pageKey] = list;
             }
             list.Add(container);
@@ -29,16 +29,16 @@ namespace Atlas.Forms.Caching
             return WhenPage(typeof(TPage).Name);
         }
 
-        public virtual bool Remove(string pageKey, PageMapContainer container)
+        public virtual bool Remove(string pageKey, PageMapInfo info)
         {
-            IList<PageMapContainer> list;
+            IList<PageMapInfo> list;
             PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
-            return list != null && list.Remove(container);
+            return list != null && list.Remove(info);
         }
 
-        public virtual IList<PageMapContainer> GetMappingsForKey(string pageKey)
+        public virtual IList<PageMapInfo> GetMappingsForKey(string pageKey)
         {
-            IList<PageMapContainer> list;
+            IList<PageMapInfo> list;
             PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
             return list;
         }

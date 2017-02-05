@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -8,21 +7,21 @@ namespace Atlas.Forms.Interfaces.Services
 {
     public interface INavigationService
     {
-        IReadOnlyList<IPageContainer> ModalStack { get; }
+        IReadOnlyList<IPageInfo> ModalStack { get; }
 
-        IReadOnlyList<IPageContainer> NavigationStack { get; }
+        IReadOnlyList<IPageInfo> NavigationStack { get; }
 
         INavigation Navigation { get; }
 
         void InsertPageBefore(NavigationInfo pageInfo, NavigationInfo before, IParametersService parameters = null);
 
-        Task<IPageContainer> PopAsync(IParametersService parameters = null);
+        Task<IPageInfo> PopAsync(IParametersService parameters = null);
 
-        Task<IPageContainer> PopAsync(bool animated, IParametersService parameters = null);
+        Task<IPageInfo> PopAsync(bool animated, IParametersService parameters = null);
 
-        Task<IPageContainer> PopModalAsync(IParametersService parameters = null);
+        Task<IPageInfo> PopModalAsync(IParametersService parameters = null);
 
-        Task<IPageContainer> PopModalAsync(bool animated, IParametersService parameters = null);
+        Task<IPageInfo> PopModalAsync(bool animated, IParametersService parameters = null);
 
         Task PopToRootAsync();
 

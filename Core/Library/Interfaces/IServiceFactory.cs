@@ -6,7 +6,7 @@ namespace Atlas.Forms.Interfaces
     {
         T CreateService<T>(params object[] args) where T : class;
 
-        void AddService(Type type, Func<object[], object> service);
+        bool AddService(Type type, Func<object[], object> service);
 
         void Lock();
     }

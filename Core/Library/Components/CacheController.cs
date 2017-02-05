@@ -1,39 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Containers;
+using Atlas.Forms.Pages.Info;
 
 namespace Atlas.Forms.Components
 {
     public class CacheController : ICacheController
     {
-        public virtual void AddCachedPages(IList<PageCacheContainer> list)
+        public virtual void AddCachedPages(IList<PageCacheInfo> list)
         {
             foreach (var container in list)
             {
-                PageCacheContainer pageContainer;
-                PageCacheStore.Current.PageCache.TryGetValue(container.Key, out pageContainer);
-                if (pageContainer == null)
+                PageCacheInfo pageInfo;
+                PageCacheStore.Current.PageCache.TryGetValue(container.Key, out pageInfo);
+                if (pageInfo == null)
                 {
                     TryAddPage(container.Key, container);
                 }
             }
         }
 
-        public virtual bool TryAddPage(string key, PageCacheContainer container)
+        public virtual bool TryAddPage(string key, PageCacheInfo info)
         {
-            PageCacheContainer storedContainer;
-            PageCacheStore.Current.PageCache.TryGetValue(key, out storedContainer);
-            if (storedContainer == null)
+            PageCacheInfo storedInfo;
+            PageCacheStore.Current.PageCache.TryGetValue(key, out storedInfo);
+            if (storedInfo == null)
             {
-                PageActionInvoker.InvokeOnPageCaching(container.Page);
-                PageCacheStore.Current.PageCache.Add(key, container);
-                PageActionInvoker.InvokeOnPageCached(container.Page);
+                PageActionInvoker.InvokeOnPageCaching(info.Page);
+                PageCacheStore.Current.PageCache.Add(key, info);
+                PageActionInvoker.InvokeOnPageCached(info.Page);
                 return true;
             }
             return false;
@@ -41,7 +40,7 @@ namespace Atlas.Forms.Components
 
         public virtual void RemoveCachedPages(string key)
         {
-            IList<PageMapContainer> containers;
+            IList<PageMapInfo> containers;
             PageCacheMap.Current.Mappings.TryGetValue(key, out containers);
             if (containers == null)
             {
@@ -69,20 +68,20 @@ namespace Atlas.Forms.Components
 
         public virtual object TryGetCachedPage(string key, IParametersService parameters)
         {
-            PageCacheContainer container;
-            PageCacheStore.Current.PageCache.TryGetValue(key, out container);
-            if (container != null)
+            PageCacheInfo info;
+            PageCacheStore.Current.PageCache.TryGetValue(key, out info);
+            if (info != null)
             {
-                if (container.CacheState == CacheState.Default)
+                if (info.CacheState == CacheState.Default)
                 {
-                    PageCacheStore.Current.PageCache.Remove(container.Key);
+                    PageCacheStore.Current.PageCache.Remove(info.Key);
                 }
-                if (!container.Initialized)
+                if (!info.Initialized)
                 {
-                    PageActionInvoker.InvokeInitialize(container.Page, parameters);
-                    container.Initialized = true;
+                    PageActionInvoker.InvokeInitialize(info.Page, parameters);
+                    info.Initialized = true;
                 }
-                return container.Page;
+                return info.Page;
             }
             return null;
         }
