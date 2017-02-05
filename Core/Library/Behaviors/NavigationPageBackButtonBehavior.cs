@@ -18,7 +18,7 @@ namespace Atlas.Forms.Behaviors
             base.OnDetachingFrom(bindable);
         }
 
-        protected void NavigationPage_Popped(object sender, NavigationEventArgs e)
+        protected virtual void NavigationPage_Popped(object sender, NavigationEventArgs e)
         {
             var navigationPage = (NavigationPage) sender;
             var currentPage = navigationPage.CurrentPage;

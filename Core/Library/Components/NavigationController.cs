@@ -42,11 +42,6 @@ namespace Atlas.Forms.Components
             }
         }
 
-        public virtual object GetMainPage()
-        {
-            return ApplicationProvider.MainPage;
-        }
-
         public virtual async Task PushPageAsync(object page, bool animated, IParametersService parameters, bool useModal)
         {
             var nextPage = page as Page;

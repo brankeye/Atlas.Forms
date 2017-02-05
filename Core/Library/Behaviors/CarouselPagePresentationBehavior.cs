@@ -23,7 +23,7 @@ namespace Atlas.Forms.Behaviors
             base.OnDetachingFrom(bindable);
         }
 
-        private void OnCurrentPageChanged(object sender, EventArgs eventArgs)
+        protected virtual void OnCurrentPageChanged(object sender, EventArgs eventArgs)
         {
             var tabbedPage = (CarouselPage) sender;
             PageActionInvoker.InvokeOnPageDisappeared(LastPage, new ParametersService());

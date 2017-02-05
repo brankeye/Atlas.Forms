@@ -11,8 +11,6 @@ namespace Atlas.Forms.Services
 {
     public class NavigationService : INavigationService
     {
-        public static INavigationService Current { get; internal set; }
-
         public virtual IReadOnlyList<IPageContainer> NavigationStack => NavigationController.GetNavigationStack();
 
         public virtual IReadOnlyList<IPageContainer> ModalStack => NavigationController.GetModalStack();

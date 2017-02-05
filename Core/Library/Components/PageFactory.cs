@@ -48,7 +48,7 @@ namespace Atlas.Forms.Components
             if (pageInstance != null)
             {
                 var navigationService = ServiceFactory.CreateNavigationService(pageInstance.Navigation);
-                PagePropertyInjector.InjectProperty<INavigationServiceProvider, INavigationService>(pageInstance, navigationService, (x, arg) => x.NavigationService = arg);
+                PagePropertyInjector.InjectNavigationService(pageInstance, navigationService);
             }
         }
 

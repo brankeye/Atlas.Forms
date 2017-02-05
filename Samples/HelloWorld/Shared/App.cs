@@ -2,7 +2,6 @@
 using atlas.samples.helloworld.Shared.Views.Pages.NavigationPage;
 using Atlas.Forms;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
 
 namespace atlas.samples.helloworld.Shared

@@ -33,7 +33,6 @@ namespace Atlas.Forms.Pages
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService) as Page;
-            NavigationController.TrySetNavigation(nextPage);
             var lastPage = Page.Detail;
             if (lastPage != null)
             {

@@ -151,8 +151,8 @@ namespace Library.Tests.Fixtures
         public static IPageCacheController GetPageCacheController()
         {
             StateManager.ResetAll();
-            var navigationProvider = new NavigationProvider();
-            return new PageCacheController(new CacheController(), new NavigationController(new ApplicationProvider(), navigationProvider, new PageStackController(navigationProvider)));
+            var navigationProvider = new NavigationProvider(null);
+            return new PageCacheController(new CacheController(), new PageFactory(new ServiceFactoryImp()));
         }
     }
 }

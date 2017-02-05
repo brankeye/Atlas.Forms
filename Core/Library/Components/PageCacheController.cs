@@ -86,6 +86,11 @@ namespace Atlas.Forms.Components
 
         public virtual object GetCachedOrNewPage(NavigationInfo pageInfo, IParametersService parameters)
         {
+            if (pageInfo.NewInstanceRequested)
+            {
+                return GetNewPage(pageInfo);
+            }
+
             Page pageInstance;
             if (pageInfo.HasWrapperPage)
             {

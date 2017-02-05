@@ -10,8 +10,6 @@ namespace Atlas.Forms.Interfaces.Components
     {
         void SetMainPage(object page, IParametersService parameters = null);
 
-        object GetMainPage();
-
         IReadOnlyList<IPageContainer> GetNavigationStack();
 
         IReadOnlyList<IPageContainer> GetModalStack();

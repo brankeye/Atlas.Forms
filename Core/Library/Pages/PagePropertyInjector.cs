@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Utilities;
 using Xamarin.Forms;
 
@@ -23,6 +24,11 @@ namespace Atlas.Forms.Pages
                 PropertyInjector.Inject(page, injectable, action);
                 PropertyInjector.Inject(page.BindingContext, injectable, action);
             }
+        }
+
+        public static void InjectNavigationService(Page page, INavigationService injectable)
+        {
+            InjectProperty<INavigationServiceProvider, INavigationService>(page, injectable, (p, inj) => p.NavigationService = inj);
         }
 
         public static void InjectMasterDetailManager(MasterDetailPage page, IMasterDetailPageManager injectable)

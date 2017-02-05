@@ -15,32 +15,7 @@ namespace Atlas.Forms.Navigation
         public void TrySetNavigation(object pageArg)
         {
             var page = pageArg as Page;
-            while (page != null)
-            {
-                if (page is NavigationPage)
-                {
-                    Navigation = (page as NavigationPage).Navigation;
-                    break;
-                }
-                if (page is MasterDetailPage)
-                {
-                    page = (page as MasterDetailPage).Detail;
-                    continue;
-                }
-                if (page is TabbedPage)
-                {
-                    page = (page as TabbedPage).CurrentPage;
-                    continue;
-                }
-                if (page is CarouselPage)
-                {
-                    page = (page as CarouselPage).CurrentPage;
-                    continue;
-                }
-                break;
-            }
-
-            if (page != null && Navigation == null)
+            if (page != null)
             {
                 Navigation = page.Navigation;
             }

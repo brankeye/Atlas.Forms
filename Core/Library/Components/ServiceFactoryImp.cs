@@ -1,13 +1,27 @@
 ﻿using System;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Utilities;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Components
 {
     public class ServiceFactoryImp : ServiceFactory, IServiceFactoryImp
     {
-        public static IServiceFactoryImp Current { get; set; } = new ServiceFactoryImp();
+        public void AddNavigationService(Func<INavigation, object> func)
+        {
+            AddService(typeof(INavigationService), args => func.Invoke(args[0] as INavigation));
+        }
+
+        public void AddNavigationController(Func<INavigation, object> func)
+        {
+            AddService(typeof(INavigationController), args => func.Invoke(args[0] as INavigation));
+        }
+
+        public void AddPageCacheController(Func<object> func)
+        {
+            AddService(typeof(IPageCacheController), args => func.Invoke());
+        }
 
         public INavigationController CreateNavigationController(INavigation navigation)
         {

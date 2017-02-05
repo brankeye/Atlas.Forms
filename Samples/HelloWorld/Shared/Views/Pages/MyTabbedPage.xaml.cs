@@ -21,7 +21,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         public void Initialize(IParametersService parameters)
         {
             PageManager.AddPage(Nav.Get("FirstTabPage").AsNavigationPage().Info());
-            PageManager.AddPage(Nav.Get("SecondTabPage").Info());
+            PageManager.AddPage(Nav.Get("SecondTabPage").AsNavigationPage().Info());
             PageManager.AddPage(Nav.Get("ThirdTabPage").Info());
         }
 

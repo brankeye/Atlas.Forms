@@ -41,8 +41,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Components\ServiceFactoryImp.cs" />
-    <Compile Include="Components\ServiceFactory.cs" />
-    <Compile Include="Interfaces\Components\IServiceFactory.cs" />
+    <Compile Include="Utilities\ServiceFactory.cs" />
+    <Compile Include="Interfaces\IServiceFactory.cs" />
     <Compile Include="Interfaces\Components\IServiceFactoryImp.cs" />
     <Compile Include="Interfaces\INavigationServiceProvider.cs" />
     <Compile Include="Services\NavigationInfo.cs" />

@@ -185,9 +185,9 @@ namespace Library.Tests.Fixtures
 
         protected static INavigationService GetNavigationService()
         {
-            var navigationProvider = new NavigationProvider();
+            var navigationProvider = new NavigationProvider(null);
             var navigationController = new NavigationController(new ApplicationProviderMock(), navigationProvider, new PageStackController(navigationProvider));
-            var pageCacheController = new PageCacheController(new CacheController(), navigationController);
+            var pageCacheController = new PageCacheController(new CacheController(), new PageFactory(new ServiceFactoryImp()));
             return new NavigationServiceMock(navigationController, pageCacheController);
         }
 
