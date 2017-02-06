@@ -13,10 +13,14 @@ namespace Atlas.Forms
     {
         protected IServiceFactoryImp ServiceFactory { get; set; }
 
+        private IAutoCacheController AutoCacheController { get; set; }
+
         protected override void Initialize()
         {
-            base.Initialize();
+            AutoCacheController = new AutoCacheController();
+            MessagingService.Current = CreateMessagingService();
             ConfigureServiceFactory();
+            base.Initialize();
         }
 
         protected virtual void ConfigureServiceFactory()
@@ -75,6 +79,11 @@ namespace Atlas.Forms
         protected virtual IServiceFactoryImp CreateServiceFactory()
         {
             return new ServiceFactoryImp();
+        }
+
+        protected virtual IMessagingService CreateMessagingService()
+        {
+            return new MessagingService();
         }
     }
 }

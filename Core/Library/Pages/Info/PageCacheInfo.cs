@@ -13,6 +13,6 @@ namespace Atlas.Forms.Pages.Info
 
         public Page Page { get; set; }
 
-        internal bool Initialized { get; set; }
+        public bool Initialized { get; set; }
     }
 }

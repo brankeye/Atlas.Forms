@@ -40,7 +40,12 @@
     <DefineConstants>TEST</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Caching\CacheEvents.cs" />
+    <Compile Include="Components\AutoCacheController.cs" />
     <Compile Include="Components\ServiceFactoryImp.cs" />
+    <Compile Include="Interfaces\Components\IAutoCacheController.cs" />
+    <Compile Include="Interfaces\Services\IMessagingService.cs" />
+    <Compile Include="Services\MessagingService.cs" />
     <Compile Include="Utilities\ServiceFactory.cs" />
     <Compile Include="Interfaces\IServiceFactory.cs" />
     <Compile Include="Interfaces\Components\IServiceFactoryImp.cs" />
