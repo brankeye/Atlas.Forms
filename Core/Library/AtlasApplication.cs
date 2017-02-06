@@ -1,4 +1,5 @@
-﻿using Atlas.Forms.Caching;
+﻿using System;
+using Atlas.Forms.Caching;
 using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
@@ -17,8 +18,8 @@ namespace Atlas.Forms
 
         protected override void Initialize()
         {
-            AutoCacheController = new AutoCacheController();
-            MessagingService.Current = CreateMessagingService();
+            MessagingService.SetCurrent(CreateMessagingService);
+            AutoCacheController = CreateAutoCacheController();
             ConfigureServiceFactory();
             base.Initialize();
         }
@@ -44,7 +45,7 @@ namespace Atlas.Forms
             return new PageCacheService(CreatePageCacheController());
         }
 
-        protected override IPageDialogService CreateDialogService()
+        protected override IPageDialogService CreatePageDialogService()
         {
             return new PageDialogService(new ApplicationProvider());
         }
@@ -79,6 +80,11 @@ namespace Atlas.Forms
         protected virtual IServiceFactoryImp CreateServiceFactory()
         {
             return new ServiceFactoryImp();
+        }
+
+        protected virtual IAutoCacheController CreateAutoCacheController()
+        {
+            return new AutoCacheController(new CacheController());
         }
 
         protected virtual IMessagingService CreateMessagingService()

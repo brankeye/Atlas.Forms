@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Atlas.Forms.Caching;
+using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Info;
 using Xamarin.Forms;
@@ -11,7 +14,22 @@ namespace Atlas.Forms.Services
 {
     public class PageCacheService : IPageCacheService
     {
-        public static IPageCacheService Current { get; internal set; }
+        public static IPageCacheService Current => GetCurrent();
+        private static Lazy<IPageCacheService> _current;
+
+        protected static IPageCacheService GetCurrent()
+        {
+            if (_current == null)
+            {
+                _current = new Lazy<IPageCacheService>();
+            }
+            return _current.Value;
+        }
+
+        public static void SetCurrent(Func<IPageCacheService> func)
+        {
+            _current = new Lazy<IPageCacheService>(func);
+        }
 
         protected IPageCacheController PageCacheController { get; }
 
