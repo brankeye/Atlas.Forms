@@ -27,31 +27,37 @@ namespace Atlas.Forms.Components
             PageStackController = pageStackController;
         }
 
-        public virtual void SetMainPage(object page, IParametersService parameters)
+        public virtual void SetMainPage(Page page, IParametersService parameters)
         {
-            var pageInstance = page as Page;
-            if (pageInstance != null)
+            if (page != null)
             {
-                NavigationProvider.TrySetNavigation(pageInstance);
-                PageActionInvoker.InvokeOnPageAppearing(pageInstance, parameters);
-                ApplicationProvider.MainPage = pageInstance;
-                PageActionInvoker.InvokeOnPageAppeared(pageInstance, parameters);
+                NavigationProvider.TrySetNavigation(page);
+                PageActionInvoker.InvokeOnPageAppearing(page, parameters);
+                ApplicationProvider.MainPage = page;
+                PageActionInvoker.InvokeOnPageAppeared(page, parameters);
             }
         }
 
-        public virtual async Task PushPageAsync(object page, bool animated, IParametersService parameters, bool useModal)
+        public virtual Page GetMainPage()
         {
-            var nextPage = page as Page;
-            PageActionInvoker.InvokeOnPageAppearing(nextPage, parameters);
-            if (useModal)
+            return ApplicationProvider.MainPage;
+        }
+
+        public virtual async Task PushPageAsync(Page page, bool animated, IParametersService parameters, bool useModal)
+        {
+            if (page != null)
             {
-                await NavigationProvider.Navigation.PushModalAsync(nextPage, animated);
+                PageActionInvoker.InvokeOnPageAppearing(page, parameters);
+                if (useModal)
+                {
+                    await NavigationProvider.Navigation.PushModalAsync(page, animated);
+                }
+                else
+                {
+                    await NavigationProvider.Navigation.PushAsync(page, animated);
+                }
+                PageActionInvoker.InvokeOnPageAppeared(page, parameters);
             }
-            else
-            {
-                await NavigationProvider.Navigation.PushAsync(nextPage, animated);
-            }
-            PageActionInvoker.InvokeOnPageAppeared(nextPage, parameters);
         }
 
         public virtual async Task<IPageInfo> PopPageAsync(bool animated, IParametersService parameters, bool useModal)
@@ -73,16 +79,15 @@ namespace Atlas.Forms.Components
             return pageContainer;
         }
 
-        public virtual void InsertPageBefore(object page, string before, IParametersService parameters)
+        public virtual void InsertPageBefore(Page page, string before, IParametersService parameters)
         {
-            var pageInstance = page as Page;
-            if (pageInstance != null)
+            if (page != null)
             {
                 var navStack = PageStackController.NavigationStack.ToList();
                 var beforeElement = navStack.FirstOrDefault(x => x.Key == before);
                 var beforeIndex = navStack.IndexOf(beforeElement);
                 var beforePage = NavigationProvider.Navigation.NavigationStack.ElementAtOrDefault(beforeIndex);
-                NavigationProvider.Navigation.InsertPageBefore(pageInstance, beforePage);
+                NavigationProvider.Navigation.InsertPageBefore(page, beforePage);
             }
         }
 
@@ -122,7 +127,7 @@ namespace Atlas.Forms.Components
             return NavigationProvider.Navigation;
         }
 
-        public virtual void TrySetNavigation(object page)
+        public virtual void TrySetNavigation(Page page)
         {
             NavigationProvider.TrySetNavigation(page);
         }

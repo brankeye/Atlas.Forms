@@ -1,15 +1,15 @@
 ﻿using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Pages
 {
     public class TriggerPageApi : ITriggerPageApi
     {
-        private readonly PageMapInfo _info;
+        private readonly MapInfo _info;
         private readonly string _triggerPage;
 
-        public TriggerPageApi(string triggerPage, PageMapInfo mapInfo)
+        public TriggerPageApi(string triggerPage, MapInfo mapInfo)
         {
             _info = mapInfo;
             _info.CacheState = CacheState.KeepAlive;

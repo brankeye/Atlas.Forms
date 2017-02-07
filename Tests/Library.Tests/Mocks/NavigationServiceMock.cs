@@ -5,7 +5,7 @@ namespace Library.Tests.Mocks
 {
     public class NavigationServiceMock : NavigationService
     {
-        public NavigationServiceMock(INavigationController navigationController, IPageCacheController pageCacheController)
-            : base(navigationController, pageCacheController) { }
+        public NavigationServiceMock(INavigationController navigationController, IPageRetriever pageRetriever)
+            : base(navigationController, pageRetriever) { }
     }
 }

@@ -10,7 +10,7 @@ namespace Atlas.Forms.Interfaces.Components
 
         INavigationController CreateNavigationController(INavigation navigation);
 
-        IPageCacheController CreatePageCacheController();
+        IPageRetriever CreatePageCacheController();
 
         void AddNavigationService(Func<INavigation, object> func);
 

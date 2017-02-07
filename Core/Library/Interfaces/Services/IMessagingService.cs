@@ -16,7 +16,7 @@ namespace Atlas.Forms.Interfaces.Services
         /// </summary>
         /// <param name="message">Message.</param>
         /// <param name="callback">Callback.</param>
-        void Subscribe(string message, Action<IMessagingService> callback);
+        void Subscribe(string message, Action callback);
 
         /// <summary>
         /// Subscribe the specified message and callback.
@@ -24,7 +24,7 @@ namespace Atlas.Forms.Interfaces.Services
         /// <param name="message">Message.</param>
         /// <param name="callback">Callback.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        void Subscribe<TArgs>(string message, Action<IMessagingService, TArgs> callback);
+        void Subscribe<TArgs>(string message, Action<TArgs> callback);
 
         /// <summary>
         /// Sends the message.

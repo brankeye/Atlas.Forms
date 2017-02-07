@@ -5,81 +5,74 @@ using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Interfaces.Utilities;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
+using Atlas.Forms.Utilities;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Services
 {
     public class PageCacheService : IPageCacheService
     {
-        public static IPageCacheService Current => GetCurrent();
-        private static Lazy<IPageCacheService> _current;
+        public static IPageCacheService Current => Instance.Current;
 
-        protected static IPageCacheService GetCurrent()
-        {
-            if (_current == null)
-            {
-                _current = new Lazy<IPageCacheService>();
-            }
-            return _current.Value;
-        }
+        protected static ILazySingleton<IPageCacheService> Instance { get; set; }
+            = new LazySingleton<IPageCacheService>();
 
         public static void SetCurrent(Func<IPageCacheService> func)
         {
-            _current = new Lazy<IPageCacheService>(func);
+            Instance.SetCurrent(func);
         }
 
-        protected IPageCacheController PageCacheController { get; }
+        protected IPageRetriever PageRetriever { get; }
 
-        public PageCacheService(IPageCacheController pageCacheController)
+        protected ICacheController CacheController { get; }
+
+        public PageCacheService(IPageRetriever pageRetriever, ICacheController cacheController)
         {
-            PageCacheController = pageCacheController;
+            PageRetriever = pageRetriever;
+            CacheController = cacheController;
         }
 
-        public virtual IReadOnlyDictionary<string, PageCacheInfo> CachedPages => PageCacheStore.Current.GetPageCache();
+        public virtual IReadOnlyDictionary<string, CacheInfo> CachedPages => PageCacheStore.Current.GetPageCache();
 
         public virtual Page GetNewPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            var pageInstance = PageCacheController.GetNewPage(pageInfo) as Page;
+            var pageInstance = PageRetriever.GetNewPage(pageInfo);
             PageActionInvoker.InvokeInitialize(pageInstance, parameters ?? new ParametersService());
             return pageInstance;
         }
 
         public virtual Page GetCachedOrNewPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            return PageCacheController.GetCachedOrNewPage(pageInfo, parameters ?? new ParametersService()) as Page;
+            return PageRetriever.GetCachedOrNewPage(pageInfo, parameters ?? new ParametersService());
         }
 
         public virtual Page TryGetCachedPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            return PageCacheController.TryGetCachedPage(pageInfo.Page, parameters ?? new ParametersService()) as Page;
+            return PageRetriever.TryGetCachedPage(pageInfo.Page, parameters ?? new ParametersService());
         }
 
         public virtual bool TryAddPage(NavigationInfo pageInfo)
         {
-            return PageCacheController.TryAddCachedPage(pageInfo, CacheState.Default);
+            throw new NotImplementedException();
         }
 
-        public virtual bool TryAddPageAsKeepAlive(NavigationInfo pageInfo)
+        public virtual bool RemovePage(NavigationInfo pageInfo)
         {
-            return PageCacheController.TryAddCachedPage(pageInfo, CacheState.KeepAlive);
+            throw new NotImplementedException();
         }
 
-        public virtual bool TryAddPageAsSingleInstance(NavigationInfo pageInfo)
+        public bool TryAddNewPage(NavigationInfo pageInfo)
         {
-            return PageCacheController.TryAddCachedPage(pageInfo, CacheState.SingleInstance);
+            throw new NotImplementedException();
         }
 
-        public virtual bool TryAddPageAsLifetimeInstance(NavigationInfo pageInfo)
+        public bool TryAddExistingPage(NavigationInfo pageInfo, Page page)
         {
-            return PageCacheController.TryAddCachedPage(pageInfo, CacheState.LifetimeInstance);
-        }
-
-        public bool RemovePage(NavigationInfo pageInfo)
-        {
-            return PageCacheController.RemovePageFromCache(pageInfo.Page);
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Caching
 {
@@ -8,11 +8,11 @@ namespace Atlas.Forms.Caching
     {
         public static PageCacheMap Current { get; set; } = new PageCacheMap();
 
-        public IDictionary<string, IList<PageMapInfo>> Mappings { get; } = new Dictionary<string, IList<PageMapInfo>>();
+        public IDictionary<string, IList<MapInfo>> Mappings { get; } = new Dictionary<string, IList<MapInfo>>();
 
-        public IReadOnlyDictionary<string, IList<PageMapInfo>> GetMappings()
+        public IReadOnlyDictionary<string, IList<MapInfo>> GetMappings()
         {
-            return new ReadOnlyDictionary<string, IList<PageMapInfo>>(Mappings);
+            return new ReadOnlyDictionary<string, IList<MapInfo>>(Mappings);
         }
     }
 }

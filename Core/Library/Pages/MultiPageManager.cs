@@ -27,23 +27,22 @@ namespace Atlas.Forms.Pages
 
         protected INavigationController NavigationController { get; set; }
 
-        protected IPageCacheController PageCacheController { get; set; }
+        protected IPageRetriever PageRetriever { get; set; }
 
         public MultiPageManager(
             MultiPage<T> page,
             INavigationController navigationController,
-            IPageCacheController pageCacheController)
+            IPageRetriever pageRetriever)
         {
             Page = page;
             NavigationController = navigationController;
-            PageCacheController = pageCacheController;
+            PageRetriever = pageRetriever;
         }
 
         public void AddPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            var pageInstance = PageCacheController.GetCachedOrNewPage(pageInfo, parameters ?? new ParametersService()) as T;
+            var pageInstance = PageRetriever.GetCachedOrNewPage(pageInfo, parameters ?? new ParametersService()) as T;
             Page.Children.Add(pageInstance);
-            PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
             var children = Children;
             if (children.Count == 1)
             {
@@ -100,7 +99,7 @@ namespace Atlas.Forms.Pages
 
         public void SetPageTemplate(string page, IParametersService parameters = null)
         {
-            var pageInstance = PageCacheController.TryGetCachedPage(page, parameters ?? new ParametersService());
+            var pageInstance = PageRetriever.TryGetCachedPage(page, parameters ?? new ParametersService());
             Page.ItemTemplate = new DataTemplate(() => pageInstance); 
         }
 

@@ -1,7 +1,9 @@
-﻿namespace Atlas.Forms.Interfaces.Components
+﻿using Xamarin.Forms;
+
+namespace Atlas.Forms.Interfaces.Components
 {
     public interface IPageFactory
     {
-        object GetNewPage(string key, object pageArg = null);
+        Page GetNewPage(string key, Page pageArg = null);
     }
 }

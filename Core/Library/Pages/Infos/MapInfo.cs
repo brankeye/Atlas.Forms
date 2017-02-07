@@ -1,19 +1,19 @@
 ﻿using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
 
-namespace Atlas.Forms.Pages.Info
+namespace Atlas.Forms.Pages.Infos
 {
-    public class PageMapInfo : PageInfo
+    public class MapInfo : PageInfo
     {
-        public PageMapInfo() { }
+        public MapInfo() { }
 
-        public PageMapInfo(CacheState state, CacheOption option, IPageInfo info) : base (info)
+        public MapInfo(CacheState state, CacheOption option, IPageInfo info) : base (info)
         {
             CacheState = state;
             CacheOption = option;
         }
 
-        public PageMapInfo(PageMapInfo info) : base(info)
+        public MapInfo(MapInfo info) : base(info)
         {
             CacheState = info.CacheState;
             CacheOption = info.CacheOption;

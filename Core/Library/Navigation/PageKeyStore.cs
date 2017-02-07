@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Navigation

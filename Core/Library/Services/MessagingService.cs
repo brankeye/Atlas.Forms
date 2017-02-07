@@ -1,26 +1,21 @@
 ﻿using System;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Interfaces.Utilities;
+using Atlas.Forms.Utilities;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Services
 {
     public class MessagingService : IMessagingService
     {
-        public static IMessagingService Current => GetCurrent();
-        private static Lazy<IMessagingService> _current;
+        public static IMessagingService Current => Instance.Current;
 
-        protected static IMessagingService GetCurrent()
-        {
-            if (_current == null)
-            {
-                _current = new Lazy<IMessagingService>();
-            }
-            return _current.Value;
-        }
+        protected static ILazySingleton<IMessagingService> Instance { get; set; }
+            = new LazySingleton<IMessagingService>();
 
         public static void SetCurrent(Func<IMessagingService> func)
         {
-            _current = new Lazy<IMessagingService>(func);
+            Instance.SetCurrent(func);
         }
 
         public virtual void SendMessage(string message)
@@ -33,14 +28,16 @@ namespace Atlas.Forms.Services
             MessagingCenter.Send(this, message, args);
         }
 
-        public virtual void Subscribe(string message, Action<IMessagingService> callback)
+        public virtual void Subscribe(string message, Action callback)
         {
-            MessagingCenter.Subscribe(this, message, callback);
+            Action<IMessagingService> action = service => callback.Invoke();
+            MessagingCenter.Subscribe(this, message, action);
         }
 
-        public virtual void Subscribe<TArgs>(string message, Action<IMessagingService, TArgs> callback)
+        public virtual void Subscribe<TArgs>(string message, Action<TArgs> callback)
         {
-            MessagingCenter.Subscribe(this, message, callback);
+            Action<IMessagingService, TArgs> action = (service, args) => callback.Invoke(args);
+            MessagingCenter.Subscribe(this, message, action);
         }
 
         public virtual void Unsubscribe(string message)

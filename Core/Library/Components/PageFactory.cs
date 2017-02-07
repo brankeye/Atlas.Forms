@@ -17,7 +17,7 @@ namespace Atlas.Forms.Components
             ServiceFactory = serviceFactory;
         }
 
-        public virtual object GetNewPage(string key, object pageArg = null)
+        public virtual Page GetNewPage(string key, Page pageArg = null)
         {
             ConstructorInfo constructor;
             PageNavigationStore.Current.PageConstructors.TryGetValue(key, out constructor);
@@ -30,9 +30,8 @@ namespace Atlas.Forms.Components
             {
                 parameters = new object[] {};
             }
-            var nextPage = constructor?.Invoke(parameters);
-            var page = nextPage as Page;
-            PageKeyStore.Current.PageKeys.Add(page, key);
+            var nextPage = constructor?.Invoke(parameters) as Page;
+            PageKeyStore.Current.PageKeys.Add(nextPage, key);
             TryAddServices(nextPage);
             TryAddBehaviors(nextPage);
             TryAddManagers(nextPage);

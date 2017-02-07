@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Caching
 {
     public class PageCacheRegistry : IPageCacheRegistry
     {
-        public virtual IReadOnlyDictionary<string, IList<PageMapInfo>> CacheMap => PageCacheMap.Current.GetMappings();
+        public virtual IReadOnlyDictionary<string, IList<MapInfo>> CacheMap => PageCacheMap.Current.GetMappings();
 
         public virtual ITriggerPageApi WhenPage(string pageKey)
         {
-            var container = new PageMapInfo();
-            IList<PageMapInfo> list;
+            var container = new MapInfo();
+            IList<MapInfo> list;
             PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
             if (list == null)
             {
-                list = new List<PageMapInfo>();
+                list = new List<MapInfo>();
                 PageCacheMap.Current.Mappings[pageKey] = list;
             }
             list.Add(container);
@@ -29,16 +29,16 @@ namespace Atlas.Forms.Caching
             return WhenPage(typeof(TPage).Name);
         }
 
-        public virtual bool Remove(string pageKey, PageMapInfo info)
+        public virtual bool Remove(string pageKey, MapInfo info)
         {
-            IList<PageMapInfo> list;
+            IList<MapInfo> list;
             PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
             return list != null && list.Remove(info);
         }
 
-        public virtual IList<PageMapInfo> GetMappingsForKey(string pageKey)
+        public virtual IList<MapInfo> GetMappingsForKey(string pageKey)
         {
-            IList<PageMapInfo> list;
+            IList<MapInfo> list;
             PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
             return list;
         }

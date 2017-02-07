@@ -1,16 +1,16 @@
 ﻿using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Pages
 {
     public class TargetPageApi : ITargetPageApi
     {
-        private readonly PageMapInfo _info;
+        private readonly MapInfo _info;
         private readonly string _triggerPage;
 
-        public TargetPageApi(string triggerPage, PageMapInfo mapInfo)
+        public TargetPageApi(string triggerPage, MapInfo mapInfo)
         {
             _info = mapInfo;
             _triggerPage = triggerPage;

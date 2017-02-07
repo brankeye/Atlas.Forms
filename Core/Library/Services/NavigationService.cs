@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Atlas.Forms.Caching;
+using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
-using Atlas.Forms.Pages.Info;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Services
@@ -21,18 +22,18 @@ namespace Atlas.Forms.Services
 
         protected INavigationController NavigationController { get; set; }
 
-        protected IPageCacheController PageCacheController { get; }
+        protected IPageRetriever PageRetriever { get; }
 
-        public NavigationService(INavigationController navigationController, IPageCacheController pageCacheController)
+        public NavigationService(INavigationController navigationController, IPageRetriever pageRetriever)
         {
             NavigationController = navigationController;
-            PageCacheController = pageCacheController;
+            PageRetriever = pageRetriever;
         }
 
         public virtual void InsertPageBefore(NavigationInfo pageInfo, NavigationInfo before, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService);
+            var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
             NavigationController.InsertPageBefore(nextPage, before.Page, paramService);
         }
 
@@ -59,23 +60,13 @@ namespace Atlas.Forms.Services
         protected virtual async Task<IPageInfo> PopInternalAsync(bool animated, IParametersService parameters = null, bool useModal = false)
         {
             var paramService = parameters ?? new ParametersService();
-            var pageStack = useModal ? ModalStack :
-                                       NavigationStack;
+            var pageStack = useModal ? Navigation.ModalStack :
+                                       Navigation.NavigationStack;
             var lastPage = pageStack.Last();
-            PageCacheController.RemoveCachedPages(lastPage.Key);
             var pageContainer = await NavigationController.PopPageAsync(animated, paramService, useModal);
-            PageCacheController.AddCachedPagesWithOption(lastPage.Key, CacheOption.Appears);
             var currentPage = Navigation.NavigationStack.ToList().LastOrDefault();
-            if (currentPage != null)
-            {
-                var pageInfo = PageKeyStore.Current.GetPageContainer(currentPage);
-                var mapInfo = PageCacheController.GetMapContainersWithOption(pageInfo.Key, CacheOption.Appears)
-                .FirstOrDefault(x => x.Key == pageInfo.Key);
-                if (mapInfo != null)
-                {
-                    PageCacheController.TryAddCachedPage(currentPage, mapInfo);
-                }
-            }
+            CachePubSubService.Publisher.SendPageDisappearedMessage(lastPage);
+            CachePubSubService.Publisher.SendPageAppearedMessage(currentPage);
             return pageContainer;
         }
 
@@ -115,22 +106,13 @@ namespace Atlas.Forms.Services
         protected virtual async Task PushInternalAsync(NavigationInfo pageInfo, bool animated, IParametersService parameters = null, bool useModal = false)
         {
             var paramService = parameters ?? new ParametersService();
-            var pageStack = useModal ? ModalStack :
-                                       NavigationStack;
-            if (pageStack.Count > 0)
-            {
-                var lastPage = pageStack.Last();
-                PageCacheController.RemoveCachedPages(lastPage.Key);
-            }
-            var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService);
+            var pageStack = useModal ? Navigation.ModalStack :
+                                       Navigation.NavigationStack;
+            var lastPage = pageStack.LastOrDefault();
+            var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
             await NavigationController.PushPageAsync(nextPage, animated, paramService, useModal);
-            var mapInfo = PageCacheController.GetMapContainersWithOption(pageInfo.Page, CacheOption.Appears)
-                .FirstOrDefault(x => x.Key == pageInfo.Page);
-            if (mapInfo != null)
-            {
-                PageCacheController.TryAddCachedPage(nextPage as Page, mapInfo);
-            }
-            PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
+            CachePubSubService.Publisher.SendPageDisappearedMessage(lastPage);
+            CachePubSubService.Publisher.SendPageAppearedMessage(nextPage);
         }
 
         public virtual void RemovePage(NavigationInfo pageInfo)
@@ -140,20 +122,11 @@ namespace Atlas.Forms.Services
 
         public virtual void SetMainPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            //if (NavigationController.GetMainPage() != null && MainPageContainer != null)
-            //{
-            //    PageCacheController.RemoveCachedPages(MainPageContainer.Key);
-            //}
+            CachePubSubService.Publisher.SendPageDisappearedMessage(NavigationController.GetMainPage());
             var paramService = parameters ?? new ParametersService();
-            var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService);
+            var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
             NavigationController.SetMainPage(nextPage, paramService);
-            var mapInfo = PageCacheController.GetMapContainersWithOption(pageInfo.Page, CacheOption.Appears)
-                .FirstOrDefault(x => x.Key == pageInfo.Page);
-            if (mapInfo != null)
-            {
-                PageCacheController.TryAddCachedPage(nextPage as Page, mapInfo);
-            }
-            PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
+            CachePubSubService.Publisher.SendPageAppearedMessage(nextPage);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using Atlas.Forms.Interfaces;
 
-namespace Atlas.Forms.Pages.Info
+namespace Atlas.Forms.Pages.Infos
 {
     public class PageInfo : IPageInfo
     {

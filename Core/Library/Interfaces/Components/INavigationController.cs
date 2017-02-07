@@ -7,7 +7,7 @@ namespace Atlas.Forms.Interfaces.Components
 {
     public interface INavigationController
     {
-        void SetMainPage(object page, IParametersService parameters = null);
+        void SetMainPage(Page page, IParametersService parameters = null);
 
         IReadOnlyList<IPageInfo> GetNavigationStack();
 
@@ -15,9 +15,11 @@ namespace Atlas.Forms.Interfaces.Components
 
         INavigation GetNavigation();
 
-        Task PushPageAsync(object page, bool animated, IParametersService parameters, bool useModal);
+        Page GetMainPage();
 
-        void InsertPageBefore(object page, string before, IParametersService parameters);
+        Task PushPageAsync(Page page, bool animated, IParametersService parameters, bool useModal);
+
+        void InsertPageBefore(Page page, string before, IParametersService parameters);
 
         Task<IPageInfo> PopPageAsync(bool animated, IParametersService parameters, bool useModal);
 
@@ -25,6 +27,6 @@ namespace Atlas.Forms.Interfaces.Components
 
         void RemovePage(string pageKey);
 
-        void TrySetNavigation(object page);
+        void TrySetNavigation(Page page);
     }
 }

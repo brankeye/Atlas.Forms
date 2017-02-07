@@ -1,32 +1,29 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Atlas.Forms.Caching;
-using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
-using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Components
 {
     public class CacheController : ICacheController
     {
-        public virtual void AddCachedPages(IList<PageCacheInfo> list)
+        public virtual void AddCacheInfos(IList<CacheInfo> list)
         {
             foreach (var container in list)
             {
-                PageCacheInfo pageInfo;
-                PageCacheStore.Current.PageCache.TryGetValue(container.Key, out pageInfo);
-                if (pageInfo == null)
+                CacheInfo info;
+                PageCacheStore.Current.PageCache.TryGetValue(container.Key, out info);
+                if (info == null)
                 {
-                    TryAddPage(container.Key, container);
+                    TryAddCacheInfo(container.Key, container);
                 }
             }
         }
 
-        public virtual bool TryAddPage(string key, PageCacheInfo info)
+        public virtual bool TryAddCacheInfo(string key, CacheInfo info)
         {
-            PageCacheInfo storedInfo;
+            CacheInfo storedInfo;
             PageCacheStore.Current.PageCache.TryGetValue(key, out storedInfo);
             if (storedInfo == null)
             {
@@ -38,55 +35,14 @@ namespace Atlas.Forms.Components
             return false;
         }
 
-        public virtual void RemoveCachedPages(string key)
+        public virtual CacheInfo TryGetCacheInfo(string key)
         {
-            IList<PageMapInfo> containers;
-            PageCacheMap.Current.Mappings.TryGetValue(key, out containers);
-            if (containers == null)
-            {
-                return;
-            }
-            foreach (var container in containers)
-            {
-                if (container.CacheState == CacheState.Default ||
-                    container.CacheState == CacheState.KeepAlive)
-                {
-                    PageCacheStore.Current.PageCache.Remove(container.Key);
-                }
-            }
-
-            var lists = PageCacheMap.Current.Mappings.Values;
-            foreach (var list in lists)
-            {
-                var sorted = list.Where(x => x.CacheState == CacheState.LifetimeInstance && x.LifetimePageKey == key).ToList();
-                foreach (var map in sorted)
-                {
-                    PageCacheStore.Current.PageCache.Remove(map.Key);
-                }
-            }
-        }
-
-        public virtual object TryGetCachedPage(string key, IParametersService parameters)
-        {
-            PageCacheInfo info;
+            CacheInfo info;
             PageCacheStore.Current.PageCache.TryGetValue(key, out info);
-            if (info != null)
-            {
-                if (info.CacheState == CacheState.Default)
-                {
-                    PageCacheStore.Current.PageCache.Remove(info.Key);
-                }
-                if (!info.Initialized)
-                {
-                    PageActionInvoker.InvokeInitialize(info.Page, parameters);
-                    info.Initialized = true;
-                }
-                return info.Page;
-            }
-            return null;
+            return info;
         }
 
-        public virtual bool RemovePageFromCache(string key)
+        public virtual bool RemoveCacheInfo(string key)
         {
             return PageCacheStore.Current.PageCache.Remove(key);
         }

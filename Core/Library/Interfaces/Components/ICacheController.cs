@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
 using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Interfaces.Components
 {
     public interface ICacheController
     {
-        bool TryAddPage(string key, PageCacheInfo info);
+        CacheInfo TryGetCacheInfo(string key);
 
-        object TryGetCachedPage(string key, IParametersService parameters);
+        bool TryAddCacheInfo(string key, CacheInfo info);
 
-        void RemoveCachedPages(string key);
+        void AddCacheInfos(IList<CacheInfo> list);
 
-        void AddCachedPages(IList<PageCacheInfo> list);
-
-        bool RemovePageFromCache(string key);
+        bool RemoveCacheInfo(string key);
     }
 }

@@ -19,14 +19,15 @@ namespace Atlas.Forms
         protected override void Initialize()
         {
             MessagingService.SetCurrent(CreateMessagingService);
+            CachePubSubService.SetCurrent(CreateCachePubSubService);
             AutoCacheController = CreateAutoCacheController();
+            ServiceFactory = CreateServiceFactory();
             ConfigureServiceFactory();
             base.Initialize();
         }
 
         protected virtual void ConfigureServiceFactory()
         {
-            ServiceFactory = CreateServiceFactory();
             ServiceFactory.AddNavigationService(CreateNavigationService);
             ServiceFactory.AddNavigationController(CreateNavigationController);
             ServiceFactory.AddPageCacheController(CreatePageCacheController);
@@ -42,7 +43,7 @@ namespace Atlas.Forms
 
         protected override IPageCacheService CreatePageCacheService()
         {
-            return new PageCacheService(CreatePageCacheController());
+            return new PageCacheService(CreatePageCacheController(), new CacheController());
         }
 
         protected override IPageDialogService CreatePageDialogService()
@@ -67,9 +68,9 @@ namespace Atlas.Forms
             return new NavigationController(new ApplicationProvider(), navigationProvider, pageStackController);
         }
 
-        protected virtual IPageCacheController CreatePageCacheController()
+        protected virtual IPageRetriever CreatePageCacheController()
         {
-            return new PageCacheController(new CacheController(), new PageFactory(ServiceFactory));
+            return new PageRetriever(new CacheController(), new PageFactory(ServiceFactory));
         }
 
         protected virtual IPageStackController CreatePageStackController(INavigationProvider navigationProvider)
@@ -90,6 +91,11 @@ namespace Atlas.Forms
         protected virtual IMessagingService CreateMessagingService()
         {
             return new MessagingService();
+        }
+
+        protected virtual ICachePubSubService CreateCachePubSubService()
+        {
+            return new CachePubSubService();
         }
     }
 }

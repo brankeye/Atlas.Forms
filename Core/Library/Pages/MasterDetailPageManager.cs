@@ -1,4 +1,6 @@
-﻿using Atlas.Forms.Enums;
+﻿using Atlas.Forms.Caching;
+using Atlas.Forms.Components;
+using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Services;
@@ -13,22 +15,22 @@ namespace Atlas.Forms.Pages
 
         protected INavigationController NavigationController { get; set; }
 
-        protected IPageCacheController PageCacheController { get; set; }
+        protected IPageRetriever PageRetriever { get; set; }
 
         public MasterDetailPageManager(
             MasterDetailPage page,
             INavigationController navigationController,
-            IPageCacheController pageCacheController)
+            IPageRetriever pageRetriever)
         {
             Page = page;
             NavigationController = navigationController;
-            PageCacheController = pageCacheController;
+            PageRetriever = pageRetriever;
         }
 
         public virtual void PresentPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = PageCacheController.GetCachedOrNewPage(pageInfo, paramService) as Page;
+            var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService) as Page;
             var lastPage = Page.Detail;
             if (lastPage != null)
             {
@@ -41,7 +43,8 @@ namespace Atlas.Forms.Pages
                 PageActionInvoker.InvokeOnPageDisappeared(lastPage, paramService);
             }
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
-            PageCacheController.AddCachedPagesWithOption(pageInfo.Page, CacheOption.Appears);
+            CachePubSubService.Publisher.SendPageDisappearedMessage(lastPage);
+            CachePubSubService.Publisher.SendPageAppearedMessage(nextPage);
         }
     }
 }

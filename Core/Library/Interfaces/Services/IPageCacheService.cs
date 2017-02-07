@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Atlas.Forms.Pages.Info;
+using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -7,7 +7,7 @@ namespace Atlas.Forms.Interfaces.Services
 {
     public interface IPageCacheService
     {
-        IReadOnlyDictionary<string, PageCacheInfo> CachedPages { get; }
+        IReadOnlyDictionary<string, CacheInfo> CachedPages { get; }
 
         Page GetCachedOrNewPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
@@ -15,10 +15,10 @@ namespace Atlas.Forms.Interfaces.Services
 
         Page TryGetCachedPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        bool TryAddPage(NavigationInfo pageInfo);
+        bool TryAddNewPage(NavigationInfo pageInfo);
 
-        bool TryAddPageAsKeepAlive(NavigationInfo pageInfo);
+        bool TryAddExistingPage(NavigationInfo pageInfo, Page page);
 
-        bool TryAddPageAsSingleInstance(NavigationInfo pageInfo);
+        bool RemovePage(NavigationInfo pageInfo);
     }
 }

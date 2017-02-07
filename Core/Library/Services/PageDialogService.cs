@@ -2,27 +2,22 @@
 using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Services;
+using Atlas.Forms.Interfaces.Utilities;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Utilities;
 
 namespace Atlas.Forms.Services
 {
     public class PageDialogService : IPageDialogService
     {
-        public static IPageDialogService Current => GetCurrent();
-        private static Lazy<IPageDialogService> _current;
+        public static IPageDialogService Current => Instance.Current;
 
-        protected static IPageDialogService GetCurrent()
-        {
-            if (_current == null)
-            {
-                _current = new Lazy<IPageDialogService>();
-            }
-            return _current.Value;
-        }
+        protected static ILazySingleton<IPageDialogService> Instance { get; set; }
+            = new LazySingleton<IPageDialogService>();
 
         public static void SetCurrent(Func<IPageDialogService> func)
         {
-            _current = new Lazy<IPageDialogService>(func);
+            Instance.SetCurrent(func);
         }
 
         protected IApplicationProvider ApplicationProvider { get; }

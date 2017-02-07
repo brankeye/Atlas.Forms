@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
-using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
-using Atlas.Forms.Pages.Info;
-using Atlas.Forms.Services;
+using Atlas.Forms.Pages.Infos;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Components
@@ -31,12 +26,12 @@ namespace Atlas.Forms.Components
 
         protected virtual void Subscribe()
         {
-            MessagingService.Current.Subscribe<Page>(CacheEvents.OnPageAppeared, OnPageAppeared);
-            MessagingService.Current.Subscribe<Page>(CacheEvents.OnPageDisappeared, OnPageDisappeared);
-            MessagingService.Current.Subscribe<Page>(CacheEvents.OnPageCreated, OnPageCreated);
+            CachePubSubService.Subscriber.SubscribePageAppeared(OnPageAppeared);
+            CachePubSubService.Subscriber.SubscribePageDisappeared(OnPageDisappeared);
+            CachePubSubService.Subscriber.SubscribePageCreated(OnPageCreated);
         }
 
-        protected virtual void OnPageAppeared(IMessagingService messagingService, Page page)
+        protected virtual void OnPageAppeared(Page page)
         {
             var pageMappings = GetPageMappings(page);
             if (pageMappings != null)
@@ -45,16 +40,16 @@ namespace Atlas.Forms.Components
             }
         }
 
-        protected virtual void OnPageDisappeared(IMessagingService messagingService, Page page)
+        protected virtual void OnPageDisappeared(Page page)
         {
             var pageMappings = GetPageMappings(page);
             if (pageMappings != null)
             {
-                CacheController.RemoveCachedPages("");
+                //CacheController.RemoveCachedPages("");
             }
         }
 
-        protected virtual void OnPageCreated(IMessagingService messagingService, Page page)
+        protected virtual void OnPageCreated(Page page)
         {
             var pageMappings = GetPageMappings(page);
             if (pageMappings != null)
@@ -63,19 +58,19 @@ namespace Atlas.Forms.Components
             }
         }
 
-        protected virtual IList<PageMapInfo> GetPageMappings(Page page)
+        protected virtual IList<MapInfo> GetPageMappings(Page page)
         {
             var pageInfo = PageKeyStore.Current.GetPageContainer(page);
-            IList<PageMapInfo> pageMappings;
+            IList<MapInfo> pageMappings;
             PageCacheMap.Current.Mappings.TryGetValue(pageInfo.Key, out pageMappings);
             return pageMappings;
         }
 
         protected virtual void Unsubscribe()
         {
-            MessagingService.Current.Unsubscribe(CacheEvents.OnPageAppeared);
-            MessagingService.Current.Unsubscribe(CacheEvents.OnPageDisappeared);
-            MessagingService.Current.Unsubscribe(CacheEvents.OnPageCreated);
+            CachePubSubService.Subscriber.UnsubscribePageAppeared();
+            CachePubSubService.Subscriber.UnsubscribePageDisappeared();
+            CachePubSubService.Subscriber.UnsubscribePageCreated();
         }
     }
 }

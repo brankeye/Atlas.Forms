@@ -20,7 +20,7 @@ namespace Atlas.Forms.Components
 
         public void AddPageCacheController(Func<object> func)
         {
-            AddService(typeof(IPageCacheController), args => func.Invoke());
+            AddService(typeof(IPageRetriever), args => func.Invoke());
         }
 
         public INavigationController CreateNavigationController(INavigation navigation)
@@ -33,9 +33,9 @@ namespace Atlas.Forms.Components
             return CreateService<INavigationService>(navigation);
         }
 
-        public IPageCacheController CreatePageCacheController()
+        public IPageRetriever CreatePageCacheController()
         {
-            return CreateService<IPageCacheController>();
+            return CreateService<IPageRetriever>();
         }
     }
 }

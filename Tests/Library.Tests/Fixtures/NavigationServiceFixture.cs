@@ -187,7 +187,7 @@ namespace Library.Tests.Fixtures
         {
             var navigationProvider = new NavigationProvider(null);
             var navigationController = new NavigationController(new ApplicationProviderMock(), navigationProvider, new PageStackController(navigationProvider));
-            var pageCacheController = new PageCacheController(new CacheController(), new PageFactory(new ServiceFactoryImp()));
+            var pageCacheController = new PageRetriever(new CacheController(), new PageFactory(new ServiceFactoryImp()));
             return new NavigationServiceMock(navigationController, pageCacheController);
         }
 
