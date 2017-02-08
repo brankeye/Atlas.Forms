@@ -11,14 +11,17 @@ namespace Atlas.Forms
 {
     public abstract class AtlasApplication : AtlasApplicationBase
     {
-        protected IServiceFactoryImp ServiceFactory { get; set; }
+        protected IServiceFactoryImp ServiceFactory { get; private set; }
 
         private IAutoCacheController AutoCacheController { get; set; }
+
+        private ICacheController CacheController { get; set; }
 
         protected override void Initialize()
         {
             MessagingService.SetCurrent(CreateMessagingService);
             CachePubSubService.SetCurrent(CreateCachePubSubService);
+            CacheController = CreateCacheController();
             AutoCacheController = CreateAutoCacheController();
             ServiceFactory = CreateServiceFactory();
             ConfigureServiceFactory();
@@ -29,20 +32,20 @@ namespace Atlas.Forms
         {
             ServiceFactory.AddNavigationService(CreateNavigationService);
             ServiceFactory.AddNavigationController(CreateNavigationController);
-            ServiceFactory.AddPageCacheController(CreatePageCacheController);
+            ServiceFactory.AddPageCacheController(CreatePageRetriever);
             ServiceFactory.Lock();
         }
 
         protected override INavigationService CreateNavigationService(INavigation navigation)
         {
             var navigationController = CreateNavigationController(navigation);
-            var pageCacheController = CreatePageCacheController();
+            var pageCacheController = CreatePageRetriever();
             return new NavigationService(navigationController, pageCacheController, CachePubSubService.Publisher);
         }
 
         protected override IPageCacheService CreatePageCacheService()
         {
-            return new PageCacheService(CreatePageCacheController(), new CacheController());
+            return new PageCacheService(CreatePageRetriever(), new CacheController());
         }
 
         protected override IPageDialogService CreatePageDialogService()
@@ -67,9 +70,14 @@ namespace Atlas.Forms
             return new NavigationController(new ApplicationProvider(), navigationProvider, pageStackController);
         }
 
-        protected virtual IPageRetriever CreatePageCacheController()
+        protected virtual IPageRetriever CreatePageRetriever()
         {
-            return new PageRetriever(new CacheController(), new PageFactory(ServiceFactory), CachePubSubService.Publisher);
+            return new PageRetriever(CacheController, new PageFactory(ServiceFactory), CachePubSubService.Publisher);
+        }
+
+        protected virtual ICacheController CreateCacheController()
+        {
+            return new CacheController();
         }
 
         protected virtual IPageStackController CreatePageStackController(INavigationProvider navigationProvider)
@@ -84,7 +92,7 @@ namespace Atlas.Forms
 
         protected virtual IAutoCacheController CreateAutoCacheController()
         {
-            return new AutoCacheController(new CacheController(), new PageFactory(ServiceFactory), CachePubSubService.Subscriber);
+            return new AutoCacheController(CacheController, new PageFactory(ServiceFactory), CachePubSubService.Subscriber);
         }
 
         protected virtual IMessagingService CreateMessagingService()

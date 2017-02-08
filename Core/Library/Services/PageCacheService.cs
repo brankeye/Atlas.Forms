@@ -34,7 +34,7 @@ namespace Atlas.Forms.Services
             CacheController = cacheController;
         }
 
-        public virtual IReadOnlyDictionary<string, CacheInfo> CachedPages => PageCacheStore.Current.GetPageCache();
+        public virtual IReadOnlyDictionary<string, CacheInfo> CachedPages => CacheController.GetPageCache();
 
         public virtual Page GetNewPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {

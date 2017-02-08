@@ -60,7 +60,6 @@
     <Compile Include="Behaviors\CarouselPagePresentationBehavior.cs" />
     <Compile Include="Behaviors\TabbedPagePresentationBehavior.cs" />
     <Compile Include="Caching\PageCacheRegistry.cs" />
-    <Compile Include="Caching\PageCacheStore.cs" />
     <Compile Include="Components\CacheController.cs" />
     <Compile Include="Components\PageRetriever.cs" />
     <Compile Include="Components\NavigationController.cs" />

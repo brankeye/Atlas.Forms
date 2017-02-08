@@ -5,6 +5,8 @@ namespace Atlas.Forms.Interfaces.Components
 {
     public interface ICacheController
     {
+        IReadOnlyDictionary<string, CacheInfo> GetPageCache();
+
         CacheInfo TryGetCacheInfo(string key);
 
         bool TryAddCacheInfo(string key, CacheInfo info);

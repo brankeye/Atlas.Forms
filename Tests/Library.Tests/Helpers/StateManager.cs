@@ -20,7 +20,7 @@ namespace Library.Tests.Helpers
 
         public static void ResetPageCacheStore()
         {
-            PageCacheStore.Current = new PageCacheStore();
+            //PageCacheStore.Current = new PageCacheStore();
         }
 
         public static void ResetPageCacheMap()
