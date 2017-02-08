@@ -1,5 +1,4 @@
-﻿using System;
-using Atlas.Forms.Caching;
+﻿using Atlas.Forms.Caching;
 using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
@@ -85,7 +84,7 @@ namespace Atlas.Forms
 
         protected virtual IAutoCacheController CreateAutoCacheController()
         {
-            return new AutoCacheController(new CacheController());
+            return new AutoCacheController(new CacheController(), new PageFactory(ServiceFactory));
         }
 
         protected virtual IMessagingService CreateMessagingService()

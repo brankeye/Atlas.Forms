@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Atlas.Forms.Interfaces.Services;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Interfaces.Components
@@ -20,6 +15,10 @@ namespace Atlas.Forms.Interfaces.Components
         void SendPageDisappearedMessage(Page page);
 
         void SendPageCreatedMessage(Page page);
+
+        void SendPageNavigatedFromMessage(Page page);
+
+        void SendPageNavigatedToMessage(Page page);
     }
 
     public interface ICacheSubscriber
@@ -30,10 +29,18 @@ namespace Atlas.Forms.Interfaces.Components
 
         void SubscribePageCreated(Action<Page> action);
 
+        void SubscribePageNavigatedFrom(Action<Page> action);
+
+        void SubscribePageNavigatedTo(Action<Page> action);
+
         void UnsubscribePageAppeared();
 
         void UnsubscribePageDisappeared();
 
         void UnsubscribePageCreated();
+
+        void UnsubscribePageNavigatedFrom();
+
+        void UnsubscribePageNavigatedTo();
     }
 }

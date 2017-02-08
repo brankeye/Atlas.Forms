@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // Xamarin.Forms.Toolkit
 // Source: https://github.com/jamesmontemagno/xamarin.forms-toolkit/blob/master/FormsToolkit/FormsToolkit/Interfaces/IMessagingService.cs

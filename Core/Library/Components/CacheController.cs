@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Atlas.Forms.Caching;
+using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
@@ -39,6 +40,10 @@ namespace Atlas.Forms.Components
         {
             CacheInfo info;
             PageCacheStore.Current.PageCache.TryGetValue(key, out info);
+            if (info?.CacheState == CacheState.Default)
+            {
+                PageCacheStore.Current.PageCache.Remove(key);
+            }
             return info;
         }
 

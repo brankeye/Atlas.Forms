@@ -15,7 +15,7 @@ namespace Atlas.Forms.Interfaces.Services
 
         Page TryGetCachedPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        bool TryAddNewPage(NavigationInfo pageInfo);
+        bool TryAddPage(NavigationInfo pageInfo);
 
         bool TryAddExistingPage(NavigationInfo pageInfo, Page page);
 

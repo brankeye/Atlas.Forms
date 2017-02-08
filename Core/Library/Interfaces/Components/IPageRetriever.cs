@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Atlas.Forms.Enums;
-using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Pages.Infos;
+﻿using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 

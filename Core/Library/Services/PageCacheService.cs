@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Atlas.Forms.Caching;
-using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Interfaces.Utilities;
-using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Utilities;
@@ -57,22 +55,32 @@ namespace Atlas.Forms.Services
 
         public virtual bool TryAddPage(NavigationInfo pageInfo)
         {
-            throw new NotImplementedException();
-        }
-
-        public virtual bool RemovePage(NavigationInfo pageInfo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryAddNewPage(NavigationInfo pageInfo)
-        {
-            throw new NotImplementedException();
+            var pageInstance = PageRetriever.GetNewPage(pageInfo);
+            var cacheInfo = new CacheInfo(pageInstance, new MapInfo
+            {
+                Key = pageInfo.Page,
+                Type = pageInstance.GetType(),
+                CacheState = CacheState.Default,
+                CacheOption = CacheOption.None
+            });
+            return CacheController.TryAddCacheInfo(pageInfo.Page, cacheInfo);
         }
 
         public bool TryAddExistingPage(NavigationInfo pageInfo, Page page)
         {
-            throw new NotImplementedException();
+            var cacheInfo = new CacheInfo(page, new MapInfo
+            {
+                Key = pageInfo.Page,
+                Type = page.GetType(),
+                CacheState = CacheState.Default,
+                CacheOption = CacheOption.None
+            });
+            return CacheController.TryAddCacheInfo(pageInfo.Page, cacheInfo);
+        }
+
+        public virtual bool RemovePage(NavigationInfo pageInfo)
+        {
+            return CacheController.RemoveCacheInfo(pageInfo.Page);
         }
     }
 }
