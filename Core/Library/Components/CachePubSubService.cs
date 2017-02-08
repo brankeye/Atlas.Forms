@@ -1,5 +1,6 @@
 ﻿using System;
 using Atlas.Forms.Interfaces.Components;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Interfaces.Utilities;
 using Atlas.Forms.Services;
 using Atlas.Forms.Utilities;
@@ -14,7 +15,14 @@ namespace Atlas.Forms.Components
         public static ICacheSubscriber Subscriber => Instance.Current;
 
         protected static ILazySingleton<ICachePubSubService> Instance { get; set; }
-            = new LazySingleton<ICachePubSubService>();
+            = new LazySingleton<ICachePubSubService>(() => null);
+
+        protected IMessagingService MessagingService { get; }
+
+        public CachePubSubService(IMessagingService messagingService)
+        {
+            MessagingService = messagingService;
+        }
 
         public static void SetCurrent(Func<ICachePubSubService> func)
         {
@@ -35,77 +43,77 @@ namespace Atlas.Forms.Components
 
         public virtual void SendPageAppearedMessage(Page page)
         {
-            MessagingService.Current.SendMessage(OnPageAppeared, page);
+            MessagingService.SendMessage(OnPageAppeared, page);
         }
 
         public virtual void SendPageDisappearedMessage(Page page)
         {
-            MessagingService.Current.SendMessage(OnPageDisappeared, page);
+            MessagingService.SendMessage(OnPageDisappeared, page);
         }
 
         public virtual void SendPageNavigatedFromMessage(Page page)
         {
-            MessagingService.Current.SendMessage(OnPageNavigatedFrom, page);
+            MessagingService.SendMessage(OnPageNavigatedFrom, page);
         }
 
         public virtual void SendPageNavigatedToMessage(Page page)
         {
-            MessagingService.Current.SendMessage(OnPageNavigatedTo, page);
+            MessagingService.SendMessage(OnPageNavigatedTo, page);
         }
 
         public virtual void SendPageCreatedMessage(Page page)
         {
-            MessagingService.Current.SendMessage(OnPageCreated, page);
+            MessagingService.SendMessage(OnPageCreated, page);
         }
 
         public virtual void SubscribePageAppeared(Action<Page> action)
         {
-            MessagingService.Current.Subscribe(OnPageAppeared, action);
+            MessagingService.Subscribe(OnPageAppeared, action);
         }
 
         public virtual void SubscribePageDisappeared(Action<Page> action)
         {
-            MessagingService.Current.Subscribe(OnPageDisappeared, action);
+            MessagingService.Subscribe(OnPageDisappeared, action);
         }
 
         public virtual void SubscribePageNavigatedFrom(Action<Page> action)
         {
-            MessagingService.Current.Subscribe(OnPageNavigatedFrom, action);
+            MessagingService.Subscribe(OnPageNavigatedFrom, action);
         }
 
         public virtual void SubscribePageNavigatedTo(Action<Page> action)
         {
-            MessagingService.Current.Subscribe(OnPageNavigatedTo, action);
+            MessagingService.Subscribe(OnPageNavigatedTo, action);
         }
 
         public virtual void SubscribePageCreated(Action<Page> action)
         {
-            MessagingService.Current.Subscribe(OnPageCreated, action);
+            MessagingService.Subscribe(OnPageCreated, action);
         }
 
         public virtual void UnsubscribePageAppeared()
         {
-            MessagingService.Current.Unsubscribe<Page>(OnPageAppeared);
+            MessagingService.Unsubscribe<Page>(OnPageAppeared);
         }
 
         public virtual void UnsubscribePageDisappeared()
         {
-            MessagingService.Current.Unsubscribe<Page>(OnPageDisappeared);
+            MessagingService.Unsubscribe<Page>(OnPageDisappeared);
         }
 
         public virtual void UnsubscribePageNavigatedFrom()
         {
-            MessagingService.Current.Unsubscribe<Page>(OnPageNavigatedFrom);
+            MessagingService.Unsubscribe<Page>(OnPageNavigatedFrom);
         }
 
         public virtual void UnsubscribePageNavigatedTo()
         {
-            MessagingService.Current.Unsubscribe<Page>(OnPageNavigatedTo);
+            MessagingService.Unsubscribe<Page>(OnPageNavigatedTo);
         }
 
         public virtual void UnsubscribePageCreated()
         {
-            MessagingService.Current.Unsubscribe<Page>(OnPageCreated);
+            MessagingService.Unsubscribe<Page>(OnPageCreated);
         }
     }
 }

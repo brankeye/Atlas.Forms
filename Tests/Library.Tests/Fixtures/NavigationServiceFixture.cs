@@ -185,21 +185,21 @@ namespace Library.Tests.Fixtures
 
         protected static INavigationService GetNavigationService()
         {
+            var cachePubSubService = new CachePubSubService(new MessagingService());
             var navigationProvider = new NavigationProvider(null);
             var navigationController = new NavigationController(new ApplicationProviderMock(), navigationProvider, new PageStackController(navigationProvider));
-            var pageCacheController = new PageRetriever(new CacheController(), new PageFactory(new ServiceFactoryImp()));
-            return new NavigationServiceMock(navigationController, pageCacheController);
+            var pageCacheController = new PageRetriever(new CacheController(), new PageFactory(new ServiceFactoryImp()), cachePubSubService);
+            return new NavigationServiceMock(navigationController, pageCacheController, cachePubSubService);
         }
 
         protected static void Setup()
         {
             StateManager.ResetAll();
-            var pageType = typeof(ContentPage);
             PageNavigationStore.Current.AddTypeAndConstructorInfo("NavigationPage", typeof(NavigationPage));
-            PageNavigationStore.Current.AddTypeAndConstructorInfo("MainPage", pageType);
-            PageNavigationStore.Current.AddTypeAndConstructorInfo("FirstPage", pageType);
-            PageNavigationStore.Current.AddTypeAndConstructorInfo("SecondPage", pageType);
-            PageNavigationStore.Current.AddTypeAndConstructorInfo("ThirdPage", pageType);
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("MainPage", typeof(ContentPage));
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("SecondPage", typeof(ContentPage));
+            PageNavigationStore.Current.AddTypeAndConstructorInfo("ThirdPage", typeof(ContentPage));
         }
     }
 }

@@ -124,7 +124,6 @@
     <Compile Include="Services\ParametersService.cs" />
     <Compile Include="Utilities\ActionInvoker.cs" />
     <Compile Include="Utilities\PropertyInjector.cs" />
-    <Compile Include="Utilities\SuperLazySingleton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">

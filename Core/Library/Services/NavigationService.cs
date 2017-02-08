@@ -21,10 +21,13 @@ namespace Atlas.Forms.Services
 
         protected IPageRetriever PageRetriever { get; }
 
-        public NavigationService(INavigationController navigationController, IPageRetriever pageRetriever)
+        protected ICachePublisher CachePublisher { get; }
+
+        public NavigationService(INavigationController navigationController, IPageRetriever pageRetriever, ICachePublisher cachePublisher)
         {
             NavigationController = navigationController;
             PageRetriever = pageRetriever;
+            CachePublisher = cachePublisher;
         }
 
         public virtual void InsertPageBefore(NavigationInfo pageInfo, NavigationInfo before, IParametersService parameters = null)
@@ -62,8 +65,8 @@ namespace Atlas.Forms.Services
             var lastPage = pageStack.Last();
             var pageContainer = await NavigationController.PopPageAsync(animated, paramService, useModal);
             var currentPage = Navigation.NavigationStack.ToList().LastOrDefault();
-            CachePubSubService.Publisher.SendPageNavigatedFromMessage(lastPage);
-            CachePubSubService.Publisher.SendPageNavigatedToMessage(currentPage);
+            CachePublisher.SendPageNavigatedFromMessage(lastPage);
+            CachePublisher.SendPageNavigatedToMessage(currentPage);
             return pageContainer;
         }
 
@@ -108,8 +111,8 @@ namespace Atlas.Forms.Services
             var lastPage = pageStack.LastOrDefault();
             var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
             await NavigationController.PushPageAsync(nextPage, animated, paramService, useModal);
-            CachePubSubService.Publisher.SendPageNavigatedFromMessage(lastPage);
-            CachePubSubService.Publisher.SendPageNavigatedToMessage(nextPage);
+            CachePublisher.SendPageNavigatedFromMessage(lastPage);
+            CachePublisher.SendPageNavigatedToMessage(nextPage);
         }
 
         public virtual void RemovePage(NavigationInfo pageInfo)
@@ -119,11 +122,11 @@ namespace Atlas.Forms.Services
 
         public virtual void SetMainPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            CachePubSubService.Publisher.SendPageNavigatedFromMessage(NavigationController.GetMainPage());
+            CachePublisher.SendPageNavigatedFromMessage(NavigationController.GetMainPage());
             var paramService = parameters ?? new ParametersService();
             var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
             NavigationController.SetMainPage(nextPage, paramService);
-            CachePubSubService.Publisher.SendPageNavigatedToMessage(nextPage);
+            CachePublisher.SendPageNavigatedToMessage(nextPage);
         }
     }
 }

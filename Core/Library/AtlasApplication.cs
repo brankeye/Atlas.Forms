@@ -37,7 +37,7 @@ namespace Atlas.Forms
         {
             var navigationController = CreateNavigationController(navigation);
             var pageCacheController = CreatePageCacheController();
-            return new NavigationService(navigationController, pageCacheController);
+            return new NavigationService(navigationController, pageCacheController, CachePubSubService.Publisher);
         }
 
         protected override IPageCacheService CreatePageCacheService()
@@ -69,7 +69,7 @@ namespace Atlas.Forms
 
         protected virtual IPageRetriever CreatePageCacheController()
         {
-            return new PageRetriever(new CacheController(), new PageFactory(ServiceFactory));
+            return new PageRetriever(new CacheController(), new PageFactory(ServiceFactory), CachePubSubService.Publisher);
         }
 
         protected virtual IPageStackController CreatePageStackController(INavigationProvider navigationProvider)
@@ -94,7 +94,7 @@ namespace Atlas.Forms
 
         protected virtual ICachePubSubService CreateCachePubSubService()
         {
-            return new CachePubSubService();
+            return new CachePubSubService(MessagingService.Current);
         }
     }
 }

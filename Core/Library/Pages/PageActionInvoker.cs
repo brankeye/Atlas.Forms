@@ -58,7 +58,7 @@ namespace Atlas.Forms.Pages
         public static void InvokeOnPageAppeared(object view, IParametersService parameters)
         {
             InvokeActionOnPage<IPageAppearedAware>(view, x => x.OnPageAppeared(parameters));
-            CachePubSubService.Publisher.SendPageAppearedMessage(view as Page);
+            CachePubSubService.Publisher?.SendPageAppearedMessage(view as Page);
         }
 
         public static void InvokeOnPageDisappearing(object view, IParametersService parameters)
@@ -69,7 +69,7 @@ namespace Atlas.Forms.Pages
         public static void InvokeOnPageDisappeared(object view, IParametersService parameters)
         {
             InvokeActionOnPage<IPageDisappearedAware>(view, x => x.OnPageDisappeared(parameters));
-            CachePubSubService.Publisher.SendPageDisappearedMessage(view as Page);
+            CachePubSubService.Publisher?.SendPageDisappearedMessage(view as Page);
         }
 
         public static void InvokeOnPageCaching(object view)

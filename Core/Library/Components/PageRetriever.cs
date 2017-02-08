@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Atlas.Forms.Caching;
-using Atlas.Forms.Enums;
-using Atlas.Forms.Interfaces.Components;
+﻿using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -13,29 +8,29 @@ namespace Atlas.Forms.Components
 {
     public class PageRetriever : IPageRetriever
     {
-        protected ICacheController CacheController { get; set; }
+        protected ICacheController CacheController { get; }
 
-        protected IPageFactory PageFactory { get; set; }
+        protected IPageFactory PageFactory { get; }
 
-        public PageRetriever(ICacheController cacheController, IPageFactory pageFactory)
+        protected ICachePublisher CachePublisher { get; }
+
+        public PageRetriever(ICacheController cacheController, IPageFactory pageFactory, ICachePublisher cachePublisher)
         {
             CacheController = cacheController;
             PageFactory = pageFactory;
+            CachePublisher = cachePublisher;
         }
 
         public virtual Page TryGetCachedPage(string key, IParametersService parameters)
         {
             var pageCacheInfo = CacheController.TryGetCacheInfo(key);
-            if (pageCacheInfo.CacheState == CacheState.Default)
-            {
-                PageCacheStore.Current.PageCache.Remove(pageCacheInfo.Key);
-            }
-            if (!pageCacheInfo.Initialized)
+            if (pageCacheInfo != null && !pageCacheInfo.Initialized)
             {
                 PageActionInvoker.InvokeInitialize(pageCacheInfo.Page, parameters);
                 pageCacheInfo.Initialized = true;
+                return pageCacheInfo.Page;
             }
-            return pageCacheInfo.Page;
+            return null;
         }
 
         public virtual Page GetNewPage(NavigationInfo pageInfo)
@@ -55,7 +50,7 @@ namespace Atlas.Forms.Components
             {
                 pageInstance = GetNewPage(pageInfo);
                 PageActionInvoker.InvokeInitialize(pageInstance, parameters);
-                CachePubSubService.Publisher.SendPageCreatedMessage(pageInstance);
+                CachePublisher.SendPageCreatedMessage(pageInstance);
             }
             else
             {
@@ -64,14 +59,7 @@ namespace Atlas.Forms.Components
                 {
                     pageInstance = PageFactory.GetNewPage(pageInfo.Page);
                     PageActionInvoker.InvokeInitialize(pageInstance, parameters);
-                    CachePubSubService.Publisher.SendPageCreatedMessage(pageInstance);
-                }
-                IList<MapInfo> mapContainers;
-                PageCacheMap.Current.Mappings.TryGetValue(pageInfo.Page, out mapContainers);
-                if (mapContainers != null)
-                {
-                    var container = mapContainers.FirstOrDefault(x => x.CacheOption == CacheOption.IsCreated && x.Key == pageInfo.Page);
-                    var result = CacheController.TryAddCacheInfo(pageInfo.Page, new CacheInfo(pageInstance, container) { Initialized = true });
+                    CachePublisher.SendPageCreatedMessage(pageInstance);
                 }
                 if (pageInfo.HasWrapperPage)
                 {
@@ -80,7 +68,7 @@ namespace Atlas.Forms.Components
                         return (Page) pageInstance.Parent;
                     }
                     var innerPageInstance = pageInstance;
-                    pageInstance = PageFactory.GetNewPage(pageInfo.WrapperPage, innerPageInstance) as Page;
+                    pageInstance = PageFactory.GetNewPage(pageInfo.WrapperPage, innerPageInstance);
                     if (pageInstance is NavigationPage)
                     {
                         pageInstance.Title = innerPageInstance?.Title;

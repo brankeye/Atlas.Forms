@@ -17,7 +17,7 @@ namespace Atlas.Forms.Services
         public static IPageCacheService Current => Instance.Current;
 
         protected static ILazySingleton<IPageCacheService> Instance { get; set; }
-            = new LazySingleton<IPageCacheService>();
+            = new LazySingleton<IPageCacheService>(() => null);
 
         public static void SetCurrent(Func<IPageCacheService> func)
         {

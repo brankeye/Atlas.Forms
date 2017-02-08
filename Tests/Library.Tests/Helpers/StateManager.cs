@@ -10,6 +10,7 @@ namespace Library.Tests.Helpers
             ResetPageNavigationStore();
             ResetPageCacheStore();
             ResetPageCacheMap();
+            ResetPageKeyStore();
         }
 
         public static void ResetPageNavigationStore()
@@ -25,6 +26,11 @@ namespace Library.Tests.Helpers
         public static void ResetPageCacheMap()
         {
             PageCacheMap.Current = new PageCacheMap();
+        }
+
+        public static void ResetPageKeyStore()
+        {
+            PageKeyStore.Current = new PageKeyStore();
         }
     }
 }

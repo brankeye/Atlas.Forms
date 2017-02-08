@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Interfaces.Utilities;
+using Atlas.Forms.Navigation;
 using Atlas.Forms.Utilities;
 
 namespace Atlas.Forms.Services
@@ -12,7 +13,7 @@ namespace Atlas.Forms.Services
         public static IPageDialogService Current => Instance.Current;
 
         protected static ILazySingleton<IPageDialogService> Instance { get; set; }
-            = new LazySingleton<IPageDialogService>();
+            = new LazySingleton<IPageDialogService>(() => null);
 
         public static void SetCurrent(Func<IPageDialogService> func)
         {

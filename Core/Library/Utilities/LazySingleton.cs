@@ -8,8 +8,6 @@ namespace Atlas.Forms.Utilities
         public T Current => GetCurrent();
         private Lazy<T> _current;
 
-        public LazySingleton() { }
-
         public LazySingleton(Func<T> func)
         {
             SetCurrent(func);
@@ -17,16 +15,7 @@ namespace Atlas.Forms.Utilities
 
         protected virtual T GetCurrent()
         {
-            if (_current == null)
-            {
-                _current = CreateCurrent();
-            }
             return _current.Value;
-        }
-
-        protected virtual Lazy<T> CreateCurrent()
-        {
-            return new Lazy<T>();
         }
 
         public void SetCurrent(Func<T> func)
