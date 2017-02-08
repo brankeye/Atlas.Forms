@@ -76,7 +76,7 @@ namespace Atlas.Forms.Components
             if (pageMappings != null)
             {
                 pageMappings = pageMappings.Where(x => x.CacheOption == CacheOption.Appears).ToList();
-                var currentPageMap = pageMappings.FirstOrDefault(x => x.Key == pageInfo.Key && x.CacheOption == CacheOption.Appears);
+                var currentPageMap = pageMappings.FirstOrDefault(x => x.Key == pageInfo.Key);
                 if (currentPageMap != null)
                 {
                     CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, true, currentPageMap));
@@ -113,7 +113,7 @@ namespace Atlas.Forms.Components
             if (pageMappings != null)
             {
                 pageMappings = pageMappings.Where(x => x.CacheOption == CacheOption.IsCreated).ToList();
-                var currentPageMap = pageMappings.FirstOrDefault(x => x.Key == pageInfo.Key && x.CacheOption == CacheOption.IsCreated);
+                var currentPageMap = pageMappings.FirstOrDefault(x => x.Key == pageInfo.Key);
                 if (currentPageMap != null)
                 {
                     CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, true, currentPageMap));

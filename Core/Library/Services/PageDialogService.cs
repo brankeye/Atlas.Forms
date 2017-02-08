@@ -22,6 +22,11 @@ namespace Atlas.Forms.Services
 
         protected IApplicationProvider ApplicationProvider { get; }
 
+        public PageDialogService()
+        {
+            ApplicationProvider = new ApplicationProvider();
+        }
+
         public PageDialogService(IApplicationProvider applicationProvider)
         {
             ApplicationProvider = applicationProvider;
