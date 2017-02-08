@@ -1,5 +1,6 @@
 ﻿using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages.Infos;
 using Xamarin.Forms;
 

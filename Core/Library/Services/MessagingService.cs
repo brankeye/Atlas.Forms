@@ -30,24 +30,24 @@ namespace Atlas.Forms.Services
 
         public virtual void Subscribe(string message, Action callback)
         {
-            Action<IMessagingService> action = service => callback.Invoke();
+            Action<MessagingService> action = service => callback.Invoke();
             MessagingCenter.Subscribe(this, message, action);
         }
 
         public virtual void Subscribe<TArgs>(string message, Action<TArgs> callback)
         {
-            Action<IMessagingService, TArgs> action = (service, args) => callback.Invoke(args);
+            Action<MessagingService, TArgs> action = (service, args) => callback.Invoke(args);
             MessagingCenter.Subscribe(this, message, action);
         }
 
         public virtual void Unsubscribe(string message)
         {
-            MessagingCenter.Unsubscribe<IMessagingService>(this, message);
+            MessagingCenter.Unsubscribe<MessagingService>(this, message);
         }
 
         public virtual void Unsubscribe<TArgs>(string message)
         {
-            MessagingCenter.Unsubscribe<IMessagingService, TArgs>(this, message);
+            MessagingCenter.Unsubscribe<MessagingService, TArgs>(this, message);
         }
     }
 }

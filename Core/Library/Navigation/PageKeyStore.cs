@@ -14,6 +14,7 @@ namespace Atlas.Forms.Navigation
 
         public IPageInfo GetPageContainer(Page pageInstance)
         {
+            if (pageInstance == null) return null;
             string pageKey;
             PageKeys.TryGetValue(pageInstance, out pageKey);
             return new PageInfo(pageKey, pageInstance.GetType());

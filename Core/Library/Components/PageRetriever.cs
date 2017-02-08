@@ -1,6 +1,8 @@
-﻿using Atlas.Forms.Interfaces.Components;
+﻿using Atlas.Forms.Caching;
+using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Pages;
+using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -24,13 +26,15 @@ namespace Atlas.Forms.Components
         public virtual Page TryGetCachedPage(string key, IParametersService parameters)
         {
             var pageCacheInfo = CacheController.TryGetCacheInfo(key);
-            if (pageCacheInfo != null && !pageCacheInfo.Initialized)
+            if (pageCacheInfo != null)
             {
-                PageActionInvoker.InvokeInitialize(pageCacheInfo.Page, parameters);
-                pageCacheInfo.Initialized = true;
-                return pageCacheInfo.Page;
+                if (!pageCacheInfo.Initialized)
+                {
+                    PageActionInvoker.InvokeInitialize(pageCacheInfo.Page, parameters);
+                    pageCacheInfo.Initialized = true;
+                }
             }
-            return null;
+            return pageCacheInfo?.Page;
         }
 
         public virtual Page GetNewPage(NavigationInfo pageInfo)
@@ -50,7 +54,6 @@ namespace Atlas.Forms.Components
             {
                 pageInstance = GetNewPage(pageInfo);
                 PageActionInvoker.InvokeInitialize(pageInstance, parameters);
-                CachePublisher.SendPageCreatedMessage(pageInstance);
             }
             else
             {
@@ -59,7 +62,6 @@ namespace Atlas.Forms.Components
                 {
                     pageInstance = PageFactory.GetNewPage(pageInfo.Page);
                     PageActionInvoker.InvokeInitialize(pageInstance, parameters);
-                    CachePublisher.SendPageCreatedMessage(pageInstance);
                 }
                 if (pageInfo.HasWrapperPage)
                 {
@@ -76,6 +78,7 @@ namespace Atlas.Forms.Components
                     }
                 }
             }
+            CachePublisher.SendPageCreatedMessage(pageInstance);
             return pageInstance;
         }
     }

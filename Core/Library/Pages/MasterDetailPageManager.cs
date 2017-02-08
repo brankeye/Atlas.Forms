@@ -28,7 +28,7 @@ namespace Atlas.Forms.Pages
         public virtual void PresentPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
             var paramService = parameters ?? new ParametersService();
-            var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService) as Page;
+            var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
             var lastPage = Page.Detail;
             if (lastPage != null)
             {
@@ -41,8 +41,6 @@ namespace Atlas.Forms.Pages
                 PageActionInvoker.InvokeOnPageDisappeared(lastPage, paramService);
             }
             PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
-            CachePubSubService.Publisher.SendPageDisappearedMessage(lastPage);
-            CachePubSubService.Publisher.SendPageAppearedMessage(nextPage);
         }
     }
 }

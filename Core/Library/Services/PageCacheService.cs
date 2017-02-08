@@ -56,7 +56,7 @@ namespace Atlas.Forms.Services
         public virtual bool TryAddPage(NavigationInfo pageInfo)
         {
             var pageInstance = PageRetriever.GetNewPage(pageInfo);
-            var cacheInfo = new CacheInfo(pageInstance, new MapInfo
+            var cacheInfo = new CacheInfo(pageInstance, false, new MapInfo
             {
                 Key = pageInfo.Page,
                 Type = pageInstance.GetType(),
@@ -68,7 +68,7 @@ namespace Atlas.Forms.Services
 
         public bool TryAddExistingPage(NavigationInfo pageInfo, Page page)
         {
-            var cacheInfo = new CacheInfo(page, new MapInfo
+            var cacheInfo = new CacheInfo(page, false, new MapInfo
             {
                 Key = pageInfo.Page,
                 Type = page.GetType(),

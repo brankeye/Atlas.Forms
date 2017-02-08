@@ -12,11 +12,11 @@ namespace Atlas.Forms.Components
 {
     public class NavigationController : INavigationController
     {
-        protected IApplicationProvider ApplicationProvider { get; set; }
+        protected IApplicationProvider ApplicationProvider { get; }
 
-        protected INavigationProvider NavigationProvider { get; set; }
+        protected INavigationProvider NavigationProvider { get; }
 
-        protected IPageStackController PageStackController { get; set; }
+        protected IPageStackController PageStackController { get; }
 
         public NavigationController(IApplicationProvider applicationProvider,
                                     INavigationProvider navigationProvider,

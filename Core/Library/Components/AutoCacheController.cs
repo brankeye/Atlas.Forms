@@ -12,14 +12,17 @@ namespace Atlas.Forms.Components
 {
     public class AutoCacheController : IAutoCacheController
     {
-        protected ICacheController CacheController { get; set; }
+        protected ICacheController CacheController { get; }
 
-        protected IPageFactory PageFactory { get; set; }
+        protected IPageFactory PageFactory { get; }
 
-        public AutoCacheController(ICacheController cacheController, IPageFactory pageFactory)
+        protected ICacheSubscriber CacheSubscriber { get; }
+
+        public AutoCacheController(ICacheController cacheController, IPageFactory pageFactory, ICacheSubscriber cacheSubscriber)
         {
             CacheController = cacheController;
             PageFactory = pageFactory;
+            CacheSubscriber = cacheSubscriber;
             SubscribeInternal();
         }
 
@@ -30,14 +33,19 @@ namespace Atlas.Forms.Components
 
         protected virtual void Subscribe()
         {
-            CachePubSubService.Subscriber.SubscribePageAppeared(OnPageAppeared);
-            CachePubSubService.Subscriber.SubscribePageDisappeared(OnPageDisappeared);
-            CachePubSubService.Subscriber.SubscribePageNavigatedFrom(OnPageNavigatedFrom);
-            CachePubSubService.Subscriber.SubscribePageCreated(OnPageCreated);
+            CacheSubscriber.SubscribePageAppeared(OnPageAppeared);
+            CacheSubscriber.SubscribePageDisappeared(OnPageDisappeared);
+            CacheSubscriber.SubscribePageNavigatedFrom(OnPageNavigatedFrom);
+            CacheSubscriber.SubscribePageCreated(OnPageCreated);
         }
 
         protected virtual void OnPageNavigatedFrom(Page page)
         {
+            if (page == null) { return; }
+            if (page is NavigationPage)
+            {
+                page = (page as NavigationPage).CurrentPage;
+            }
             var pageInfo = GetPageInfo(page);
             var pageMappings = GetPageMappings(pageInfo.Key);
             if (pageMappings != null)
@@ -52,6 +60,11 @@ namespace Atlas.Forms.Components
 
         protected virtual void OnPageAppeared(Page page)
         {
+            if (page == null) { return; }
+            if (page is NavigationPage)
+            {
+                page = (page as NavigationPage).CurrentPage;
+            }
             var pageInfo = GetPageInfo(page);
             var pageMappings = GetPageMappings(pageInfo.Key);
             if (pageMappings != null)
@@ -60,7 +73,7 @@ namespace Atlas.Forms.Components
                 var currentPageMap = pageMappings.FirstOrDefault(x => x.Key == pageInfo.Key && x.CacheOption == CacheOption.Appears);
                 if (currentPageMap != null)
                 {
-                    CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, currentPageMap));
+                    CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, true, currentPageMap));
                     pageMappings.Remove(currentPageMap);
                 }
                 AddPagesToCache(pageMappings);
@@ -69,6 +82,11 @@ namespace Atlas.Forms.Components
 
         protected virtual void OnPageDisappeared(Page page)
         {
+            if (page == null) { return; }
+            if (page is NavigationPage)
+            {
+                page = (page as NavigationPage).CurrentPage;
+            }
             var pageInfo = GetPageInfo(page);
             var lifetimeMappings = GetLifetimeMappings(pageInfo.Key);
             foreach (var mapInfo in lifetimeMappings)
@@ -79,6 +97,11 @@ namespace Atlas.Forms.Components
 
         protected virtual void OnPageCreated(Page page)
         {
+            if (page == null) { return; }
+            if (page is NavigationPage)
+            {
+                page = (page as NavigationPage).CurrentPage;
+            }
             var pageInfo = GetPageInfo(page);
             var pageMappings = GetPageMappings(pageInfo.Key);
             if (pageMappings != null)
@@ -87,7 +110,7 @@ namespace Atlas.Forms.Components
                 var currentPageMap = pageMappings.FirstOrDefault(x => x.Key == pageInfo.Key && x.CacheOption == CacheOption.IsCreated);
                 if (currentPageMap != null)
                 {
-                    CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, currentPageMap));
+                    CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, true, currentPageMap));
                     pageMappings.Remove(currentPageMap);
                 }
                 AddPagesToCache(pageMappings);
@@ -102,7 +125,7 @@ namespace Atlas.Forms.Components
                 if (cacheInfo == null)
                 {
                     var pageInstance = PageFactory.GetNewPage(mapInfo.Key);
-                    CacheController.TryAddCacheInfo(mapInfo.Key, new CacheInfo(pageInstance, mapInfo));
+                    CacheController.TryAddCacheInfo(mapInfo.Key, new CacheInfo(pageInstance, false, mapInfo));
                 }
             }
         }
@@ -136,10 +159,10 @@ namespace Atlas.Forms.Components
 
         protected virtual void Unsubscribe()
         {
-            CachePubSubService.Subscriber.UnsubscribePageAppeared();
-            CachePubSubService.Subscriber.UnsubscribePageDisappeared();
-            CachePubSubService.Subscriber.UnsubscribePageNavigatedFrom();
-            CachePubSubService.Subscriber.UnsubscribePageCreated();
+            CacheSubscriber.UnsubscribePageAppeared();
+            CacheSubscriber.UnsubscribePageDisappeared();
+            CacheSubscriber.UnsubscribePageNavigatedFrom();
+            CacheSubscriber.UnsubscribePageCreated();
         }
     }
 }

@@ -2,7 +2,6 @@
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Interfaces.Utilities;
-using Atlas.Forms.Services;
 using Atlas.Forms.Utilities;
 using Xamarin.Forms;
 
@@ -43,26 +42,31 @@ namespace Atlas.Forms.Components
 
         public virtual void SendPageAppearedMessage(Page page)
         {
+            if (page == null) return;
             MessagingService.SendMessage(OnPageAppeared, page);
         }
 
         public virtual void SendPageDisappearedMessage(Page page)
         {
+            if (page == null) return;
             MessagingService.SendMessage(OnPageDisappeared, page);
         }
 
         public virtual void SendPageNavigatedFromMessage(Page page)
         {
+            if (page == null) return;
             MessagingService.SendMessage(OnPageNavigatedFrom, page);
         }
 
         public virtual void SendPageNavigatedToMessage(Page page)
         {
+            if (page == null) return;
             MessagingService.SendMessage(OnPageNavigatedTo, page);
         }
 
         public virtual void SendPageCreatedMessage(Page page)
         {
+            if (page == null) return;
             MessagingService.SendMessage(OnPageCreated, page);
         }
 

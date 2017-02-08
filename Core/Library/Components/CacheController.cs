@@ -42,7 +42,7 @@ namespace Atlas.Forms.Components
             PageCacheStore.Current.PageCache.TryGetValue(key, out info);
             if (info?.CacheState == CacheState.Default)
             {
-                PageCacheStore.Current.PageCache.Remove(key);
+                RemoveCacheInfo(key);
             }
             return info;
         }

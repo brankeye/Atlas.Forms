@@ -6,9 +6,10 @@ namespace Atlas.Forms.Pages.Infos
     {
         public CacheInfo() { }
 
-        public CacheInfo(Page page, MapInfo info) : base(info)
+        public CacheInfo(Page page, bool initialized, MapInfo info) : base(info)
         {
             Page = page;
+            Initialized = initialized;
         }
 
         public Page Page { get; set; }

@@ -84,7 +84,7 @@ namespace Atlas.Forms
 
         protected virtual IAutoCacheController CreateAutoCacheController()
         {
-            return new AutoCacheController(new CacheController(), new PageFactory(ServiceFactory));
+            return new AutoCacheController(new CacheController(), new PageFactory(ServiceFactory), CachePubSubService.Subscriber);
         }
 
         protected virtual IMessagingService CreateMessagingService()

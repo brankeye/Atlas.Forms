@@ -10,7 +10,7 @@ namespace Atlas.Forms.Components
 {
     public class PageFactory : IPageFactory
     {
-        protected IServiceFactoryImp ServiceFactory { get; set; }
+        protected IServiceFactoryImp ServiceFactory { get; }
 
         public PageFactory(IServiceFactoryImp serviceFactory)
         {

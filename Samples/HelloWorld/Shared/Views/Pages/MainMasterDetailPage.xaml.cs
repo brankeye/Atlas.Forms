@@ -39,7 +39,6 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         private void ListView_OnItemSelected(object sender, SelectedItemChangedEventArgs selectedItemChangedEventArgs)
         {
             var selectedItem = (MasterPageItem)selectedItemChangedEventArgs.SelectedItem;
-            //Detail = PageService.Current.GetCachedOrNewPage(selectedItem.PageKey);
             (BindingContext as ViewModels.Pages.MainMasterDetailPage)?.PresentPage(selectedItem.PageInfo);
             IsPresented = false;
         }
