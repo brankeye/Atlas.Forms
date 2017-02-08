@@ -20,11 +20,14 @@ namespace Atlas.Forms.Components
 
         protected IPageCacheMap PageCacheMap { get; }
 
-        public AutoCacheController(ICacheController cacheController, IPageCacheMap pageCacheMap, IPageFactory pageFactory, ICacheSubscriber cacheSubscriber)
+        protected IPageKeyStore PageKeyStore { get; }
+
+        public AutoCacheController(ICacheController cacheController, IPageCacheMap pageCacheMap, IPageKeyStore pageKeyStore, IPageFactory pageFactory, ICacheSubscriber cacheSubscriber)
         {
             CacheController = cacheController;
             PageCacheMap = pageCacheMap;
             PageFactory = pageFactory;
+            PageKeyStore = pageKeyStore;
             CacheSubscriber = cacheSubscriber;
             SubscribeInternal();
         }
@@ -135,7 +138,7 @@ namespace Atlas.Forms.Components
 
         protected virtual IPageInfo GetPageInfo(Page page)
         {
-            var pageInfo = PageKeyStore.Current.GetPageContainer(page);
+            var pageInfo = PageKeyStore.GetPageContainer(page);
             return pageInfo;
         }
 

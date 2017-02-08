@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Atlas.Forms.Interfaces;
 using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Caching
@@ -25,14 +26,5 @@ namespace Atlas.Forms.Caching
         {
             return new ReadOnlyDictionary<string, IList<MapInfo>>(Mappings);
         }
-    }
-
-    public interface IPageCacheMap
-    {
-        IReadOnlyDictionary<string, IList<MapInfo>> GetMappings();
-
-        IList<MapInfo> GetMapInfos(string key);
-
-        void AddMapInfos(string key, IList<MapInfo> mapInfos);
     }
 }

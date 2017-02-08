@@ -4,7 +4,6 @@ using NUnit.Framework;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Services;
-using Library.Tests.Helpers;
 using Library.Tests.Mocks;
 using Xamarin.Forms;
 
@@ -17,7 +16,6 @@ namespace Library.Tests.Fixtures
         public void SetMainPage_PageIsRegistered_MainPageIsSet()
         {
             var navigationService = GetNavigationService();
-            Setup();
             navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
             var mainPageContainer = navigationService.NavigationStack[0];
             Assert.That(mainPageContainer.Key, Is.EqualTo("MainPage"));
@@ -27,7 +25,6 @@ namespace Library.Tests.Fixtures
         public void PushAsync_PageIsRegistered_PageIsPushedToStack()
         {
             var navigationService = GetNavigationService();
-            Setup();
             navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
             navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
             navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
@@ -45,7 +42,6 @@ namespace Library.Tests.Fixtures
         public void PushModalAsync_PageIsRegistered_PageIsPushedToStack()
         {
             var navigationService = GetNavigationService();
-            Setup();
             navigationService.SetMainPage(Nav.Get("MainPage").Info());
             navigationService.PushModalAsync(Nav.Get("FirstPage").Info()).Wait();
             navigationService.PushModalAsync(Nav.Get("SecondPage").Info()).Wait();
@@ -61,7 +57,6 @@ namespace Library.Tests.Fixtures
         public void PopAsync_PageIsRegistered_PageIsPoppedFromStack()
         {
             var navigationService = GetNavigationService();
-            Setup();
             navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
             navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
             navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
@@ -88,7 +83,6 @@ namespace Library.Tests.Fixtures
         public void PopModalAsync_PageIsRegistered_PageIsPoppedFromStack()
         {
             var navigationService = GetNavigationService();
-            Setup();
             navigationService.SetMainPage(Nav.Get("MainPage").Info());
             navigationService.PushModalAsync(Nav.Get("FirstPage").Info()).Wait();
             navigationService.PushModalAsync(Nav.Get("SecondPage").Info()).Wait();
@@ -108,7 +102,6 @@ namespace Library.Tests.Fixtures
         public void InsertPageBefore_PageIsRegistered_PageIsInserted()
         {
             var navigationService = GetNavigationService();
-            Setup();
             navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
             navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
             navigationService.PushAsync(Nav.Get("ThirdPage").Info()).Wait();
@@ -133,7 +126,6 @@ namespace Library.Tests.Fixtures
         public void RemovePage_PageIsRegistered_PageIsRemoved()
         {
             var navigationService = GetNavigationService();
-            Setup();
             navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
             navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
             navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
@@ -162,7 +154,6 @@ namespace Library.Tests.Fixtures
         public void PopToRootAsync_NavigationStackIsPopulated_RootIsPoppedTo()
         {
             var navigationService = GetNavigationService();
-            Setup();
             navigationService.SetMainPage(Nav.Get("MainPage").AsNavigationPage().Info());
             navigationService.PushAsync(Nav.Get("FirstPage").Info()).Wait();
             navigationService.PushAsync(Nav.Get("SecondPage").Info()).Wait();
@@ -185,22 +176,18 @@ namespace Library.Tests.Fixtures
 
         protected static INavigationService GetNavigationService()
         {
+            var pageKeyStore = new PageKeyStore();
             var cachePubSubService = new CachePubSubService(new MessagingService());
             var navigationProvider = new NavigationProvider(null);
-            var navigationController = new NavigationController(new ApplicationProviderMock(), navigationProvider, new PageStackController(navigationProvider));
+            var navigationController = new NavigationController(new ApplicationProviderMock(), navigationProvider, new PageStackController(navigationProvider, pageKeyStore), pageKeyStore);
             var pageNavigationStore = new PageNavigationStore();
             pageNavigationStore.AddTypeAndConstructorInfo("NavigationPage", typeof(NavigationPage));
             pageNavigationStore.AddTypeAndConstructorInfo("MainPage", typeof(ContentPage));
             pageNavigationStore.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));
             pageNavigationStore.AddTypeAndConstructorInfo("SecondPage", typeof(ContentPage));
             pageNavigationStore.AddTypeAndConstructorInfo("ThirdPage", typeof(ContentPage));
-            var pageCacheController = new PageRetriever(new CacheController(), new PageFactory(pageNavigationStore, new ServiceFactoryImp()), cachePubSubService);
+            var pageCacheController = new PageRetriever(new CacheController(), new PageFactory(pageNavigationStore, pageKeyStore, new ServiceFactoryImp()), cachePubSubService);
             return new NavigationServiceMock(navigationController, pageCacheController, cachePubSubService);
-        }
-
-        protected static void Setup()
-        {
-            StateManager.ResetAll();
         }
     }
 }

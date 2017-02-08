@@ -1,4 +1,5 @@
-﻿using Atlas.Forms.Interfaces.Components;
+﻿using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
 using Xamarin.Forms;
 
@@ -9,8 +10,9 @@ namespace Atlas.Forms.Pages
         public TabbedPageManager(
             TabbedPage page,
             INavigationController navigationController,
-            IPageRetriever pageRetriever) 
-            : base(page, navigationController, pageRetriever)
+            IPageRetriever pageRetriever,
+            IPageKeyStore pageKeyStore) 
+            : base(page, navigationController, pageRetriever, pageKeyStore)
         {
 
         }

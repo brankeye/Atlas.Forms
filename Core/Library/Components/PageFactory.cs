@@ -13,11 +13,14 @@ namespace Atlas.Forms.Components
     {
         protected IPageNavigationStore PageNavigationStore { get; }
 
+        protected IPageKeyStore PageKeyStore { get; }
+
         protected IServiceFactoryImp ServiceFactory { get; }
 
-        public PageFactory(IPageNavigationStore pageNavigationStore, IServiceFactoryImp serviceFactory)
+        public PageFactory(IPageNavigationStore pageNavigationStore, IPageKeyStore pageKeyStore, IServiceFactoryImp serviceFactory)
         {
             PageNavigationStore = pageNavigationStore;
+            PageKeyStore = pageKeyStore;
             ServiceFactory = serviceFactory;
         }
 
@@ -34,7 +37,7 @@ namespace Atlas.Forms.Components
                 parameters = new object[] {};
             }
             var nextPage = constructor?.Invoke(parameters) as Page;
-            PageKeyStore.Current.PageKeys.Add(nextPage, key);
+            PageKeyStore.AddPageKey(nextPage, key);
             TryAddServices(nextPage);
             TryAddBehaviors(nextPage);
             TryAddManagers(nextPage);
@@ -91,12 +94,12 @@ namespace Atlas.Forms.Components
 
         protected virtual ITabbedPageManager GetTabbedPageManager(TabbedPage page)
         {
-            return new TabbedPageManager(page, ServiceFactory.CreateNavigationController(page.Navigation), ServiceFactory.CreatePageCacheController());
+            return new TabbedPageManager(page, ServiceFactory.CreateNavigationController(page.Navigation), ServiceFactory.CreatePageCacheController(), PageKeyStore);
         }
 
         protected virtual ICarouselPageManager GetCarouselPageManager(CarouselPage page)
         {
-            return new CarouselPageManager(page, ServiceFactory.CreateNavigationController(page.Navigation), ServiceFactory.CreatePageCacheController());
+            return new CarouselPageManager(page, ServiceFactory.CreateNavigationController(page.Navigation), ServiceFactory.CreatePageCacheController(), PageKeyStore);
         }
     }
 }

@@ -21,8 +21,11 @@ namespace Atlas.Forms
 
         private IPageCacheMap PageCacheMap { get; set; }
 
+        private IPageKeyStore PageKeyStore { get; set; }
+
         protected override void Initialize()
         {
+            PageKeyStore = new PageKeyStore();
             PageNavigationStore = new PageNavigationStore();
             PageCacheMap = new PageCacheMap();
             MessagingService.SetCurrent(CreateMessagingService);
@@ -73,12 +76,12 @@ namespace Atlas.Forms
         {
             var navigationProvider = new NavigationProvider(navigation);
             var pageStackController = CreatePageStackController(navigationProvider);
-            return new NavigationController(new ApplicationProvider(), navigationProvider, pageStackController);
+            return new NavigationController(new ApplicationProvider(), navigationProvider, pageStackController, PageKeyStore);
         }
 
         protected virtual IPageRetriever CreatePageRetriever()
         {
-            return new PageRetriever(CacheController, new PageFactory(PageNavigationStore, ServiceFactory), CachePubSubService.Publisher);
+            return new PageRetriever(CacheController, new PageFactory(PageNavigationStore, PageKeyStore, ServiceFactory), CachePubSubService.Publisher);
         }
 
         protected virtual ICacheController CreateCacheController()
@@ -88,7 +91,7 @@ namespace Atlas.Forms
 
         protected virtual IPageStackController CreatePageStackController(INavigationProvider navigationProvider)
         {
-            return new PageStackController(navigationProvider);
+            return new PageStackController(navigationProvider, PageKeyStore);
         }
 
         protected virtual IServiceFactoryImp CreateServiceFactory()
@@ -98,7 +101,7 @@ namespace Atlas.Forms
 
         protected virtual IAutoCacheController CreateAutoCacheController()
         {
-            return new AutoCacheController(CacheController, PageCacheMap, new PageFactory(PageNavigationStore, ServiceFactory), CachePubSubService.Subscriber);
+            return new AutoCacheController(CacheController, PageCacheMap, PageKeyStore, new PageFactory(PageNavigationStore, PageKeyStore, ServiceFactory), CachePubSubService.Subscriber);
         }
 
         protected virtual IMessagingService CreateMessagingService()

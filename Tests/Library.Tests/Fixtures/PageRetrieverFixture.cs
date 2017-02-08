@@ -7,7 +7,6 @@ using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
-using Library.Tests.Helpers;
 using Xamarin.Forms;
 
 namespace Library.Tests.Fixtures
@@ -149,8 +148,7 @@ namespace Library.Tests.Fixtures
 
         public static IPageRetriever GetPageCacheController()
         {
-            StateManager.ResetAll();
-            return new PageRetriever(new CacheController(), new PageFactory(new PageNavigationStore(), new ServiceFactoryImp()), CachePubSubService.Publisher);
+            return new PageRetriever(new CacheController(), new PageFactory(new PageNavigationStore(), new PageKeyStore(), new ServiceFactoryImp()), CachePubSubService.Publisher);
         }
     }
 }

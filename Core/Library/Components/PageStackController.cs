@@ -13,9 +13,12 @@ namespace Atlas.Forms.Components
 
         protected INavigationProvider NavigationProvider { get; }
 
-        public PageStackController(INavigationProvider navigationProvider)
+        protected IPageKeyStore PageKeyStore { get; }
+
+        public PageStackController(INavigationProvider navigationProvider, IPageKeyStore pageKeyStore)
         {
             NavigationProvider = navigationProvider;
+            PageKeyStore = pageKeyStore;
         }
 
         public virtual IList<IPageInfo> CreateNavigationStack()
@@ -34,7 +37,7 @@ namespace Atlas.Forms.Components
                                    : NavigationProvider.Navigation.NavigationStack;
             if (currentStack != null)
             {
-                var stack = PageKeyStore.Current.GetPageContainers(currentStack.ToList());
+                var stack = PageKeyStore.GetPageContainers(currentStack.ToList());
                 return stack;
             }
             return new List<IPageInfo>();

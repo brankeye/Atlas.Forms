@@ -18,13 +18,17 @@ namespace Atlas.Forms.Components
 
         protected IPageStackController PageStackController { get; }
 
+        protected IPageKeyStore PageKeyStore { get; }
+
         public NavigationController(IApplicationProvider applicationProvider,
                                     INavigationProvider navigationProvider,
-                                    IPageStackController pageStackController)
+                                    IPageStackController pageStackController,
+                                    IPageKeyStore pageKeyStore)
         {
             ApplicationProvider = applicationProvider;
             NavigationProvider = navigationProvider;
             PageStackController = pageStackController;
+            PageKeyStore = pageKeyStore;
         }
 
         public virtual void SetMainPage(Page page, IParametersService parameters)
@@ -65,7 +69,7 @@ namespace Atlas.Forms.Components
             var pageStack = useModal ? NavigationProvider.Navigation.ModalStack
                                      : NavigationProvider.Navigation.NavigationStack;
             var currentPage = pageStack[pageStack.Count - 1];
-            var pageContainer = PageKeyStore.Current.GetPageContainer(currentPage);
+            var pageContainer = PageKeyStore.GetPageContainer(currentPage);
             PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
             if (useModal)
             {

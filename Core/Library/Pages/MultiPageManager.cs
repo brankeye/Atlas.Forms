@@ -28,14 +28,18 @@ namespace Atlas.Forms.Pages
 
         protected IPageRetriever PageRetriever { get; set; }
 
+        protected IPageKeyStore PageKeyStore { get; }
+
         public MultiPageManager(
             MultiPage<T> page,
             INavigationController navigationController,
-            IPageRetriever pageRetriever)
+            IPageRetriever pageRetriever,
+            IPageKeyStore pageKeyStore)
         {
             Page = page;
             NavigationController = navigationController;
             PageRetriever = pageRetriever;
+            PageKeyStore = pageKeyStore;
         }
 
         public void AddPage(NavigationInfo pageInfo, IParametersService parameters = null)
@@ -65,7 +69,7 @@ namespace Atlas.Forms.Pages
 
         public IPageInfo RemovePageAt(int index)
         {
-            var pageContainer = PageKeyStore.Current.GetPageContainer(Page.Children[index]);
+            var pageContainer = PageKeyStore.GetPageContainer(Page.Children[index]);
             Page.Children.RemoveAt(index);
             return pageContainer;
         }
@@ -74,7 +78,7 @@ namespace Atlas.Forms.Pages
         {
             if (index < Page.Children.Count)
             {
-                var pageContainer = PageKeyStore.Current.GetPageContainer(Page.Children[index]);
+                var pageContainer = PageKeyStore.GetPageContainer(Page.Children[index]);
                 Page.CurrentPage = Page.Children[index];
                 CurrentPage = pageContainer;
                 return pageContainer;
@@ -118,7 +122,7 @@ namespace Atlas.Forms.Pages
             var children = new List<IPageInfo>();
             foreach (var child in Page.Children)
             {
-                children.Add(PageKeyStore.Current.GetPageContainer(child));
+                children.Add(PageKeyStore.GetPageContainer(child));
             }
             return children;
         }

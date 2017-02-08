@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Pages.Infos;
@@ -6,11 +7,14 @@ using Xamarin.Forms;
 
 namespace Atlas.Forms.Navigation
 {
-    public class PageKeyStore
+    public class PageKeyStore : IPageKeyStore
     {
-        public static PageKeyStore Current { get; set; } = new PageKeyStore();
+        protected ConditionalWeakTable<Page, string> PageKeys { get; } = new ConditionalWeakTable<Page, string>();
 
-        public ConditionalWeakTable<Page, string> PageKeys { get; } = new ConditionalWeakTable<Page, string>();
+        public void AddPageKey(Page page, string key)
+        {
+            PageKeys.Add(page, key);
+        }
 
         public IPageInfo GetPageContainer(Page pageInstance)
         {

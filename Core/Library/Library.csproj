@@ -45,6 +45,8 @@
     <Compile Include="Components\ServiceFactoryImp.cs" />
     <Compile Include="Interfaces\Components\IAutoCacheController.cs" />
     <Compile Include="Interfaces\Components\ICachePublisher.cs" />
+    <Compile Include="Interfaces\IPageCacheMap.cs" />
+    <Compile Include="Interfaces\IPageKeyStore.cs" />
     <Compile Include="Interfaces\IPageNavigationStore.cs" />
     <Compile Include="Interfaces\Services\IMessagingService.cs" />
     <Compile Include="Interfaces\Utilities\ILazySingleton.cs" />
