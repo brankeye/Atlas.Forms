@@ -17,8 +17,11 @@ namespace Atlas.Forms
 
         private ICacheController CacheController { get; set; }
 
+        private IPageNavigationStore PageNavigationStore { get; set; }
+
         protected override void Initialize()
         {
+            PageNavigationStore = new PageNavigationStore();
             MessagingService.SetCurrent(CreateMessagingService);
             CachePubSubService.SetCurrent(CreateCachePubSubService);
             CacheController = CreateCacheController();
@@ -55,7 +58,7 @@ namespace Atlas.Forms
 
         protected override IPageNavigationRegistry CreatePageNavigationRegistry()
         {
-            return new PageNavigationRegistry();
+            return new PageNavigationRegistry(PageNavigationStore);
         }
 
         protected override IPageCacheRegistry CreatePageCacheRegistry()
@@ -72,7 +75,7 @@ namespace Atlas.Forms
 
         protected virtual IPageRetriever CreatePageRetriever()
         {
-            return new PageRetriever(CacheController, new PageFactory(ServiceFactory), CachePubSubService.Publisher);
+            return new PageRetriever(CacheController, new PageFactory(PageNavigationStore, ServiceFactory), CachePubSubService.Publisher);
         }
 
         protected virtual ICacheController CreateCacheController()
@@ -92,7 +95,7 @@ namespace Atlas.Forms
 
         protected virtual IAutoCacheController CreateAutoCacheController()
         {
-            return new AutoCacheController(CacheController, new PageFactory(ServiceFactory), CachePubSubService.Subscriber);
+            return new AutoCacheController(CacheController, new PageFactory(PageNavigationStore, ServiceFactory), CachePubSubService.Subscriber);
         }
 
         protected virtual IMessagingService CreateMessagingService()

@@ -5,6 +5,13 @@ namespace Atlas.Forms.Navigation
 {
     public class PageNavigationRegistry : IPageNavigationRegistry
     {
+        protected IPageNavigationStore PageNavigationStore { get; }
+
+        public PageNavigationRegistry(IPageNavigationStore pageNavigationStore)
+        {
+            PageNavigationStore = pageNavigationStore;
+        }
+
         public virtual void RegisterPage<TPage>() where TPage : Page
         {
             RegisterPage<TPage>(typeof(TPage).Name);
@@ -17,7 +24,7 @@ namespace Atlas.Forms.Navigation
 
         public virtual void RegisterPage<TPage>(string key) where TPage : Page
         {
-            PageNavigationStore.Current.AddTypeAndConstructorInfo(key, typeof(TPage));
+            PageNavigationStore.AddTypeAndConstructorInfo(key, typeof(TPage));
         }
     }
 }

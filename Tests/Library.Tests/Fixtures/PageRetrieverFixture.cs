@@ -150,7 +150,7 @@ namespace Library.Tests.Fixtures
         public static IPageRetriever GetPageCacheController()
         {
             StateManager.ResetAll();
-            return new PageRetriever(new CacheController(), new PageFactory(new ServiceFactoryImp()), CachePubSubService.Publisher);
+            return new PageRetriever(new CacheController(), new PageFactory(new PageNavigationStore(), new ServiceFactoryImp()), CachePubSubService.Publisher);
         }
     }
 }

@@ -7,20 +7,8 @@ namespace Library.Tests.Helpers
     {
         public static void ResetAll()
         {
-            ResetPageNavigationStore();
-            ResetPageCacheStore();
             ResetPageCacheMap();
             ResetPageKeyStore();
-        }
-
-        public static void ResetPageNavigationStore()
-        {
-            PageNavigationStore.Current = new PageNavigationStore();
-        }
-
-        public static void ResetPageCacheStore()
-        {
-            //PageCacheStore.Current = new PageCacheStore();
         }
 
         public static void ResetPageCacheMap()

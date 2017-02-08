@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Atlas.Forms.Behaviors;
+using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Navigation;
@@ -10,17 +11,19 @@ namespace Atlas.Forms.Components
 {
     public class PageFactory : IPageFactory
     {
+        protected IPageNavigationStore PageNavigationStore { get; }
+
         protected IServiceFactoryImp ServiceFactory { get; }
 
-        public PageFactory(IServiceFactoryImp serviceFactory)
+        public PageFactory(IPageNavigationStore pageNavigationStore, IServiceFactoryImp serviceFactory)
         {
+            PageNavigationStore = pageNavigationStore;
             ServiceFactory = serviceFactory;
         }
 
         public virtual Page GetNewPage(string key, Page pageArg = null)
         {
-            ConstructorInfo constructor;
-            PageNavigationStore.Current.PageConstructors.TryGetValue(key, out constructor);
+            ConstructorInfo constructor = PageNavigationStore.GetConstructor(key);
             object[] parameters;
             if (pageArg != null)
             {
