@@ -8,17 +8,23 @@ namespace Atlas.Forms.Caching
 {
     public class PageCacheRegistry : IPageCacheRegistry
     {
-        public virtual IReadOnlyDictionary<string, IList<MapInfo>> CacheMap => PageCacheMap.Current.GetMappings();
+        public IReadOnlyDictionary<string, IList<MapInfo>> CacheMap => PageCacheMap.GetMappings();
+
+        protected IPageCacheMap PageCacheMap { get; }
+
+        public PageCacheRegistry(IPageCacheMap pageCacheMap)
+        {
+            PageCacheMap = pageCacheMap;
+        }
 
         public virtual ITriggerPageApi WhenPage(string pageKey)
         {
             var container = new MapInfo();
-            IList<MapInfo> list;
-            PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
+            var list = PageCacheMap.GetMapInfos(pageKey);
             if (list == null)
             {
                 list = new List<MapInfo>();
-                PageCacheMap.Current.Mappings[pageKey] = list;
+                PageCacheMap.AddMapInfos(pageKey, list);
             }
             list.Add(container);
             return new TriggerPageApi(pageKey, container);
@@ -31,15 +37,13 @@ namespace Atlas.Forms.Caching
 
         public virtual bool Remove(string pageKey, MapInfo info)
         {
-            IList<MapInfo> list;
-            PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
+            var list = PageCacheMap.GetMapInfos(pageKey);
             return list != null && list.Remove(info);
         }
 
         public virtual IList<MapInfo> GetMappingsForKey(string pageKey)
         {
-            IList<MapInfo> list;
-            PageCacheMap.Current.Mappings.TryGetValue(pageKey, out list);
+            var list = PageCacheMap.GetMapInfos(pageKey);
             return list;
         }
     }

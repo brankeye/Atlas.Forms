@@ -7,13 +7,7 @@ namespace Library.Tests.Helpers
     {
         public static void ResetAll()
         {
-            ResetPageCacheMap();
             ResetPageKeyStore();
-        }
-
-        public static void ResetPageCacheMap()
-        {
-            PageCacheMap.Current = new PageCacheMap();
         }
 
         public static void ResetPageKeyStore()

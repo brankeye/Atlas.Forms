@@ -18,9 +18,12 @@ namespace Atlas.Forms.Components
 
         protected ICacheSubscriber CacheSubscriber { get; }
 
-        public AutoCacheController(ICacheController cacheController, IPageFactory pageFactory, ICacheSubscriber cacheSubscriber)
+        protected IPageCacheMap PageCacheMap { get; }
+
+        public AutoCacheController(ICacheController cacheController, IPageCacheMap pageCacheMap, IPageFactory pageFactory, ICacheSubscriber cacheSubscriber)
         {
             CacheController = cacheController;
+            PageCacheMap = pageCacheMap;
             PageFactory = pageFactory;
             CacheSubscriber = cacheSubscriber;
             SubscribeInternal();
@@ -138,14 +141,12 @@ namespace Atlas.Forms.Components
 
         protected virtual IList<MapInfo> GetPageMappings(string key)
         {
-            IList<MapInfo> pageMappings;
-            PageCacheMap.Current.Mappings.TryGetValue(key, out pageMappings);
-            return pageMappings;
+            return PageCacheMap.GetMapInfos(key);
         }
 
         protected virtual IList<MapInfo> GetLifetimeMappings(string key)
         {
-            var pageMappings = PageCacheMap.Current.Mappings.Values.Where(x => x.FirstOrDefault(y => y.LifetimePageKey == key) != null);
+            var pageMappings = PageCacheMap.GetMappings().Values.Where(x => x.FirstOrDefault(y => y.LifetimePageKey == key) != null);
             IList<MapInfo> mapInfos = new List<MapInfo>();
             foreach (var list in pageMappings)
             {
