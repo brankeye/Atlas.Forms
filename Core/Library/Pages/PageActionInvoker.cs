@@ -27,24 +27,6 @@ namespace Atlas.Forms.Pages
                     view = navigationPage.CurrentPage;
                     continue;
                 }
-                if (page is MasterDetailPage)
-                {
-                    var masterDetailPage = page as MasterDetailPage;
-                    view = masterDetailPage.Detail;
-                    continue;
-                }
-                //if (page is TabbedPage)
-                //{
-                //    var tabbedPage = page as TabbedPage;
-                //    view = tabbedPage.CurrentPage;
-                //    continue;
-                //}
-                //if (page is CarouselPage)
-                //{
-                //    var carouselPage = page as CarouselPage;
-                //    view = carouselPage.CurrentPage;
-                //    continue;
-                //}
 
                 canContinue = false;
             }

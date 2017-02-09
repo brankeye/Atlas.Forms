@@ -1,5 +1,5 @@
 # Atlas.Forms
-Atlas is a small library that provides a viewmodel-first navigation service, a page-cache service, automatic page-caching when navigating, as well as a page dialog service, all usable from view or viewmodel.
+Atlas is a small library that provides  viewmodel-first navigation, event-based automatic page-caching, a page-dialog service, and an asynchronous messaging service.
 
 NOTE: Atlas is still in beta.
 
@@ -10,7 +10,7 @@ To install Atlas.Forms, run the following command in the Package Manager Console
     Install-Package Atlas.Forms -Pre
 
 ## Usage
-Atlas navigation uses an API similar to the INavigation interface, where strings replace Page references.
+Atlas navigation uses an API similar to the INavigation interface.
 
 ### Using Atlas.Forms
 In your App class, inherit from ```AtlasApplication``` instead of ```Application```.
@@ -27,8 +27,9 @@ protected override void RegisterPagesForNavigation(IPageNavigationRegistry regis
 {
     // Save a reference to the registry if you'd like to use it later.
 	registry.RegisterPage<NavigationPage>(); // Key used will be "NavigationPage"
-	registry.RegisterPage<Views.Pages.About>(); // Key used will be "About"
-	registry.RegisterPage<Views.Pages.Dashboard>("Dash"); // Key used will be "Dash"
+	registry.RegisterPage<Views.Pages.AboutPage>(); // Key used will be "AboutPage"
+	registry.RegisterPage<Views.Pages.DashboardPage>("Dashboard"); // Key used will be "Dash"
+	registry.RegisterPage<ContactPage, ContactViewModel>(); // Key used will be "ContactViewModel"
 }
 ```
 
@@ -39,10 +40,10 @@ In your App class, override ```RegisterPagesForCaching``` and register pages for
 protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
 {
 	// When the About page appears the Changelog page will be added to the cache as a Default instance.
-	registry.WhenPage<About>().Appears().CachePage("Changelog");
+	registry.WhenPage("AboutPage").Appears().CachePage("ProfilePage");
 
 	// When the Tutorials page is created it will be added to the cache as a KeepAlive instance.
-	registry.WhenPage<Tutorials>().IsCreated().CachePage().AsKeepAlive();
+	registry.WhenPage<TutorialsPage>().IsCreated().CachePage().AsKeepAlive();
 	
 	// Cache the Contact page when it appears as a SingleInstance.
 	registry.WhenPage<Contact>().Appears().CachePage().AsSingleInstance();
@@ -62,38 +63,52 @@ protected override void RegisterPagesForCaching(IPageCacheRegistry registry)
 
 	Default - Removed from cache after first retrieval (means same instance is never used twice).
 	
-	KeepAlive - Removed from cache when navigating forward or backward (ideal for MasterDetailPage).
+	KeepAlive - Removed from cache when navigating forward or backward.
 	
 	LifetimeInstance - Removes page X when page Y is removed.
 	
 	SingleInstance - Never removed from cache. Yours to manage.
 
 ### How to navigate
-Set the main page in your App.cs class.
+When navigating, the service will first look for a page with the same key in the page-cache, if not found, a new instance will be created.
+
+Set the main page in your App.cs class by making use of the ```Nav``` fluent API helper.
 
 ```csharp
 public class App : AtlasApplication
 {
 	public App()
 	{
-		NavigationService.Current.SetMainPage("MainPage");
-		//NavigationService.Current.SetMainPage("NavigationPage/MainPage");
-		//NavigationService.Current.SetMainPage("MyPageContainer/MainPage");
+	    var mainPage = Nav.Get<MainMasterDetailPage>().Info();
+		NavigationService.SetMainPage(mainPage);
 	}
 }
 ```
 
-When navigating, the service will first look for a page with the same key in the page-cache, if not found, a new instance will be created.
+The ```Nav``` API allows you to get pages via string or class, request a new page instance (cache-instances are retrieved by default), or wrap a page in a NavigationPage (or custom NavigationPage). Some examples:
+
+```csharp
+    var firstPage = Nav.Get<FirstPage>().Info();
+    // The following uses the "NavigationPage" key to wrap "SecondPage"
+    var secondPage = Nav.Get("SecondPage").AsNavigationPage().Info();
+    var thirdPage = Nav.Get("ThirdPage").As("CustomNavigationPage").Info();
+    // The following will retrieve the FourthPage registered to the FourthPageViewModel
+    var fourthPage = Nav.Get<FourthPageViewModel>().AsNewInstance().Info(); 
+```
+
 
 Then use ```PushAsync``` to navigate, with optional parameters to be passed to the ```OnPageAppearing/OnPageAppeared``` functions.
 ```csharp
-public class MainPageViewModel : IPageAppearingAware, IPageAppearedAware
+public class MainPageViewModel : IPageAppearingAware, IPageAppearedAware, 
+                                 INavigationServiceProvider
 {
+    public INavigationService NavigationService { get; set; }
+
 	private void NavigateButton_OnClicked()
 	{
 		var parameters = new ParametersService();
 		parameters.TryAdd("Id", 1);
-		NavigationService.Current.PushAsync("NextPage", parameters);
+		NavigationService.PushAsync(Nav.Get<FirstPage>().Info(), parameters);
 	}
 	
 	public void OnPageAppearing(IParametersService parameters)
@@ -107,19 +122,23 @@ public class MainPageViewModel : IPageAppearingAware, IPageAppearedAware
 	}
 }
 
-public class NextPageViewModel : IInitializeAware, 
-				 IPageAppearingAware, 
-				 IPageAppearedAware,
-				 IPageDisappearingAware,
-				 IPageDisappearedAware,
-				 IPageCachingAware,
-				 IPageCachedAware
+public class NextPageViewModel : 
+                INavigationServiceProvider,
+                IInitializeAware, 
+				IPageAppearingAware, 
+				IPageAppearedAware,
+				IPageDisappearingAware,
+				IPageDisappearedAware,
+				IPageCachingAware,
+				IPageCachedAware
 {
+    public INavigationService NavigationService { get; set; }
+
 	private void BackButton_OnClicked()
 	{
 		var parameters = new ParametersService();
 		parameters.TryAdd("Name", "Atlas");
-		NavigationService.Current.PopAsync(parameters);
+		NavigationService.PopAsync(parameters);
 	}
 
 	public void Initialize(IParametersService parameters)
@@ -149,7 +168,7 @@ public class NextPageViewModel : IInitializeAware,
 	
 	public void OnPageCaching() {}
 
-        public void OnPageCached() {}
+    public void OnPageCached() {}
 ```
 
 ### Navigating in a MasterDetailPage
@@ -165,12 +184,12 @@ public class MainMasterDetailPage : IMasterDetailPageProvider, IInitializeAware
 
 	public void Initialize(IParametersService parameters)
 	{
-	    PageManager.PresentPage("StartingPage");
+	    PageManager.PresentPage(Nav.Get("StartingPage").Info());
 	}
 
-	public void PresentPage(string page)
+	public void PresentPage(NavigationInfo navigationInfo)
 	{
-	    PageManager.PresentPage(page);
+	    PageManager.PresentPage(navigationInfo);
 	}
 }
 ```
@@ -193,35 +212,29 @@ public class MyTabbedPage : ITabbedPageProvider, IInitializeAware
 
         public void Initialize(IParametersService parameters)
         {
-            PageManager.AddPage("NavigationPage/FirstTabPage");
-            PageManager.AddPage("SecondTabPage");
-            PageManager.AddPage("ThirdTabPage");
+            PageManager.AddPage(Nav.Get<FirstTabPage>().Info());
+            PageManager.AddPage(Nav.Get<SecondTabPage>().Info());
+            PageManager.AddPage(Nav.Get<ThirdTabPage>().Info());
         }
 }
 ```
 
 ### How to cache and use multiple Navigation stacks
 
-To save a Navigation stack, wrap your page in a NavigationPage like so:
-
+Navigation stacks are saved if a page is cached for later use. Consider the following scenario:
 ```
-public class MyNavigationContentPage : NavigationPage
-{
-	public MyNavigationContentPage() : base(new MyContentPage())
-	{
-	    Title = "MyContentPage";
-	}
-}
+// MainMasterDetailPage is the MainPage
+// first Detail page is FirstPage, second Detail page is SettingsPage
+MainMasterDetailPage / FirstPage / SecondPage
+MainMasterDetailPage / SettingsPage / PermissionsPage
 ```
-
-With your newly wrapped page, register its type, then register it for the cache using your choice of cache state (LifetimeInstance, SingleInstance, etc).
-
+If the following cache rules are used:
 ```
-registry.RegisterPage<MyNavigationContentPage>();
-registry.WhenPage<MyNavigationContentPage>().IsCreated().CachePage().AsSingleInstance();
+registry.WhenPage<FirstPage>().IsCreated().CachePage().AsLifetimeInstance("MainMasterDetailPage");
+registry.WhenPage<SettingsPage>().IsCreated().CachePage().AsLifetimeInstance("MainMasterDetailPage");
 ```
 
-Now whenever you navigate to this page, using either ```SetMainPage("MyNavigationContentPage")``` or ```PushAsync("MyNavigationContentPage")```, the same navigation stack will always be used (saving navigation history even when switching pages).
+Then whenever you switch between the Detail pages, the navigation history of each will be saved.
 
 ### How to use dialog pages from viewmodels.
 
@@ -250,7 +263,7 @@ public class MainPageViewModel
 }
 ```
 
-## API
+## Navigation Service API
 The Atlas.Forms Navigation API follows the Xamarin.Forms INavigation interface as closely as possible.
 
 Two extra functions make an appearance. The Present function is used to present Detail pages in a MasterDetailPage, while

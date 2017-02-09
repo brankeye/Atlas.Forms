@@ -15,7 +15,7 @@ namespace Atlas.Forms
 
         private IAutoCacheController AutoCacheController { get; set; }
 
-        private ICacheController CacheController { get; set; }
+        protected ICacheController CacheController { get; private set; }
 
         private IPageNavigationStore PageNavigationStore { get; set; }
 
@@ -28,9 +28,9 @@ namespace Atlas.Forms
             CreateStores();
             MessagingService.SetCurrent(CreateMessagingService);
             CachePubSubService.SetCurrent(CreateCachePubSubService);
+            ServiceFactory = CreateServiceFactory();
             CacheController = CreateCacheController();
             AutoCacheController = CreateAutoCacheController();
-            ServiceFactory = CreateServiceFactory();
             ConfigureServiceFactory();
             base.Initialize();
         }

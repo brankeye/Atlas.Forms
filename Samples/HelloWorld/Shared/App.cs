@@ -12,6 +12,14 @@ namespace atlas.samples.helloworld.Shared
         public App()
         {
             NavigationService.SetMainPage(Nav.Get<MainMasterDetailPage>().Info());
+            //NavigationService.SetMainPage(Nav.Get("MyContentPage").AsNavigationPage().Info());
+            //NavigationService.PushAsync(Nav.Get("MyNextPage").Info()).Wait();
+            //NavigationService.PushAsync(Nav.Get("NextTabPage").Info()).Wait();
+            //var pageCache = CacheController.GetPageCache();
+            //NavigationService.PopAsync().Wait();
+            //pageCache = CacheController.GetPageCache();
+            //NavigationService.PopAsync().Wait();
+            //pageCache = CacheController.GetPageCache();
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)
@@ -34,6 +42,10 @@ namespace atlas.samples.helloworld.Shared
             registry.WhenPage<FirstTabPage>().IsCreated().CachePage().AsLifetimeInstance("MyTabbedPage");
             registry.WhenPage<SecondTabPage>().IsCreated().CachePage().AsLifetimeInstance("MyTabbedPage");
             registry.WhenPage<ThirdTabPage>().IsCreated().CachePage().AsLifetimeInstance("MyTabbedPage");
+
+            //registry.WhenPage<MyContentPage>().IsCreated().CachePage();
+            //registry.WhenPage<MyContentPage>().IsCreated().CachePage<MyNextPage>();
+            //registry.WhenPage<NextTabPage>().IsCreated().CachePage().AsLifetimeInstance<MyNextPage>();
         }
 
         protected override void OnStart()
