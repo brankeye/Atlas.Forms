@@ -12,7 +12,7 @@ namespace Atlas.Forms.Services
         public static IMessagingService Current => Instance.Current;
 
         protected static ILazySingleton<IMessagingService> Instance { get; set; }
-            = new LazySingleton<IMessagingService>(() => null);
+            = new LazySingleton<IMessagingService>(() => new MessagingService());
 
         public static void SetCurrent(Func<IMessagingService> func)
         {

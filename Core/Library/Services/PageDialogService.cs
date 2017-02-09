@@ -13,7 +13,7 @@ namespace Atlas.Forms.Services
         public static IPageDialogService Current => Instance.Current;
 
         protected static ILazySingleton<IPageDialogService> Instance { get; set; }
-            = new LazySingleton<IPageDialogService>(() => null);
+            = new LazySingleton<IPageDialogService>(() => new PageDialogService());
 
         public static void SetCurrent(Func<IPageDialogService> func)
         {

@@ -14,141 +14,52 @@ namespace Library.Tests.Fixtures
     [TestFixture]
     public class PageRetrieverFixture
     {
-        //[Test]
-        //public void GetCachedOrNewPage_PageNotRegistered_ReturnsNull()
-        //{
-        //    var cacheCoordinator = GetPageCacheController();
-        //    var page = cacheCoordinator.TryGetCachedPage("MainPage", new ParametersService());
-        //    Assert.That(page, Is.Null);
-        //}
-
-        //[Test]
-        //public void GetCachedOrNewPage_PageRegistered_ReturnsPage()
-        //{
-        //    var cacheCoordinator = GetPageCacheController();
-        //    PageNavigationStore.Current.AddTypeAndConstructorInfo("MainPage", typeof(ContentPage));
-        //    var page = cacheCoordinator.TryGetCachedPage("MainPage", new ParametersService());
-        //    Assert.That(page, Is.Null);
-        //}
-
-        //[Test]
-        //public void GetCachedOrNewPage_PageExists_ReturnsPage()
-        //{
-        //    var cacheCoordinator = GetPageCacheController();
-        //    PageCacheStore.Current.PageCache["MainPage"] = new CacheInfo
-        //    {
-        //        Key = "MainPage",
-        //        Page = new ContentPage()
-        //    };
-        //    var page = cacheCoordinator.TryGetCachedPage("MainPage", new ParametersService());
-        //    Assert.That(page, Is.Not.Null);
-        //}
-
-        //[Test]
-        //public void AddCachedPages_PagesLoaded_PagesAreLoaded()
-        //{
-        //    var cacheCoordinator = GetPageCacheController();
-        //    PageNavigationStore.Current.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));
-        //    PageNavigationStore.Current.AddTypeAndConstructorInfo("SecondPage", typeof(ContentPage));
-        //    PageNavigationStore.Current.AddTypeAndConstructorInfo("ThirdPage", typeof(ContentPage));
-        //    var list = new List<MapInfo>
-        //    {
-        //        new MapInfo
-        //        {
-        //            Key = "FirstPage",
-        //            Type = typeof(ContentPage),
-        //            CacheOption = CacheOption.Appears,
-        //            CacheState = CacheState.Default
-        //        },
-        //        new MapInfo
-        //        {
-        //            Key = "SecondPage",
-        //            Type = typeof(ContentPage),
-        //            CacheOption = CacheOption.Appears,
-        //            CacheState = CacheState.KeepAlive
-        //        },
-        //        new MapInfo
-        //        {
-        //            Key = "ThirdPage",
-        //            Type = typeof(ContentPage),
-        //            CacheOption = CacheOption.Appears,
-        //            CacheState = CacheState.SingleInstance
-        //        }
-        //    };
-        //    PageCacheMap.Current.Mappings["MainPage"] = list;
-        //    //cacheCoordinator.AddCachedPages("MainPage");
-        //    CacheInfo one, two, three;
-        //    PageCacheStore.Current.PageCache.TryGetValue("FirstPage", out one);
-        //    PageCacheStore.Current.PageCache.TryGetValue("SecondPage", out two);
-        //    PageCacheStore.Current.PageCache.TryGetValue("ThirdPage", out three);
-        //    Assert.That(one, Is.Not.Null);
-        //    Assert.That(two, Is.Not.Null);
-        //    Assert.That(three, Is.Not.Null);
-        //}
-
-        //[Test]
-        //public void RemoveCachedPages_PagesExist_RemovesAllButSingleInstance()
-        //{
-        //    var cacheCoordinator = GetPageCacheController();
-        //    var list = new List<MapInfo>
-        //    {
-        //        new MapInfo
-        //        {
-        //            Key = "FirstPage",
-        //            Type = typeof(ContentPage),
-        //            CacheOption = CacheOption.Appears,
-        //            CacheState = CacheState.Default
-        //        },
-        //        new MapInfo
-        //        {
-        //            Key = "SecondPage",
-        //            Type = typeof(ContentPage),
-        //            CacheOption = CacheOption.Appears,
-        //            CacheState = CacheState.KeepAlive
-        //        },
-        //        new MapInfo
-        //        {
-        //            Key = "ThirdPage",
-        //            Type = typeof(ContentPage),
-        //            CacheOption = CacheOption.Appears,
-        //            CacheState = CacheState.SingleInstance
-        //        }
-        //    };
-        //    PageCacheMap.Current.Mappings["MainPage"] = list;
-        //    PageCacheStore.Current.PageCache["FirstPage"] = new CacheInfo
-        //    {
-        //        Page = new ContentPage(),
-        //        Type = typeof(ContentPage),
-        //        CacheOption = CacheOption.Appears,
-        //        CacheState = CacheState.Default
-        //    };
-        //    PageCacheStore.Current.PageCache["SecondPage"] = new CacheInfo
-        //    {
-        //        Page = new ContentPage(),
-        //        Type = typeof(ContentPage),
-        //        CacheOption = CacheOption.Appears,
-        //        CacheState = CacheState.KeepAlive
-        //    };
-        //    PageCacheStore.Current.PageCache["ThirdPage"] = new CacheInfo
-        //    {
-        //        Page = new ContentPage(),
-        //        Type = typeof(ContentPage),
-        //        CacheOption = CacheOption.Appears,
-        //        CacheState = CacheState.SingleInstance
-        //    };
-        //    //cacheCoordinator.RemoveCachedPages("MainPage");
-        //    CacheInfo one, two, three;
-        //    PageCacheStore.Current.PageCache.TryGetValue("FirstPage", out one);
-        //    PageCacheStore.Current.PageCache.TryGetValue("SecondPage", out two);
-        //    PageCacheStore.Current.PageCache.TryGetValue("ThirdPage", out three);
-        //    Assert.That(one, Is.Null);
-        //    Assert.That(two, Is.Null);
-        //    Assert.That(three, Is.Not.Null);
-        //}
-
-        public static IPageRetriever GetPageCacheController()
+        [Test]
+        public void GetNewPage_PageRegistered_ReturnsPage()
         {
-            return new PageRetriever(new CacheController(), new PageFactory(new PageNavigationStore(), new PageKeyStore(), new ServiceFactoryImp()), CachePubSubService.Publisher);
+            var pageRetriever = GetPageRetriever();
+            var pageInstance = pageRetriever.GetNewPage(Nav.Get("FirstPage").Info());
+            Assert.That(pageInstance, Is.Not.Null);
+        }
+
+        [Test]
+        public void TryGetCachedPage_PageExists_ReturnsPage()
+        {
+            var pageRetriever = GetPageRetriever();
+            var pageInstance = pageRetriever.TryGetCachedPage("ThirdPage", new ParametersService());
+            Assert.That(pageInstance, Is.Not.Null);
+        }
+
+        [Test]
+        public void TryGetCachedOrNewPage_PageExists_ReturnsCachePage()
+        {
+            var pageRetriever = GetPageRetriever();
+            var pageInstance = pageRetriever.TryGetCachedPage("ThirdPage", new ParametersService());
+            Assert.That(pageInstance, Is.Not.Null);
+        }
+
+        [Test]
+        public void GetCachedOrNewPage_PageNotExists_ReturnsNewPage()
+        {
+            var pageRetriever = GetPageRetriever();
+            var pageInstance = pageRetriever.GetCachedOrNewPage(Nav.Get("FirstPage").Info(), new ParametersService());
+            Assert.That(pageInstance, Is.Not.Null);
+        }
+
+        public static IPageRetriever GetPageRetriever()
+        {
+            var pageNavigationStore = new PageNavigationStore();
+            pageNavigationStore.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));
+            pageNavigationStore.AddTypeAndConstructorInfo("SecondPage", typeof(ContentPage));
+            pageNavigationStore.AddTypeAndConstructorInfo("ThirdPage", typeof(ContentPage));
+            var cacheController = new CacheController();
+            cacheController.TryAddCacheInfo("ThirdPage",
+                new CacheInfo(new ContentPage(), true,
+                    new MapInfo(CacheState.Default, CacheOption.None, new PageInfo("ThirdPage", typeof(ContentPage)))));
+            MessagingService.SetCurrent(() => new MessagingService());
+            CachePubSubService.SetCurrent(() => new CachePubSubService(MessagingService.Current));
+            var pageFactory = new PageFactory(pageNavigationStore, new PageKeyStore(), new ServiceFactoryImp());
+            return new PageRetriever(cacheController, pageFactory, CachePubSubService.Publisher);
         }
     }
 }
