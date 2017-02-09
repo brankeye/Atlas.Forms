@@ -1,9 +1,12 @@
-﻿using atlas.samples.helloworld.Shared.Views.Pages;
+﻿using System;
+using System.Threading.Tasks;
+using atlas.samples.helloworld.Shared.Views.Pages;
 using atlas.samples.helloworld.Shared.Views.Pages.NavigationPage;
 using Atlas.Forms;
 using Atlas.Forms.Caching;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Services;
+using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared
 {
@@ -11,6 +14,8 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
+            Setup();
+
             NavigationService.SetMainPage(Nav.Get<MainMasterDetailPage>().Info());
             //NavigationService.SetMainPage(Nav.Get("MyContentPage").AsNavigationPage().Info());
             //NavigationService.PushAsync(Nav.Get("MyNextPage").Info()).Wait();
@@ -20,6 +25,24 @@ namespace atlas.samples.helloworld.Shared
             //pageCache = CacheController.GetPageCache();
             //NavigationService.PopAsync().Wait();
             //pageCache = CacheController.GetPageCache();
+        }
+
+        public void Setup()
+        {
+            MessagingService.Current.SubscribeAsync("Hi", async () =>
+            {
+                await Task.Run(() =>
+                {
+                    var i = 0;
+                    while (i < 10000)
+                    {
+                        i++;
+                    }
+                });
+            });
+
+            MessagingService.Current.SendMessage("Hi");
+            var x = 0;
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)

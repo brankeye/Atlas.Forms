@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Interfaces.Utilities;
 using Atlas.Forms.Utilities;
@@ -38,6 +39,18 @@ namespace Atlas.Forms.Services
         {
             Action<MessagingService, TArgs> action = (service, args) => callback.Invoke(args);
             MessagingCenter.Subscribe(this, message, action);
+        }
+
+        public virtual void SubscribeAsync(string message, Func<Task> callback)
+        {
+            Action action = async () => await callback.Invoke();
+            Current.Subscribe(message, action);
+        }
+
+        public virtual void SubscribeAsync<TArgs>(string message, Func<TArgs, Task> callback)
+        {
+            Action<TArgs> action = async args => await callback.Invoke(args);
+            Current.Subscribe(message, action);
         }
 
         public virtual void Unsubscribe(string message)
