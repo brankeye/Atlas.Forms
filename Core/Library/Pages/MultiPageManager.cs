@@ -79,13 +79,13 @@ namespace Atlas.Forms.Pages
             
         }
 
-        public IPageInfo RemovePage(string page)
+        public IPageInfo RemovePage(NavigationInfo navigationInfo)
         {
             var children = Children;
             for (var i = 0; i < children.Count; i++)
             {
                 var container = children[i];
-                if (container.Key == page)
+                if (container.Key == navigationInfo.Page)
                 {
                     return RemovePageAt(i);
                 }
@@ -122,13 +122,13 @@ namespace Atlas.Forms.Pages
             return null;
         }
 
-        public IPageInfo SetCurrentPage(string page)
+        public IPageInfo SetCurrentPage(NavigationInfo navigationInfo)
         {
             var children = Children;
             for (var i = 0; i < children.Count; i++)
             {
                 var container = children[i];
-                if (container.Key == page)
+                if (container.Key == navigationInfo.Page)
                 {
                     return SetCurrentPage(i);
                 }
@@ -136,12 +136,12 @@ namespace Atlas.Forms.Pages
             return null;
         }
 
-        public void SetPageTemplate(string page, IParametersService parameters = null)
+        public void SetPageTemplate(NavigationInfo navigationInfo)
         {
             MultiPage<T> pageRef;
             if (PageReference.TryGetTarget(out pageRef))
             {
-                var pageInstance = PageRetriever.TryGetCachedPage(page, parameters ?? new ParametersService());
+                var pageInstance = PageRetriever.GetCachedOrNewPage(navigationInfo, new ParametersService());
                 pageRef.ItemTemplate = new DataTemplate(() => pageInstance);
             }
         }

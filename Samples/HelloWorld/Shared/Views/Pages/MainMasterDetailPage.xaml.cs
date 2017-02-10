@@ -27,11 +27,11 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
                 }
             };
 
-            listView.ItemsSource = masterPageItems;
+            ListView.ItemsSource = masterPageItems;
             //var enumerator = listView.ItemsSource.GetEnumerator();
             //if (enumerator.MoveNext()) listView.SelectedItem = enumerator.Current;
 
-            listView.ItemSelected += ListView_OnItemSelected;
+            ListView.ItemSelected += ListView_OnItemSelected;
         }
 
         public IMasterDetailPageManager PageManager { get; set; }

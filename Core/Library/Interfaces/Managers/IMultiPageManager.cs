@@ -17,13 +17,13 @@ namespace Atlas.Forms.Interfaces.Managers
 
         void AddPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        IPageInfo RemovePage(string page);
+        IPageInfo RemovePage(NavigationInfo navigationInfo);
 
         IPageInfo RemovePageAt(int index);
 
-        void SetPageTemplate(string page, IParametersService parameters = null);
+        void SetPageTemplate(NavigationInfo navigationInfo);
 
-        IPageInfo SetCurrentPage(string page);
+        IPageInfo SetCurrentPage(NavigationInfo navigationInfo);
 
         IPageInfo SetCurrentPage(int index);
 

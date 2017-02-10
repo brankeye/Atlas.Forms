@@ -5,7 +5,7 @@
   <MasterDetailPage.Master>
     <ContentPage Title="Default">
       <StackLayout VerticalOptions="FillAndExpand">
-        <ListView x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="None">
+        <ListView x:Name="ListView" VerticalOptions="FillAndExpand" SeparatorVisibility="None">
           <ListView.ItemTemplate>
             <DataTemplate>
               <TextCell Text="{Binding Title}" />
