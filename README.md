@@ -1,5 +1,5 @@
 # Atlas.Forms
-Atlas is a small library that provides  viewmodel-first navigation, event-based automatic page-caching, a page-dialog service, and an asynchronous messaging service.
+Atlas is a small library that provides viewmodel-first navigation, event-based automatic page-caching, navigation-stack saving, and a few other useful services.
 
 NOTE: Atlas is still in beta.
 
@@ -29,6 +29,8 @@ protected override void RegisterPagesForNavigation(IPageNavigationRegistry regis
 	registry.RegisterPage<NavigationPage>(); // Key used will be "NavigationPage"
 	registry.RegisterPage<Views.Pages.AboutPage>(); // Key used will be "AboutPage"
 	registry.RegisterPage<Views.Pages.DashboardPage>("Dashboard"); // Key used will be "Dash"
+	
+	// With this method you can use ViewModels to navigate, the name of the viewmodel class will be used.
 	registry.RegisterPage<ContactPage, ContactViewModel>(); // Key used will be "ContactViewModel"
 }
 ```
