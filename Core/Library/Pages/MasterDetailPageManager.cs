@@ -1,4 +1,5 @@
-﻿using Atlas.Forms.Components;
+﻿using System;
+using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Services;
@@ -9,7 +10,7 @@ namespace Atlas.Forms.Pages
 {
     public class MasterDetailPageManager : IMasterDetailPageManager
     {
-        protected MasterDetailPage Page { get; set; }
+        protected WeakReference<MasterDetailPage> PageReference { get; set; }
 
         protected INavigationController NavigationController { get; set; }
 
@@ -20,7 +21,7 @@ namespace Atlas.Forms.Pages
             INavigationController navigationController,
             IPageRetriever pageRetriever)
         {
-            Page = page;
+            PageReference = new WeakReference<MasterDetailPage>(page);
             NavigationController = navigationController;
             PageRetriever = pageRetriever;
         }
@@ -29,18 +30,22 @@ namespace Atlas.Forms.Pages
         {
             var paramService = parameters ?? new ParametersService();
             var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
-            var lastPage = Page.Detail;
-            if (lastPage != null)
+            MasterDetailPage pageRef;
+            if (PageReference.TryGetTarget(out pageRef))
             {
-                PageActionInvoker.InvokeOnPageDisappearing(lastPage, paramService);
+                var lastPage = pageRef.Detail;
+                if (lastPage != null)
+                {
+                    PageActionInvoker.InvokeOnPageDisappearing(lastPage, paramService);
+                }
+                PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
+                pageRef.Detail = nextPage;
+                if (lastPage != null)
+                {
+                    PageActionInvoker.InvokeOnPageDisappeared(lastPage, paramService);
+                }
+                PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
             }
-            PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
-            Page.Detail = nextPage;
-            if (lastPage != null)
-            {
-                PageActionInvoker.InvokeOnPageDisappeared(lastPage, paramService);
-            }
-            PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
         }
     }
 }

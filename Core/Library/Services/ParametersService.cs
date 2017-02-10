@@ -17,21 +17,36 @@ namespace Atlas.Forms.Services
             return canAddItem;
         }
 
-        public virtual TObject TryGet<TObject>(string key)
+        public virtual bool TryAdd(object item)
+        {
+            return TryAdd(item.GetType().Name, item);
+        }
+
+        public virtual T TryGet<T>(string key)
         {
             object value;
             if (Store.TryGetValue(key, out value))
             {
-                return (TObject)value;
+                return (T)value;
             }
-            return default(TObject);
+            return default(T);
+        }
+
+        public virtual T TryGet<T>()
+        {
+            return TryGet<T>(typeof(T).Name);
         }
 
         public virtual bool TryRemove(string key)
         {
             return Store.Remove(key);
         }
-        
+
+        public virtual bool TryRemove<T>()
+        {
+            return TryRemove(typeof(T).Name);
+        }
+
         public virtual IDictionary<string, object> GetDictionary()
         {
             return Store;

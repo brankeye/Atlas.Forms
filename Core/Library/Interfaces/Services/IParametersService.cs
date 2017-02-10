@@ -8,8 +8,14 @@ namespace Atlas.Forms.Interfaces.Services
 
         bool TryAdd(string key, object item);
 
-        TObject TryGet<TObject>(string key);
+        bool TryAdd(object item);
+
+        T TryGet<T>(string key);
+
+        T TryGet<T>();
 
         bool TryRemove(string key);
+
+        bool TryRemove<T>();
     }
 }
