@@ -37,7 +37,7 @@ namespace Atlas.Forms.Components
             Subscribe();
         }
 
-        protected virtual void Subscribe()
+        public virtual void Subscribe()
         {
             CacheSubscriber.SubscribePageAppeared(OnPageAppeared);
             CacheSubscriber.SubscribePageDisappeared(OnPageDisappeared);
@@ -45,7 +45,7 @@ namespace Atlas.Forms.Components
             CacheSubscriber.SubscribePageCreated(OnPageCreated);
         }
 
-        protected virtual void OnPageNavigatedFrom(Page page)
+        public virtual void OnPageNavigatedFrom(Page page)
         {
             if (page == null) { return; }
             if (page is NavigationPage)
@@ -64,7 +64,7 @@ namespace Atlas.Forms.Components
             }
         }
 
-        protected virtual void OnPageAppeared(Page page)
+        public virtual void OnPageAppeared(Page page)
         {
             if (page == null) { return; }
             if (page is NavigationPage)
@@ -86,7 +86,7 @@ namespace Atlas.Forms.Components
             }
         }
 
-        protected virtual void OnPageDisappeared(Page page)
+        public virtual void OnPageDisappeared(Page page)
         {
             if (page == null) { return; }
             if (page is NavigationPage)
@@ -101,7 +101,7 @@ namespace Atlas.Forms.Components
             }
         }
 
-        protected virtual void OnPageCreated(Page page)
+        public virtual void OnPageCreated(Page page)
         {
             if (page == null) { return; }
             if (page is NavigationPage)
@@ -161,7 +161,7 @@ namespace Atlas.Forms.Components
             return mapInfos;
         }
 
-        protected virtual void Unsubscribe()
+        public virtual void Unsubscribe()
         {
             CacheSubscriber.UnsubscribePageAppeared();
             CacheSubscriber.UnsubscribePageDisappeared();

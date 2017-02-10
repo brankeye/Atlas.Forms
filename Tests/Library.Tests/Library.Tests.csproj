@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fixtures\NavigationServiceFixture.cs" />
+    <Compile Include="Fixtures\AutoCacheControllerFixture.cs" />
     <Compile Include="Fixtures\PageRetrieverFixture.cs" />
     <Compile Include="Mocks\ApplicationProviderMock.cs" />
     <Compile Include="Mocks\NavigationServiceMock.cs" />

@@ -46,7 +46,7 @@ namespace Library.Tests.Fixtures
             Assert.That(pageInstance, Is.Not.Null);
         }
 
-        public static IPageRetriever GetPageRetriever()
+        protected IPageRetriever GetPageRetriever()
         {
             var pageNavigationStore = new PageNavigationStore();
             pageNavigationStore.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));

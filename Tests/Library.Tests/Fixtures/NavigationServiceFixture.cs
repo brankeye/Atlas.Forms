@@ -174,7 +174,7 @@ namespace Library.Tests.Fixtures
             Assert.That(stackCount, Is.EqualTo(1));
         }
 
-        protected static INavigationService GetNavigationService()
+        protected INavigationService GetNavigationService()
         {
             var pageKeyStore = new PageKeyStore();
             var cachePubSubService = new CachePubSubService(new MessagingService());

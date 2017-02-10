@@ -19,17 +19,7 @@ namespace Atlas.Forms.Components
         protected IPageStackController PageStackController { get; }
 
         protected IPageKeyStore PageKeyStore { get; }
-
-        public NavigationController(INavigationProvider navigationProvider,
-                                    IPageStackController pageStackController,
-                                    IPageKeyStore pageKeyStore)
-        {
-            ApplicationProvider = new ApplicationProvider();
-            NavigationProvider = navigationProvider;
-            PageStackController = pageStackController;
-            PageKeyStore = pageKeyStore;
-        }
-
+        
         public NavigationController(IApplicationProvider applicationProvider,
                                     INavigationProvider navigationProvider,
                                     IPageStackController pageStackController,
