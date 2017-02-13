@@ -58,25 +58,13 @@ namespace Atlas.Forms.Services
         public virtual bool TryAddPage(NavigationInfo pageInfo)
         {
             var pageInstance = PageRetriever.GetNewPage(pageInfo);
-            var cacheInfo = new CacheInfo(pageInstance, false, new MapInfo
-            {
-                Key = pageInfo.Page,
-                Type = pageInstance.GetType(),
-                CacheState = CacheState.Default,
-                CacheOption = CacheOption.None
-            });
+            var cacheInfo = new CacheInfo(pageInstance, false, new TargetPageInfo(pageInfo.Page, CacheState.Default));
             return CacheController.TryAddCacheInfo(pageInfo.Page, cacheInfo);
         }
 
         public bool TryAddExistingPage(NavigationInfo pageInfo, Page page)
         {
-            var cacheInfo = new CacheInfo(page, false, new MapInfo
-            {
-                Key = pageInfo.Page,
-                Type = page.GetType(),
-                CacheState = CacheState.Default,
-                CacheOption = CacheOption.None
-            });
+            var cacheInfo = new CacheInfo(page, false, new TargetPageInfo(pageInfo.Page, CacheState.Default));
             return CacheController.TryAddCacheInfo(pageInfo.Page, cacheInfo);
         }
 

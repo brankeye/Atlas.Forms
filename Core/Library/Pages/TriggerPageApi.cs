@@ -7,25 +7,23 @@ namespace Atlas.Forms.Pages
     public class TriggerPageApi : ITriggerPageApi
     {
         private readonly MapInfo _info;
-        private readonly string _triggerPage;
 
         public TriggerPageApi(string triggerPage, MapInfo mapInfo)
         {
             _info = mapInfo;
-            _info.CacheState = CacheState.KeepAlive;
-            _triggerPage = triggerPage;
+            _info.TriggerPageInfo = new TriggerPageInfo(triggerPage, TriggerOption.None);
         }
 
         public ITargetPageApi Appears()
         {
-            _info.CacheOption = CacheOption.Appears;
-            return new TargetPageApi(_triggerPage, _info);
+            _info.TriggerPageInfo.TriggerOption = TriggerOption.Appears;
+            return new TargetPageApi(_info.TriggerPageInfo.Key, _info);
         }
 
         public ITargetPageApi IsCreated()
         {
-            _info.CacheOption = CacheOption.IsCreated;
-            return new TargetPageApi(_triggerPage, _info);
+            _info.TriggerPageInfo.TriggerOption = TriggerOption.IsCreated;
+            return new TargetPageApi(_info.TriggerPageInfo.Key, _info);
         }
     }
 }

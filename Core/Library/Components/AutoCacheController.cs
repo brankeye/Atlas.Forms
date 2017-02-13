@@ -5,6 +5,7 @@ using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
 using Xamarin.Forms;
 
@@ -56,10 +57,10 @@ namespace Atlas.Forms.Components
             var pageMappings = GetPageMappings(pageInfo.Key);
             if (pageMappings != null)
             {
-                pageMappings = pageMappings.Where(x => x.CacheState == CacheState.KeepAlive).ToList();
+                pageMappings = pageMappings.Where(x => x.TargetPageInfo.CacheState == CacheState.KeepAlive).ToList();
                 foreach (var mapInfo in pageMappings)
                 {
-                    CacheController.RemoveCacheInfo(mapInfo.Key);
+                    CacheController.RemoveCacheInfo(mapInfo.TargetPageInfo.Key);
                 }
             }
         }
@@ -75,11 +76,11 @@ namespace Atlas.Forms.Components
             var pageMappings = GetPageMappings(pageInfo.Key);
             if (pageMappings != null)
             {
-                pageMappings = pageMappings.Where(x => x.CacheOption == CacheOption.Appears).ToList();
-                var currentPageMap = pageMappings.FirstOrDefault(x => x.Key == pageInfo.Key);
+                pageMappings = pageMappings.Where(x => x.TriggerPageInfo.TriggerOption == TriggerOption.Appears).ToList();
+                var currentPageMap = pageMappings.FirstOrDefault(x => x.TargetPageInfo.Key == pageInfo.Key);
                 if (currentPageMap != null)
                 {
-                    CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, true, currentPageMap));
+                    CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, true, currentPageMap.TargetPageInfo));
                     pageMappings.Remove(currentPageMap);
                 }
                 AddPagesToCache(pageMappings);
@@ -97,7 +98,7 @@ namespace Atlas.Forms.Components
             var lifetimeMappings = GetLifetimeMappings(pageInfo.Key);
             foreach (var mapInfo in lifetimeMappings)
             {
-                CacheController.RemoveCacheInfo(mapInfo.Key);
+                CacheController.RemoveCacheInfo(mapInfo.TargetPageInfo.Key);
             }
         }
 
@@ -112,11 +113,11 @@ namespace Atlas.Forms.Components
             var pageMappings = GetPageMappings(pageInfo.Key);
             if (pageMappings != null)
             {
-                pageMappings = pageMappings.Where(x => x.CacheOption == CacheOption.IsCreated).ToList();
-                var currentPageMap = pageMappings.FirstOrDefault(x => x.Key == pageInfo.Key);
+                pageMappings = pageMappings.Where(x => x.TriggerPageInfo.TriggerOption == TriggerOption.IsCreated).ToList();
+                var currentPageMap = pageMappings.FirstOrDefault(x => x.TargetPageInfo.Key == pageInfo.Key);
                 if (currentPageMap != null)
                 {
-                    CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, true, currentPageMap));
+                    CacheController.TryAddCacheInfo(pageInfo.Key, new CacheInfo(page, true, currentPageMap.TargetPageInfo));
                     pageMappings.Remove(currentPageMap);
                 }
                 AddPagesToCache(pageMappings);
@@ -127,11 +128,11 @@ namespace Atlas.Forms.Components
         {
             foreach (var mapInfo in mapInfos)
             {
-                var cacheInfo = CacheController.TryGetCacheInfo(mapInfo.Key);
+                var cacheInfo = CacheController.TryGetCacheInfo(mapInfo.TargetPageInfo.Key);
                 if (cacheInfo == null)
                 {
-                    var pageInstance = PageFactory.GetNewPage(mapInfo.Key);
-                    CacheController.TryAddCacheInfo(mapInfo.Key, new CacheInfo(pageInstance, false, mapInfo));
+                    var pageInstance = PageFactory.GetNewPage(mapInfo.TargetPageInfo.Key);
+                    CacheController.TryAddCacheInfo(mapInfo.TargetPageInfo.Key, new CacheInfo(pageInstance, false, mapInfo.TargetPageInfo));
                 }
             }
         }
@@ -149,7 +150,7 @@ namespace Atlas.Forms.Components
 
         protected virtual IList<MapInfo> GetLifetimeMappings(string key)
         {
-            var pageMappings = PageCacheMap.GetMappings().Values.Where(x => x.FirstOrDefault(y => y.LifetimePageKey == key) != null);
+            var pageMappings = PageCacheMap.GetMappings().Values.Where(x => x.FirstOrDefault(y => y.TargetPageInfo.LifetimeInstanceKey == key) != null);
             IList<MapInfo> mapInfos = new List<MapInfo>();
             foreach (var list in pageMappings)
             {

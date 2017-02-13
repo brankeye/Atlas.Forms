@@ -50,6 +50,8 @@
     <Compile Include="Interfaces\IPageNavigationStore.cs" />
     <Compile Include="Interfaces\Services\IMessagingService.cs" />
     <Compile Include="Interfaces\Utilities\ILazySingleton.cs" />
+    <Compile Include="Pages\TargetPageInfo.cs" />
+    <Compile Include="Pages\TriggerPageInfo.cs" />
     <Compile Include="Services\MessagingService.cs" />
     <Compile Include="Utilities\LazySingleton.cs" />
     <Compile Include="Utilities\ServiceFactory.cs" />
@@ -67,7 +69,7 @@
     <Compile Include="Components\PageRetriever.cs" />
     <Compile Include="Components\NavigationController.cs" />
     <Compile Include="Components\PageFactory.cs" />
-    <Compile Include="Enums\CacheOption.cs" />
+    <Compile Include="Enums\TriggerOption.cs" />
     <Compile Include="Enums\CacheState.cs" />
     <Compile Include="FormsApplication.cs" />
     <Compile Include="Interfaces\Components\ICacheController.cs" />

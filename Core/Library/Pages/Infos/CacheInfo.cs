@@ -2,15 +2,16 @@
 
 namespace Atlas.Forms.Pages.Infos
 {
-    public class CacheInfo : MapInfo
+    public class CacheInfo
     {
-        public CacheInfo() { }
-
-        public CacheInfo(Page page, bool initialized, MapInfo info) : base(info)
+        public CacheInfo(Page page, bool initialized, TargetPageInfo info)
         {
             Page = page;
             Initialized = initialized;
+            TargetPageInfo = info;
         }
+
+        public TargetPageInfo TargetPageInfo { get; set; }
 
         public Page Page { get; set; }
 

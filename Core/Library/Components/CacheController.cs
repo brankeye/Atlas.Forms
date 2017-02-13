@@ -22,10 +22,10 @@ namespace Atlas.Forms.Components
             foreach (var container in list)
             {
                 CacheInfo info;
-                PageCache.TryGetValue(container.Key, out info);
+                PageCache.TryGetValue(container.TargetPageInfo.Key, out info);
                 if (info == null)
                 {
-                    TryAddCacheInfo(container.Key, container);
+                    TryAddCacheInfo(container.TargetPageInfo.Key, container);
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace Atlas.Forms.Components
         {
             CacheInfo info;
             PageCache.TryGetValue(key, out info);
-            if (info?.CacheState == CacheState.Default)
+            if (info?.TargetPageInfo.CacheState == CacheState.Default)
             {
                 RemoveCacheInfo(key);
             }

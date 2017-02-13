@@ -14,6 +14,7 @@ namespace Atlas.Forms.Pages
         public TargetPageApi(string triggerPage, MapInfo mapInfo)
         {
             _info = mapInfo;
+            _info.TargetPageInfo = new TargetPageInfo("", CacheState.Default);
             _triggerPage = triggerPage;
         }
 
@@ -24,7 +25,7 @@ namespace Atlas.Forms.Pages
 
         public ITargetPageApi CachePage(string key)
         {
-            _info.Key = key;
+            _info.TargetPageInfo.Key = key;
             return this;
         }
 
@@ -36,30 +37,30 @@ namespace Atlas.Forms.Pages
 
         public void AsKeepAlive()
         {
-            _info.CacheState = CacheState.KeepAlive;
+            _info.TargetPageInfo.CacheState = CacheState.KeepAlive;
         }
 
         public void AsSingleInstance()
         {
-            _info.CacheState = CacheState.SingleInstance;
+            _info.TargetPageInfo.CacheState = CacheState.SingleInstance;
         }
 
         public void AsLifetimeInstance()
         {
-            _info.CacheState = CacheState.LifetimeInstance;
-            _info.LifetimePageKey = _triggerPage;
+            _info.TargetPageInfo.CacheState = CacheState.LifetimeInstance;
+            _info.TargetPageInfo.LifetimeInstanceKey = _triggerPage;
         }
 
         public void AsLifetimeInstance<TPage>() where TPage : Page
         {
-            _info.CacheState = CacheState.LifetimeInstance;
-            _info.LifetimePageKey = typeof(TPage).Name;
+            _info.TargetPageInfo.CacheState = CacheState.LifetimeInstance;
+            _info.TargetPageInfo.LifetimeInstanceKey = typeof(TPage).Name;
         }
 
         public void AsLifetimeInstance(string page)
         {
-            _info.CacheState = CacheState.LifetimeInstance;
-            _info.LifetimePageKey = page;
+            _info.TargetPageInfo.CacheState = CacheState.LifetimeInstance;
+            _info.TargetPageInfo.LifetimeInstanceKey = page;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Atlas.Forms.Enums
 {
-    public enum CacheOption
+    public enum TriggerOption
     {
         None,
         Appears,

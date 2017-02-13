@@ -5,8 +5,6 @@ namespace Atlas.Forms.Pages.Infos
 {
     public class PageInfo : IPageInfo
     {
-        public PageInfo() { }
-
         public PageInfo(string key, Type type)
         {
             Key = key;

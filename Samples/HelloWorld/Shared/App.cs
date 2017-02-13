@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Threading.Tasks;
 using atlas.samples.helloworld.Shared.Views.Pages;
 using atlas.samples.helloworld.Shared.Views.Pages.NavigationPage;
@@ -14,7 +15,7 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
-            Setup();
+            //Setup();
 
             NavigationService.SetMainPage(Nav.Get<MainMasterDetailPage>().Info());
             //NavigationService.SetMainPage(Nav.Get("MyContentPage").AsNavigationPage().Info());
@@ -42,7 +43,6 @@ namespace atlas.samples.helloworld.Shared
             });
 
             MessagingService.Current.SendMessage("Hi");
-            var x = 0;
         }
 
         protected override void RegisterPagesForNavigation(IPageNavigationRegistry registry)

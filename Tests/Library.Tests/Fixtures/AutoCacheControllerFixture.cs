@@ -5,6 +5,7 @@ using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
@@ -105,9 +106,12 @@ namespace Library.Tests.Fixtures
             var pageCacheMap = new PageCacheMap();
             pageCacheMap.AddMapInfos("FirstPage", new List<MapInfo>
             {
-                new MapInfo(CacheState.KeepAlive, CacheOption.Appears, new PageInfo("FirstPage", typeof(ContentPage))),
-                new MapInfo(CacheState.KeepAlive, CacheOption.Appears, new PageInfo("SecondPage", typeof(ContentPage))),
-                new MapInfo(CacheState.KeepAlive, CacheOption.Appears, new PageInfo("ThirdPage", typeof(ContentPage)))
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.Appears),
+                            new TargetPageInfo("FirstPage", CacheState.KeepAlive)),
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.Appears),
+                            new TargetPageInfo("SecondPage", CacheState.KeepAlive)),
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.Appears),
+                            new TargetPageInfo("ThirdPage", CacheState.KeepAlive)),
             });
             CacheController = new CacheController();
             return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory, new CachePubSubService(new MessagingService()));
@@ -124,9 +128,12 @@ namespace Library.Tests.Fixtures
             var pageCacheMap = new PageCacheMap();
             pageCacheMap.AddMapInfos("FirstPage", new List<MapInfo>
             {
-                new MapInfo(CacheState.KeepAlive, CacheOption.Appears, new PageInfo("FirstPage", typeof(ContentPage))),
-                new MapInfo(CacheState.LifetimeInstance, CacheOption.Appears, new PageInfo("SecondPage", typeof(ContentPage))) { LifetimePageKey = "FirstPage" },
-                new MapInfo(CacheState.LifetimeInstance, CacheOption.Appears, new PageInfo("ThirdPage", typeof(ContentPage))) { LifetimePageKey = "FirstPage" }
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.Appears),
+                            new TargetPageInfo("FirstPage", CacheState.KeepAlive)),
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.Appears),
+                            new TargetPageInfo("SecondPage", CacheState.LifetimeInstance) { LifetimeInstanceKey = "FirstPage" }),
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.Appears),
+                            new TargetPageInfo("ThirdPage", CacheState.LifetimeInstance) { LifetimeInstanceKey = "FirstPage" }),
             });
             CacheController = new CacheController();
             return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory, new CachePubSubService(new MessagingService()));
@@ -143,9 +150,12 @@ namespace Library.Tests.Fixtures
             var pageCacheMap = new PageCacheMap();
             pageCacheMap.AddMapInfos("FirstPage", new List<MapInfo>
             {
-                new MapInfo(CacheState.KeepAlive, CacheOption.IsCreated, new PageInfo("FirstPage", typeof(ContentPage))),
-                new MapInfo(CacheState.KeepAlive, CacheOption.IsCreated, new PageInfo("SecondPage", typeof(ContentPage))),
-                new MapInfo(CacheState.KeepAlive, CacheOption.IsCreated, new PageInfo("ThirdPage", typeof(ContentPage)))
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.IsCreated),
+                            new TargetPageInfo("FirstPage", CacheState.KeepAlive)),
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.IsCreated),
+                            new TargetPageInfo("SecondPage", CacheState.KeepAlive)),
+                new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.IsCreated),
+                            new TargetPageInfo("ThirdPage", CacheState.KeepAlive)),
             });
             CacheController = new CacheController();
             return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory, new CachePubSubService(new MessagingService()));

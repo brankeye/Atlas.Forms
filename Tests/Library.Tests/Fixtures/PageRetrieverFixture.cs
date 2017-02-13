@@ -5,6 +5,7 @@ using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
@@ -55,7 +56,7 @@ namespace Library.Tests.Fixtures
             var cacheController = new CacheController();
             cacheController.TryAddCacheInfo("ThirdPage",
                 new CacheInfo(new ContentPage(), true,
-                    new MapInfo(CacheState.Default, CacheOption.None, new PageInfo("ThirdPage", typeof(ContentPage)))));
+                    new TargetPageInfo("ThirdPage", CacheState.Default)));
             MessagingService.SetCurrent(() => new MessagingService());
             CachePubSubService.SetCurrent(() => new CachePubSubService(MessagingService.Current));
             var pageFactory = new PageFactory(pageNavigationStore, new PageKeyStore(), new ServiceFactoryImp());
