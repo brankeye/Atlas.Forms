@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
@@ -15,9 +16,9 @@ namespace Atlas.Forms.Interfaces.Services
 
         Page TryGetCachedPage(NavigationInfo pageInfo, IParametersService parameters = null);
 
-        bool TryAddPage(NavigationInfo pageInfo);
+        bool TryAddPage(TargetPageInfo targetPageInfo);
 
-        bool TryAddExistingPage(NavigationInfo pageInfo, Page page);
+        bool TryAddExistingPage(TargetPageInfo targetPageInfo, Page page);
 
         bool RemovePage(NavigationInfo pageInfo);
     }
