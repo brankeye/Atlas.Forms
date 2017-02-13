@@ -21,4 +21,7 @@ Feedback is highly appreciated!
 Special thanks to Prism, headed by Brian Lagunas, without it this project wouldn't have been possible. I learned a lot from the Prism source code, which I am grateful for.
 
 And a quick thanks to Xamarin.Forms.Toolkit, created by James Montemagno, for providing a simpler MessagingService implementation I was able to put to good use.
+
+See the [Prism repository](https://github.com/PrismLibrary/Prism) on GitHub.
+
 See the [Xamarin.Forms.Toolkit repository](https://github.com/jamesmontemagno/xamarin.forms-toolkit) on GitHub.
