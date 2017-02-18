@@ -18,6 +18,10 @@ namespace Atlas.Forms.Interfaces.Services
         
         void Subscribe<T1, T2, T3, T4>(string message, Action<T1, T2, T3, T4> callback);
 
+        void Subscribe<T1, T2, T3, T4, T5>(string message, Action<T1, T2, T3, T4, T5> callback);
+
+        void Subscribe<T1, T2, T3, T4, T5, T6>(string message, Action<T1, T2, T3, T4, T5, T6> callback);
+
         void SubscribeAsync(string message, Func<Task> callback);
 
         void SubscribeAsync<T>(string message, Func<T, Task> callback);
@@ -27,6 +31,10 @@ namespace Atlas.Forms.Interfaces.Services
         void SubscribeAsync<T1, T2, T3>(string message, Func<T1, T2, T3, Task> callback);
 
         void SubscribeAsync<T1, T2, T3, T4>(string message, Func<T1, T2, T3, T4, Task> callback);
+
+        void SubscribeAsync<T1, T2, T3, T4, T5>(string message, Func<T1, T2, T3, T4, T5, Task> callback);
+
+        void SubscribeAsync<T1, T2, T3, T4, T5, T6>(string message, Func<T1, T2, T3, T4, T5, T6, Task> callback);
 
         void SendMessage(string message);
 
@@ -38,6 +46,10 @@ namespace Atlas.Forms.Interfaces.Services
 
         void SendMessage<T1, T2, T3, T4>(string message, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
 
+        void SendMessage<T1, T2, T3, T4, T5>(string message, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5);
+
+        void SendMessage<T1, T2, T3, T4, T5, T6>(string message, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6);
+
         void Unsubscribe(string message);
 
         void Unsubscribe<T>(string message);
@@ -47,5 +59,9 @@ namespace Atlas.Forms.Interfaces.Services
         void Unsubscribe<T1, T2, T3>(string message);
 
         void Unsubscribe<T1, T2, T3, T4>(string message);
+
+        void Unsubscribe<T1, T2, T3, T4, T5>(string message);
+
+        void Unsubscribe<T1, T2, T3, T4, T5, T6>(string message);
     }
 }
