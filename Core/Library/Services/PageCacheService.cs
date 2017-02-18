@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Atlas.Forms.Caching;
-using Atlas.Forms.Components;
-using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Interfaces.Utilities;
-using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Utilities;
@@ -30,10 +26,13 @@ namespace Atlas.Forms.Services
 
         protected ICacheController CacheController { get; }
 
-        public PageCacheService(IPageRetriever pageRetriever, ICacheController cacheController)
+        protected IPublisher Publisher { get; }
+
+        public PageCacheService(IPageRetriever pageRetriever, ICacheController cacheController, IPublisher publisher)
         {
             PageRetriever = pageRetriever;
             CacheController = cacheController;
+            Publisher = publisher;
         }
 
         public virtual IReadOnlyDictionary<string, CacheInfo> CachedPages => CacheController.GetPageCache();
@@ -41,7 +40,7 @@ namespace Atlas.Forms.Services
         public virtual Page GetNewPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
             var pageInstance = PageRetriever.GetNewPage(pageInfo);
-            PageActionInvoker.InvokeInitialize(pageInstance, parameters ?? new ParametersService());
+            Publisher.SendPageInitializeMessage(pageInstance, parameters ?? new ParametersService());
             return pageInstance;
         }
 

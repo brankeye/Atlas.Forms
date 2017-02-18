@@ -8,64 +8,44 @@ namespace Atlas.Forms.Interfaces.Services
 {
     public interface IMessagingService
     {
-        /// <summary>
-        /// Subscribe the specified message and callback.
-        /// </summary>
-        /// <param name="message">Message.</param>
-        /// <param name="callback">Callback.</param>
         void Subscribe(string message, Action callback);
 
-        /// <summary>
-        /// Subscribe the specified message and callback.
-        /// </summary>
-        /// <param name="message">Message.</param>
-        /// <param name="callback">Callback.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        void Subscribe<TArgs>(string message, Action<TArgs> callback);
+        void Subscribe<T>(string message, Action<T> callback);
+        
+        void Subscribe<T1, T2>(string message, Action<T1, T2> callback);
+        
+        void Subscribe<T1, T2, T3>(string message, Action<T1, T2, T3> callback);
+        
+        void Subscribe<T1, T2, T3, T4>(string message, Action<T1, T2, T3, T4> callback);
 
-        /// <summary>
-        /// Subscribe the specified message and callback.
-        /// </summary>
-        /// <param name="message">Message.</param>
-        /// <param name="callback">Callback.</param>
-        /// /// <param name="useAwait">Choose whether to await the call.</param>
         void SubscribeAsync(string message, Func<Task> callback);
 
-        /// <summary>
-        /// Subscribe the specified message and callback.
-        /// </summary>
-        /// <param name="message">Message.</param>
-        /// <param name="callback">Callback.</param>
-        /// <param name="useAwait">Choose whether to await the call.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        void SubscribeAsync<TArgs>(string message, Func<TArgs, Task> callback);
+        void SubscribeAsync<T>(string message, Func<T, Task> callback);
 
-        /// <summary>
-        /// Sends the message.
-        /// </summary>
-        /// <param name="message">Message.</param>
+        void SubscribeAsync<T1, T2>(string message, Func<T1, T2, Task> callback);
+
+        void SubscribeAsync<T1, T2, T3>(string message, Func<T1, T2, T3, Task> callback);
+
+        void SubscribeAsync<T1, T2, T3, T4>(string message, Func<T1, T2, T3, T4, Task> callback);
+
         void SendMessage(string message);
 
-        /// <summary>
-        /// Sends the message.
-        /// </summary>
-        /// <param name="message">Message.</param>
-        /// <param name="args">Arguments.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        void SendMessage<TArgs>(string message, TArgs args);
+        void SendMessage<T>(string message, T args);
 
-        /// <summary>
-        /// Unsubscribe the specified message.
-        /// </summary>
-        /// <param name="message">Message.</param>
+        void SendMessage<T1, T2>(string message, T1 arg1, T2 arg2);
+
+        void SendMessage<T1, T2, T3>(string message, T1 arg1, T2 arg2, T3 arg3);
+
+        void SendMessage<T1, T2, T3, T4>(string message, T1 arg1, T2 arg2, T3 arg3, T4 arg4);
+
         void Unsubscribe(string message);
 
-        /// <summary>
-        /// Unsubscribe the specified message and args.
-        /// </summary>
-        /// <param name="message">Message.</param>
-        /// <param name="args">Arguments.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        void Unsubscribe<TArgs>(string message);
+        void Unsubscribe<T>(string message);
+
+        void Unsubscribe<T1, T2>(string message);
+
+        void Unsubscribe<T1, T2, T3>(string message);
+
+        void Unsubscribe<T1, T2, T3, T4>(string message);
     }
 }

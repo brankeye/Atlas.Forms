@@ -33,7 +33,6 @@ namespace Library.Tests.Fixtures
             var thirdPage = CacheController.TryGetCacheInfo("ThirdPage");
             Assert.That(secondPage, Is.Not.Null);
             Assert.That(thirdPage, Is.Not.Null);
-            autoCacheController.Unsubscribe();
         }
 
         [Test]
@@ -55,7 +54,6 @@ namespace Library.Tests.Fixtures
             Assert.That(firstPage, Is.Null);
             Assert.That(secondPage, Is.Null);
             Assert.That(thirdPage, Is.Null);
-            autoCacheController.Unsubscribe();
         }
 
         [Test]
@@ -70,7 +68,6 @@ namespace Library.Tests.Fixtures
             Assert.That(firstPage, Is.Not.Null);
             Assert.That(secondPage, Is.Not.Null);
             Assert.That(thirdPage, Is.Not.Null);
-            autoCacheController.Unsubscribe();
         }
 
         [Test]
@@ -92,7 +89,6 @@ namespace Library.Tests.Fixtures
             Assert.That(firstPage, Is.Null);
             Assert.That(secondPage, Is.Null);
             Assert.That(thirdPage, Is.Null);
-            autoCacheController.Unsubscribe();
         }
 
         protected IAutoCacheController GetAutoCacheControllerForAppears()
@@ -113,8 +109,9 @@ namespace Library.Tests.Fixtures
                 new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.Appears),
                             new TargetPageInfo("ThirdPage", CacheState.KeepAlive)),
             });
-            CacheController = new CacheController();
-            return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory, new CachePubSubService(new MessagingService()));
+            var pubSubService = new PubSubService(new MessagingService());
+            CacheController = new CacheController(pubSubService);
+            return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory);
         }
 
         protected IAutoCacheController GetAutoCacheControllerForDisappears()
@@ -135,8 +132,9 @@ namespace Library.Tests.Fixtures
                 new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.Appears),
                             new TargetPageInfo("ThirdPage", CacheState.LifetimeInstance) { LifetimeInstanceKey = "FirstPage" }),
             });
-            CacheController = new CacheController();
-            return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory, new CachePubSubService(new MessagingService()));
+            var pubSubService = new PubSubService(new MessagingService());
+            CacheController = new CacheController(pubSubService);
+            return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory);
         }
 
         protected IAutoCacheController GetAutoCacheControllerForCreated()
@@ -157,8 +155,9 @@ namespace Library.Tests.Fixtures
                 new MapInfo(new TriggerPageInfo("FirstPage", TriggerOption.IsCreated),
                             new TargetPageInfo("ThirdPage", CacheState.KeepAlive)),
             });
-            CacheController = new CacheController();
-            return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory, new CachePubSubService(new MessagingService()));
+            var pubSubService = new PubSubService(new MessagingService());
+            CacheController = new CacheController(pubSubService);
+            return new AutoCacheController(CacheController, pageCacheMap, pageKeyStore, PageFactory);
         }
     }
 }

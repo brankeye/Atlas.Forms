@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Navigation;
-using Atlas.Forms.Pages;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Components
@@ -32,9 +30,7 @@ namespace Atlas.Forms.Components
             if (page != null)
             {
                 NavigationProvider.TrySetNavigation(page);
-                PageActionInvoker.InvokeOnPageAppearing(page, parameters);
                 ApplicationProvider.MainPage = page;
-                PageActionInvoker.InvokeOnPageAppeared(page, parameters);
             }
         }
 
@@ -47,7 +43,6 @@ namespace Atlas.Forms.Components
         {
             if (page != null)
             {
-                PageActionInvoker.InvokeOnPageAppearing(page, parameters);
                 if (useModal)
                 {
                     await NavigationProvider.Navigation.PushModalAsync(page, animated);
@@ -56,18 +51,12 @@ namespace Atlas.Forms.Components
                 {
                     await NavigationProvider.Navigation.PushAsync(page, animated);
                 }
-                PageActionInvoker.InvokeOnPageAppeared(page, parameters);
             }
         }
 
         public virtual async Task<IPageInfo> PopPageAsync(bool animated, IParametersService parameters, bool useModal)
         {
-            var pageStack = useModal ? NavigationProvider.Navigation.ModalStack
-                                     : NavigationProvider.Navigation.NavigationStack;
-            
-            var currentPage = pageStack[pageStack.Count - 1];
             var pageContainer = GetCurrentPageInfo(useModal);
-            PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
             if (useModal)
             {
                 await NavigationProvider.Navigation.PopModalAsync(animated);
@@ -76,7 +65,6 @@ namespace Atlas.Forms.Components
             {
                 await NavigationProvider.Navigation.PopAsync(animated);
             }
-            PageActionInvoker.InvokeOnPageDisappeared(currentPage, parameters);
             return pageContainer;
         }
 

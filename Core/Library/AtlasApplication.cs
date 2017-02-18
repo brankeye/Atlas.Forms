@@ -2,8 +2,10 @@
 using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
+using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Navigation;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -15,7 +17,7 @@ namespace Atlas.Forms
 
         protected ICacheController CacheController { get; private set; }
 
-        private IAutoCacheController AutoCacheController { get; set; }
+        private IMessagingController MessagingController { get; set; }
 
         private IPageNavigationStore PageNavigationStore { get; set; }
 
@@ -27,10 +29,10 @@ namespace Atlas.Forms
         {
             CreateStores();
             MessagingService.SetCurrent(CreateMessagingService);
-            CachePubSubService.SetCurrent(CreateCachePubSubService);
+            PubSubService.SetCurrent(CreatePubSubService);
             ServiceFactory = CreateServiceFactory();
             CacheController = CreateCacheController();
-            AutoCacheController = CreateAutoCacheController();
+            MessagingController = CreateMessagingController();
             ConfigureServiceFactory();
             base.Initialize();
         }
@@ -40,18 +42,19 @@ namespace Atlas.Forms
             ServiceFactory.AddNavigationService(CreateNavigationService);
             ServiceFactory.AddNavigationController(CreateNavigationController);
             ServiceFactory.AddPageCacheController(CreatePageRetriever);
+            ServiceFactory.AddPublisher(CreatePubSubService);
             ServiceFactory.Lock();
         }
 
         protected override INavigationService CreateNavigationService(INavigation navigation)
         {
             var navigationController = CreateNavigationController(navigation);
-            return new NavigationService(navigationController, CreatePageRetriever(), CachePubSubService.Publisher);
+            return new NavigationService(navigationController, CreatePageRetriever(), PubSubService.Publisher);
         }
 
         protected override IPageCacheService CreatePageCacheService()
         {
-            return new PageCacheService(CreatePageRetriever(), CacheController);
+            return new PageCacheService(CreatePageRetriever(), CacheController, PubSubService.Publisher);
         }
 
         protected override IPageDialogService CreatePageDialogService()
@@ -78,12 +81,12 @@ namespace Atlas.Forms
 
         protected virtual IPageRetriever CreatePageRetriever()
         {
-            return new PageRetriever(CacheController, CreatePageFactory(), CachePubSubService.Publisher);
+            return new PageRetriever(CacheController, CreatePageFactory(), PubSubService.Publisher);
         }
 
         protected virtual ICacheController CreateCacheController()
         {
-            return new CacheController();
+            return new CacheController(PubSubService.Publisher);
         }
 
         protected virtual IPageStackController CreatePageStackController(INavigationProvider navigationProvider)
@@ -98,7 +101,7 @@ namespace Atlas.Forms
 
         protected virtual IAutoCacheController CreateAutoCacheController()
         {
-            return new AutoCacheController(CacheController, PageCacheMap, PageKeyStore, CreatePageFactory(), CachePubSubService.Subscriber);
+            return new AutoCacheController(CacheController, PageCacheMap, PageKeyStore, CreatePageFactory());
         }
 
         protected virtual IMessagingService CreateMessagingService()
@@ -106,14 +109,24 @@ namespace Atlas.Forms
             return new MessagingService();
         }
 
-        protected virtual ICachePubSubService CreateCachePubSubService()
+        protected virtual IPubSubService CreatePubSubService()
         {
-            return new CachePubSubService(MessagingService.Current);
+            return new PubSubService(MessagingService.Current);
         }
 
         protected virtual IPageFactory CreatePageFactory()
         {
             return new PageFactory(PageNavigationStore, PageKeyStore, ServiceFactory);
+        }
+
+        protected virtual IPageActionInvoker CreatePageActionInvoker()
+        {
+            return new PageActionInvoker();
+        }
+
+        protected virtual IMessagingController CreateMessagingController()
+        {
+            return new MessagingController(PubSubService.Subscriber, CreateAutoCacheController(), CreatePageActionInvoker());
         }
 
         protected virtual void CreateStores()

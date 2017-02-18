@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
@@ -21,13 +20,13 @@ namespace Atlas.Forms.Services
 
         protected IPageRetriever PageRetriever { get; }
 
-        protected ICachePublisher CachePublisher { get; }
+        protected IPublisher Publisher { get; }
 
-        public NavigationService(INavigationController navigationController, IPageRetriever pageRetriever, ICachePublisher cachePublisher)
+        public NavigationService(INavigationController navigationController, IPageRetriever pageRetriever, IPublisher publisher)
         {
             NavigationController = navigationController;
             PageRetriever = pageRetriever;
-            CachePublisher = cachePublisher;
+            Publisher = publisher;
         }
 
         public virtual void InsertPageBefore(NavigationInfo pageInfo, NavigationInfo before, IParametersService parameters = null)
@@ -63,10 +62,18 @@ namespace Atlas.Forms.Services
             var pageStack = useModal ? Navigation.ModalStack :
                                        Navigation.NavigationStack;
             var lastPage = pageStack.Last();
+            Page nextPage = null;
+            if (pageStack.Count > 1)
+            {
+                nextPage = pageStack[pageStack.Count - 2];
+            }
+            Publisher.SendPageAppearingMessage(nextPage, paramService);
+            Publisher.SendPageDisappearingMessage(lastPage, paramService);
             var pageContainer = await NavigationController.PopPageAsync(animated, paramService, useModal);
-            var currentPage = Navigation.NavigationStack.ToList().LastOrDefault();
-            CachePublisher.SendPageNavigatedFromMessage(lastPage);
-            CachePublisher.SendPageNavigatedToMessage(currentPage);
+            Publisher.SendPageAppearedMessage(nextPage, paramService);
+            Publisher.SendPageDisappearedMessage(lastPage, paramService);
+            Publisher.SendPageNavigatedFromMessage(lastPage);
+            Publisher.SendPageNavigatedToMessage(nextPage);
             return pageContainer;
         }
 
@@ -110,9 +117,13 @@ namespace Atlas.Forms.Services
                                        Navigation.NavigationStack;
             var lastPage = pageStack.LastOrDefault();
             var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
+            Publisher.SendPageAppearingMessage(nextPage, paramService);
+            Publisher.SendPageDisappearingMessage(lastPage, paramService);
             await NavigationController.PushPageAsync(nextPage, animated, paramService, useModal);
-            CachePublisher.SendPageNavigatedFromMessage(lastPage);
-            CachePublisher.SendPageNavigatedToMessage(nextPage);
+            Publisher.SendPageAppearedMessage(nextPage, paramService);
+            Publisher.SendPageDisappearedMessage(lastPage, paramService);
+            Publisher.SendPageNavigatedFromMessage(lastPage);
+            Publisher.SendPageNavigatedToMessage(nextPage);
         }
 
         public virtual void RemovePage(NavigationInfo pageInfo)
@@ -122,11 +133,16 @@ namespace Atlas.Forms.Services
 
         public virtual void SetMainPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
-            CachePublisher.SendPageNavigatedFromMessage(NavigationController.GetMainPage());
+            var lastPage = NavigationController.GetMainPage();
+            Publisher.SendPageNavigatedFromMessage(lastPage);
             var paramService = parameters ?? new ParametersService();
             var nextPage = PageRetriever.GetCachedOrNewPage(pageInfo, paramService);
+            Publisher.SendPageAppearingMessage(nextPage, paramService);
+            Publisher.SendPageDisappearingMessage(lastPage, paramService);
             NavigationController.SetMainPage(nextPage, paramService);
-            CachePublisher.SendPageNavigatedToMessage(nextPage);
+            Publisher.SendPageAppearedMessage(nextPage, paramService);
+            Publisher.SendPageDisappearedMessage(lastPage, paramService);
+            Publisher.SendPageNavigatedToMessage(nextPage);
         }
     }
 }

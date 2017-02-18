@@ -1,8 +1,5 @@
-﻿using Atlas.Forms.Caching;
-using Atlas.Forms.Interfaces.Components;
+﻿using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -14,13 +11,15 @@ namespace Atlas.Forms.Components
 
         protected IPageFactory PageFactory { get; }
 
-        protected ICachePublisher CachePublisher { get; }
+        protected IPublisher Publisher { get; }
 
-        public PageRetriever(ICacheController cacheController, IPageFactory pageFactory, ICachePublisher cachePublisher)
+        public PageRetriever(ICacheController cacheController, 
+                             IPageFactory pageFactory, 
+                             IPublisher publisher)
         {
             CacheController = cacheController;
             PageFactory = pageFactory;
-            CachePublisher = cachePublisher;
+            Publisher = publisher;
         }
 
         public virtual Page TryGetCachedPage(string key, IParametersService parameters)
@@ -30,7 +29,7 @@ namespace Atlas.Forms.Components
             {
                 if (!pageCacheInfo.Initialized)
                 {
-                    PageActionInvoker.InvokeInitialize(pageCacheInfo.Page, parameters);
+                    Publisher.SendPageInitializeMessage(pageCacheInfo.Page, parameters);
                     pageCacheInfo.Initialized = true;
                 }
             }
@@ -53,7 +52,7 @@ namespace Atlas.Forms.Components
             if (pageInfo.NewInstanceRequested)
             {
                 pageInstance = GetNewPage(pageInfo);
-                PageActionInvoker.InvokeInitialize(pageInstance, parameters);
+                Publisher.SendPageInitializeMessage(pageInstance, parameters);
             }
             else
             {
@@ -61,7 +60,7 @@ namespace Atlas.Forms.Components
                 if (pageInstance == null)
                 {
                     pageInstance = PageFactory.GetNewPage(pageInfo.Page);
-                    PageActionInvoker.InvokeInitialize(pageInstance, parameters);
+                    Publisher.SendPageInitializeMessage(pageInstance, parameters);
                 }
                 if (pageInfo.HasWrapperPage)
                 {
@@ -78,7 +77,7 @@ namespace Atlas.Forms.Components
                     }
                 }
             }
-            CachePublisher.SendPageCreatedMessage(pageInstance);
+            Publisher.SendPageCreatedMessage(pageInstance);
             return pageInstance;
         }
     }

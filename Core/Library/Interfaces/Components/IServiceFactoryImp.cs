@@ -12,10 +12,14 @@ namespace Atlas.Forms.Interfaces.Components
 
         IPageRetriever CreatePageCacheController();
 
+        IPublisher CreatePublisher();
+
         void AddNavigationService(Func<INavigation, object> func);
 
         void AddNavigationController(Func<INavigation, object> func);
 
         void AddPageCacheController(Func<object> func);
+
+        void AddPublisher(Func<object> func);
     }
 }

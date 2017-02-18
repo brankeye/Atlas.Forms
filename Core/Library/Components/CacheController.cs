@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
-using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Components
@@ -11,6 +9,13 @@ namespace Atlas.Forms.Components
     public class CacheController : ICacheController
     {
         public IDictionary<string, CacheInfo> PageCache { get; } = new Dictionary<string, CacheInfo>();
+
+        protected IPublisher Publisher { get; }
+
+        public CacheController(IPublisher publisher)
+        {
+            Publisher = publisher;
+        }
 
         public virtual IReadOnlyDictionary<string, CacheInfo> GetPageCache()
         {
@@ -36,9 +41,9 @@ namespace Atlas.Forms.Components
             PageCache.TryGetValue(key, out storedInfo);
             if (storedInfo == null)
             {
-                PageActionInvoker.InvokeOnPageCaching(info.Page);
+                Publisher.SendPageCachingMessage(info.Page);
                 PageCache.Add(key, info);
-                PageActionInvoker.InvokeOnPageCached(info.Page);
+                Publisher.SendPageCachedMessage(info.Page);
                 return true;
             }
             return false;

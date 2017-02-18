@@ -23,6 +23,11 @@ namespace Atlas.Forms.Components
             AddService(typeof(IPageRetriever), args => func.Invoke());
         }
 
+        public void AddPublisher(Func<object> func)
+        {
+            AddService(typeof(IPublisher), args => func.Invoke());
+        }
+
         public INavigationController CreateNavigationController(INavigation navigation)
         {
             return CreateService<INavigationController>(navigation);
@@ -36,6 +41,11 @@ namespace Atlas.Forms.Components
         public IPageRetriever CreatePageCacheController()
         {
             return CreateService<IPageRetriever>();
+        }
+
+        public IPublisher CreatePublisher()
+        {
+            return CreateService<IPublisher>();
         }
     }
 }

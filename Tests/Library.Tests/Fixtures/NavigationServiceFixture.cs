@@ -177,7 +177,6 @@ namespace Library.Tests.Fixtures
         protected INavigationService GetNavigationService()
         {
             var pageKeyStore = new PageKeyStore();
-            var cachePubSubService = new CachePubSubService(new MessagingService());
             var navigationProvider = new NavigationProvider(null);
             var navigationController = new NavigationController(new ApplicationProviderMock(), navigationProvider, new PageStackController(navigationProvider, pageKeyStore));
             var pageNavigationStore = new PageNavigationStore();
@@ -186,8 +185,11 @@ namespace Library.Tests.Fixtures
             pageNavigationStore.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));
             pageNavigationStore.AddTypeAndConstructorInfo("SecondPage", typeof(ContentPage));
             pageNavigationStore.AddTypeAndConstructorInfo("ThirdPage", typeof(ContentPage));
-            var pageCacheController = new PageRetriever(new CacheController(), new PageFactory(pageNavigationStore, pageKeyStore, new ServiceFactoryImp()), cachePubSubService);
-            return new NavigationServiceMock(navigationController, pageCacheController, cachePubSubService);
+            var serviceFactory = new ServiceFactoryImp();
+            serviceFactory.AddPublisher(() => new PubSubService(new MessagingService()));
+            var pubSubService = new PubSubService(new MessagingService());
+            var pageCacheController = new PageRetriever(new CacheController(pubSubService), new PageFactory(pageNavigationStore, pageKeyStore, serviceFactory), pubSubService);
+            return new NavigationServiceMock(navigationController, pageCacheController, pubSubService);
         }
     }
 }

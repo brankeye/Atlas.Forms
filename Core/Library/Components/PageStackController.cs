@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Navigation;
 
 namespace Atlas.Forms.Components
 {
@@ -15,7 +14,8 @@ namespace Atlas.Forms.Components
 
         protected IPageKeyStore PageKeyStore { get; }
 
-        public PageStackController(INavigationProvider navigationProvider, IPageKeyStore pageKeyStore)
+        public PageStackController(INavigationProvider navigationProvider, 
+                                   IPageKeyStore pageKeyStore)
         {
             NavigationProvider = navigationProvider;
             PageKeyStore = pageKeyStore;

@@ -1,4 +1,4 @@
-﻿using Atlas.Forms.Pages;
+﻿using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -6,6 +6,13 @@ namespace Atlas.Forms.Behaviors
 {
     public class NavigationPageBackButtonBehavior : Behavior<NavigationPage>
     {
+        protected IPublisher Publisher { get; set; }
+
+        public NavigationPageBackButtonBehavior(IPublisher publisher)
+        {
+            Publisher = publisher;
+        }
+
         protected override void OnAttachedTo(NavigationPage bindable)
         {
             bindable.Popped += NavigationPage_Popped;
@@ -23,8 +30,8 @@ namespace Atlas.Forms.Behaviors
             var navigationPage = (NavigationPage) sender;
             var currentPage = navigationPage.CurrentPage;
             var previousPage = e.Page;
-            PageActionInvoker.InvokeOnPageDisappeared(previousPage, new ParametersService());
-            PageActionInvoker.InvokeOnPageAppeared(currentPage, new ParametersService());
+            Publisher.SendPageDisappearedMessage(previousPage, new ParametersService());
+            Publisher.SendPageAppearedMessage(currentPage, new ParametersService());
         }
     }
 }

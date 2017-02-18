@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Atlas.Forms.Caching;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
-using Atlas.Forms.Navigation;
-using Atlas.Forms.Pages;
 using Atlas.Forms.Pages.Infos;
 using Xamarin.Forms;
 
@@ -17,37 +14,19 @@ namespace Atlas.Forms.Components
 
         protected IPageFactory PageFactory { get; }
 
-        protected ICacheSubscriber CacheSubscriber { get; }
-
         protected IPageCacheMap PageCacheMap { get; }
 
         protected IPageKeyStore PageKeyStore { get; }
 
         public AutoCacheController(ICacheController cacheController, 
                                    IPageCacheMap pageCacheMap, 
-                                   IPageKeyStore pageKeyStore, 
-                                   IPageFactory pageFactory, 
-                                   ICacheSubscriber cacheSubscriber)
+                                   IPageKeyStore pageKeyStore,
+                                   IPageFactory pageFactory)
         {
             CacheController = cacheController;
             PageCacheMap = pageCacheMap;
             PageFactory = pageFactory;
             PageKeyStore = pageKeyStore;
-            CacheSubscriber = cacheSubscriber;
-            SubscribeInternal();
-        }
-
-        private void SubscribeInternal()
-        {
-            Subscribe();
-        }
-
-        public virtual void Subscribe()
-        {
-            CacheSubscriber.SubscribePageAppeared(OnPageAppeared);
-            CacheSubscriber.SubscribePageDisappeared(OnPageDisappeared);
-            CacheSubscriber.SubscribePageNavigatedFrom(OnPageNavigatedFrom);
-            CacheSubscriber.SubscribePageCreated(OnPageCreated);
         }
 
         public virtual void OnPageNavigatedFrom(Page page)
@@ -164,14 +143,6 @@ namespace Atlas.Forms.Components
                 }
             }
             return mapInfos;
-        }
-
-        public virtual void Unsubscribe()
-        {
-            CacheSubscriber.UnsubscribePageAppeared();
-            CacheSubscriber.UnsubscribePageDisappeared();
-            CacheSubscriber.UnsubscribePageNavigatedFrom();
-            CacheSubscriber.UnsubscribePageCreated();
         }
     }
 }

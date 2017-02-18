@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Pages.Infos;

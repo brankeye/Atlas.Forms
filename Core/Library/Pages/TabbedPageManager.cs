@@ -9,10 +9,9 @@ namespace Atlas.Forms.Pages
     {
         public TabbedPageManager(
             TabbedPage page,
-            INavigationController navigationController,
             IPageRetriever pageRetriever,
             IPageKeyStore pageKeyStore) 
-            : base(page, navigationController, pageRetriever, pageKeyStore)
+            : base(page, pageRetriever, pageKeyStore)
         {
 
         }

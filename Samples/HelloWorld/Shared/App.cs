@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Threading.Tasks;
 using atlas.samples.helloworld.Shared.Views.Pages;
 using atlas.samples.helloworld.Shared.Views.Pages.NavigationPage;
 using Atlas.Forms;
-using Atlas.Forms.Caching;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Services;
-using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared
 {

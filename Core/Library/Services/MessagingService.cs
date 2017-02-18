@@ -24,9 +24,24 @@ namespace Atlas.Forms.Services
             MessagingCenter.Send(this, message);
         }
 
-        public virtual void SendMessage<TArgs>(string message, TArgs args)
+        public virtual void SendMessage<T>(string message, T arg)
         {
-            MessagingCenter.Send(this, message, args);
+            MessagingCenter.Send(this, message, arg);
+        }
+
+        public virtual void SendMessage<T1, T2>(string message, T1 arg1, T2 arg2)
+        {
+            MessagingCenter.Send(this, message, new Tuple<T1, T2>(arg1, arg2));
+        }
+
+        public virtual void SendMessage<T1, T2, T3>(string message, T1 arg1, T2 arg2, T3 arg3)
+        {
+            MessagingCenter.Send(this, message, new Tuple<T1, T2, T3>(arg1, arg2, arg3));
+        }
+
+        public virtual void SendMessage<T1, T2, T3, T4>(string message, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            MessagingCenter.Send(this, message, new Tuple<T1, T2, T3, T4>(arg1, arg2, arg3, arg4));
         }
 
         public virtual void Subscribe(string message, Action callback)
@@ -35,9 +50,27 @@ namespace Atlas.Forms.Services
             MessagingCenter.Subscribe(this, message, action);
         }
 
-        public virtual void Subscribe<TArgs>(string message, Action<TArgs> callback)
+        public virtual void Subscribe<T>(string message, Action<T> callback)
         {
-            Action<MessagingService, TArgs> action = (service, args) => callback.Invoke(args);
+            Action<MessagingService, T> action = (service, args) => callback.Invoke(args);
+            MessagingCenter.Subscribe(this, message, action);
+        }
+
+        public virtual void Subscribe<T1, T2>(string message, Action<T1, T2> callback)
+        {
+            Action<MessagingService, Tuple<T1, T2>> action = (service, args) => callback.Invoke(args.Item1, args.Item2);
+            MessagingCenter.Subscribe(this, message, action);
+        }
+
+        public virtual void Subscribe<T1, T2, T3>(string message, Action<T1, T2, T3> callback)
+        {
+            Action<MessagingService, Tuple<T1, T2, T3>> action = (service, args) => callback.Invoke(args.Item1, args.Item2, args.Item3);
+            MessagingCenter.Subscribe(this, message, action);
+        }
+
+        public virtual void Subscribe<T1, T2, T3, T4>(string message, Action<T1, T2, T3, T4> callback)
+        {
+            Action<MessagingService, Tuple<T1, T2, T3, T4>> action = (service, args) => callback.Invoke(args.Item1, args.Item2, args.Item3, args.Item4);
             MessagingCenter.Subscribe(this, message, action);
         }
 
@@ -47,9 +80,27 @@ namespace Atlas.Forms.Services
             Current.Subscribe(message, action);
         }
 
-        public virtual void SubscribeAsync<TArgs>(string message, Func<TArgs, Task> callback)
+        public virtual void SubscribeAsync<T>(string message, Func<T, Task> callback)
         {
-            Action<TArgs> action = async args => await callback.Invoke(args);
+            Action<T> action = async args => await callback.Invoke(args);
+            Current.Subscribe(message, action);
+        }
+
+        public virtual void SubscribeAsync<T1, T2>(string message, Func<T1, T2, Task> callback)
+        {
+            Action<T1, T2> action = async (arg1, arg2) => await callback.Invoke(arg1, arg2);
+            Current.Subscribe(message, action);
+        }
+
+        public virtual void SubscribeAsync<T1, T2, T3>(string message, Func<T1, T2, T3, Task> callback)
+        {
+            Action<T1, T2, T3> action = async (arg1, arg2, arg3) => await callback.Invoke(arg1, arg2, arg3);
+            Current.Subscribe(message, action);
+        }
+
+        public virtual void SubscribeAsync<T1, T2, T3, T4>(string message, Func<T1, T2, T3, T4, Task> callback)
+        {
+            Action<T1, T2, T3, T4> action = async (arg1, arg2, arg3, arg4) => await callback.Invoke(arg1, arg2, arg3, arg4);
             Current.Subscribe(message, action);
         }
 
@@ -58,9 +109,24 @@ namespace Atlas.Forms.Services
             MessagingCenter.Unsubscribe<MessagingService>(this, message);
         }
 
-        public virtual void Unsubscribe<TArgs>(string message)
+        public virtual void Unsubscribe<T>(string message)
         {
-            MessagingCenter.Unsubscribe<MessagingService, TArgs>(this, message);
+            MessagingCenter.Unsubscribe<MessagingService, T>(this, message);
+        }
+
+        public virtual void Unsubscribe<T1, T2>(string message)
+        {
+            MessagingCenter.Unsubscribe<MessagingService, Tuple<T1, T2>>(this, message);
+        }
+
+        public virtual void Unsubscribe<T1, T2, T3>(string message)
+        {
+            MessagingCenter.Unsubscribe<MessagingService, Tuple<T1, T2, T3>>(this, message);
+        }
+
+        public virtual void Unsubscribe<T1, T2, T3, T4>(string message)
+        {
+            MessagingCenter.Unsubscribe<MessagingService, Tuple<T1, T2, T3, T4>>(this, message);
         }
     }
 }

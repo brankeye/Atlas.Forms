@@ -1,5 +1,4 @@
 ﻿using System;
-using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Utilities;
@@ -7,14 +6,13 @@ using Xamarin.Forms;
 
 namespace Atlas.Forms.Pages
 {
-    public class PageActionInvoker
+    public class PageActionInvoker : IPageActionInvoker
     {
-        public static void InvokeActionOnPage<T>(object view, Action<T> action) where T : class
+        protected void InvokeActionOnPage<T>(Page page, Action<T> action) where T : class
         {
             var canContinue = true;
             while (canContinue)
             {
-                var page = view as Page;
                 if (page != null)
                 {
                     ActionInvoker.Invoke(page, action);
@@ -24,7 +22,7 @@ namespace Atlas.Forms.Pages
                 if (page is NavigationPage)
                 {
                     var navigationPage = page as NavigationPage;
-                    view = navigationPage.CurrentPage;
+                    page = navigationPage.CurrentPage;
                     continue;
                 }
 
@@ -32,41 +30,39 @@ namespace Atlas.Forms.Pages
             }
         }
 
-        public static void InvokeOnPageAppearing(object view, IParametersService parameters)
+        public void InvokeOnPageAppearing(Page page, IParametersService parameters)
         {
-            InvokeActionOnPage<IPageAppearingAware>(view, x => x.OnPageAppearing(parameters));
+            InvokeActionOnPage<IPageAppearingAware>(page, x => x.OnPageAppearing(parameters));
         }
 
-        public static void InvokeOnPageAppeared(object view, IParametersService parameters)
+        public void InvokeOnPageAppeared(Page page, IParametersService parameters)
         {
-            InvokeActionOnPage<IPageAppearedAware>(view, x => x.OnPageAppeared(parameters));
-            CachePubSubService.Publisher?.SendPageAppearedMessage(view as Page);
+            InvokeActionOnPage<IPageAppearedAware>(page, x => x.OnPageAppeared(parameters));
         }
 
-        public static void InvokeOnPageDisappearing(object view, IParametersService parameters)
+        public void InvokeOnPageDisappearing(Page page, IParametersService parameters)
         {
-            InvokeActionOnPage<IPageDisappearingAware>(view, x => x.OnPageDisappearing(parameters));
+            InvokeActionOnPage<IPageDisappearingAware>(page, x => x.OnPageDisappearing(parameters));
         }
 
-        public static void InvokeOnPageDisappeared(object view, IParametersService parameters)
+        public void InvokeOnPageDisappeared(Page page, IParametersService parameters)
         {
-            InvokeActionOnPage<IPageDisappearedAware>(view, x => x.OnPageDisappeared(parameters));
-            CachePubSubService.Publisher?.SendPageDisappearedMessage(view as Page);
+            InvokeActionOnPage<IPageDisappearedAware>(page, x => x.OnPageDisappeared(parameters));
         }
 
-        public static void InvokeOnPageCaching(object view)
+        public void InvokeOnPageCaching(Page page)
         {
-            InvokeActionOnPage<IPageCachingAware>(view, x => x.OnPageCaching());
+            InvokeActionOnPage<IPageCachingAware>(page, x => x.OnPageCaching());
         }
 
-        public static void InvokeOnPageCached(object view)
+        public void InvokeOnPageCached(Page page)
         {
-            InvokeActionOnPage<IPageCachedAware>(view, x => x.OnPageCached());
+            InvokeActionOnPage<IPageCachedAware>(page, x => x.OnPageCached());
         }
 
-        public static void InvokeInitialize(object view, IParametersService parameters)
+        public void InvokeInitialize(Page page, IParametersService parameters)
         {
-            InvokeActionOnPage<IInitializeAware>(view, x => x.Initialize(parameters));
+            InvokeActionOnPage<IInitializeAware>(page, x => x.Initialize(parameters));
         }
     }
 }

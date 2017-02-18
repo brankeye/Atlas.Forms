@@ -1,5 +1,5 @@
 ﻿using System;
-using Atlas.Forms.Pages;
+using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -8,6 +8,13 @@ namespace Atlas.Forms.Behaviors
     public class CarouselPagePresentationBehavior : Behavior<CarouselPage>
     {
         protected Page LastPage { get; set; }
+
+        protected IPublisher Publisher { get; set; }
+
+        public CarouselPagePresentationBehavior(IPublisher publisher)
+        {
+            Publisher = publisher;
+        }
 
         protected override void OnAttachedTo(CarouselPage bindable)
         {
@@ -26,8 +33,8 @@ namespace Atlas.Forms.Behaviors
         protected virtual void OnCurrentPageChanged(object sender, EventArgs eventArgs)
         {
             var tabbedPage = (CarouselPage) sender;
-            PageActionInvoker.InvokeOnPageDisappeared(LastPage, new ParametersService());
-            PageActionInvoker.InvokeOnPageAppeared(tabbedPage.CurrentPage, new ParametersService());
+            Publisher.SendPageDisappearedMessage(LastPage, new ParametersService());
+            Publisher.SendPageAppearedMessage(tabbedPage.CurrentPage, new ParametersService());
             LastPage = tabbedPage.CurrentPage;
         }
     }

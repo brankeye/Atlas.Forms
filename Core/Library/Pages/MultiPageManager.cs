@@ -6,7 +6,6 @@ using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Services;
-using Atlas.Forms.Navigation;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 
@@ -25,20 +24,16 @@ namespace Atlas.Forms.Pages
 
         protected WeakReference<MultiPage<T>> PageReference { get; set; }
 
-        protected INavigationController NavigationController { get; set; }
-
         protected IPageRetriever PageRetriever { get; set; }
 
         protected IPageKeyStore PageKeyStore { get; }
 
         public MultiPageManager(
             MultiPage<T> page,
-            INavigationController navigationController,
             IPageRetriever pageRetriever,
             IPageKeyStore pageKeyStore)
         {
             PageReference = new WeakReference<MultiPage<T>>(page);
-            NavigationController = navigationController;
             PageRetriever = pageRetriever;
             PageKeyStore = pageKeyStore;
         }

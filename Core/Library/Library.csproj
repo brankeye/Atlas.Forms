@@ -42,12 +42,15 @@
   <ItemGroup>
     <Compile Include="Components\AutoCacheController.cs" />
     <Compile Include="Components\CachePubSubService.cs" />
+    <Compile Include="Components\MessagingController.cs" />
     <Compile Include="Components\ServiceFactoryImp.cs" />
     <Compile Include="Interfaces\Components\IAutoCacheController.cs" />
-    <Compile Include="Interfaces\Components\ICachePublisher.cs" />
+    <Compile Include="Interfaces\Components\IMessagingController.cs" />
+    <Compile Include="Interfaces\Components\IPublisher.cs" />
     <Compile Include="Interfaces\IPageCacheMap.cs" />
     <Compile Include="Interfaces\IPageKeyStore.cs" />
     <Compile Include="Interfaces\IPageNavigationStore.cs" />
+    <Compile Include="Interfaces\Pages\IPageActionInvoker.cs" />
     <Compile Include="Interfaces\Services\IMessagingService.cs" />
     <Compile Include="Interfaces\Utilities\ILazySingleton.cs" />
     <Compile Include="Pages\TargetPageInfo.cs" />

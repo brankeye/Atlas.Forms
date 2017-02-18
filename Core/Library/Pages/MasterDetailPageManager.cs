@@ -1,5 +1,4 @@
 ﻿using System;
-using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Services;
@@ -12,18 +11,18 @@ namespace Atlas.Forms.Pages
     {
         protected WeakReference<MasterDetailPage> PageReference { get; set; }
 
-        protected INavigationController NavigationController { get; set; }
-
         protected IPageRetriever PageRetriever { get; set; }
+
+        protected IPublisher Publisher { get; set; }
 
         public MasterDetailPageManager(
             MasterDetailPage page,
-            INavigationController navigationController,
-            IPageRetriever pageRetriever)
+            IPageRetriever pageRetriever,
+            IPublisher publisher)
         {
             PageReference = new WeakReference<MasterDetailPage>(page);
-            NavigationController = navigationController;
             PageRetriever = pageRetriever;
+            Publisher = publisher;
         }
 
         public virtual void PresentPage(NavigationInfo pageInfo, IParametersService parameters = null)
@@ -36,15 +35,15 @@ namespace Atlas.Forms.Pages
                 var lastPage = pageRef.Detail;
                 if (lastPage != null)
                 {
-                    PageActionInvoker.InvokeOnPageDisappearing(lastPage, paramService);
+                    Publisher.SendPageDisappearingMessage(lastPage, paramService);
                 }
-                PageActionInvoker.InvokeOnPageAppearing(nextPage, paramService);
+                Publisher.SendPageAppearingMessage(nextPage, paramService);
                 pageRef.Detail = nextPage;
                 if (lastPage != null)
                 {
-                    PageActionInvoker.InvokeOnPageDisappeared(lastPage, paramService);
+                    Publisher.SendPageAppearingMessage(lastPage, paramService);
                 }
-                PageActionInvoker.InvokeOnPageAppeared(nextPage, paramService);
+                Publisher.SendPageAppearingMessage(nextPage, paramService);
             }
         }
     }

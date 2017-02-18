@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using NUnit.Framework;
-using Atlas.Forms.Caching;
+﻿using NUnit.Framework;
 using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
 using Atlas.Forms.Interfaces.Components;
@@ -49,18 +47,18 @@ namespace Library.Tests.Fixtures
 
         protected IPageRetriever GetPageRetriever()
         {
+            MessagingService.SetCurrent(() => new MessagingService());
+            PubSubService.SetCurrent(() => new PubSubService(MessagingService.Current));
             var pageNavigationStore = new PageNavigationStore();
             pageNavigationStore.AddTypeAndConstructorInfo("FirstPage", typeof(ContentPage));
             pageNavigationStore.AddTypeAndConstructorInfo("SecondPage", typeof(ContentPage));
             pageNavigationStore.AddTypeAndConstructorInfo("ThirdPage", typeof(ContentPage));
-            var cacheController = new CacheController();
+            var cacheController = new CacheController(PubSubService.Publisher);
             cacheController.TryAddCacheInfo("ThirdPage",
                 new CacheInfo(new ContentPage(), true,
                     new TargetPageInfo("ThirdPage", CacheState.Default)));
-            MessagingService.SetCurrent(() => new MessagingService());
-            CachePubSubService.SetCurrent(() => new CachePubSubService(MessagingService.Current));
             var pageFactory = new PageFactory(pageNavigationStore, new PageKeyStore(), new ServiceFactoryImp());
-            return new PageRetriever(cacheController, pageFactory, CachePubSubService.Publisher);
+            return new PageRetriever(cacheController, pageFactory, PubSubService.Publisher);
         }
     }
 }
