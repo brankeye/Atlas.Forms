@@ -28,17 +28,31 @@ namespace Atlas.Forms.Components
             Instance.SetCurrent(func);
         }
 
-        protected string id => "__CacheEvent";
+        protected string Id => "__CacheEvent";
 
-        protected string OnPageAppeared => "OnPageAppeared" + id;
+        protected string OnPageAppearing => nameof(OnPageAppearing) + Id;
 
-        protected string OnPageNavigatedFrom => "OnPageNavigatedFrom" + id;
+        protected string OnPageAppeared => nameof(OnPageAppeared) + Id;
 
-        protected string OnPageNavigatedTo => "OnPageNavigatedTo" + id;
+        protected string OnPageDisappearing => nameof(OnPageDisappearing) + Id;
 
-        protected string OnPageDisappeared => "OnPageDisappeared" + id;
+        protected string OnPageDisappeared => nameof(OnPageDisappeared) + Id;
 
-        protected string OnPageCreated => "OnPageCreated" + id;
+        protected string OnPageCaching => nameof(OnPageCaching) + Id;
+
+        protected string OnPageCached => nameof(OnPageCached) + Id;
+
+        protected string OnPageNavigatedFrom => nameof(OnPageNavigatedFrom) + Id;
+
+        protected string OnPageNavigatedTo => nameof(OnPageNavigatedTo) + Id;
+
+        protected string OnPageCreated => nameof(OnPageCreated) + Id;
+
+        public virtual void SendPageAppearingMessage(Page page)
+        {
+            if (page == null) return;
+            MessagingService.SendMessage(OnPageAppeared, page);
+        }
 
         public virtual void SendPageAppearedMessage(Page page)
         {

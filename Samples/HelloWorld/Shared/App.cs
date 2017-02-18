@@ -15,7 +15,7 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
-            //Setup();
+            Setup();
 
             NavigationService.SetMainPage(Nav.Get<MainMasterDetailPage>().Info());
             //NavigationService.SetMainPage(Nav.Get("MyContentPage").AsNavigationPage().Info());
@@ -32,13 +32,9 @@ namespace atlas.samples.helloworld.Shared
         {
             MessagingService.Current.SubscribeAsync("Hi", async () =>
             {
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
-                    var i = 0;
-                    while (i < 10000)
-                    {
-                        i++;
-                    }
+                    await Task.Delay(TimeSpan.FromSeconds(5));
                 });
             });
 

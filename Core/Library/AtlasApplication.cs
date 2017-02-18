@@ -13,9 +13,9 @@ namespace Atlas.Forms
     {
         protected IServiceFactoryImp ServiceFactory { get; private set; }
 
-        private IAutoCacheController AutoCacheController { get; set; }
-
         protected ICacheController CacheController { get; private set; }
+
+        private IAutoCacheController AutoCacheController { get; set; }
 
         private IPageNavigationStore PageNavigationStore { get; set; }
 
@@ -46,8 +46,7 @@ namespace Atlas.Forms
         protected override INavigationService CreateNavigationService(INavigation navigation)
         {
             var navigationController = CreateNavigationController(navigation);
-            var pageCacheController = CreatePageRetriever();
-            return new NavigationService(navigationController, pageCacheController, CachePubSubService.Publisher);
+            return new NavigationService(navigationController, CreatePageRetriever(), CachePubSubService.Publisher);
         }
 
         protected override IPageCacheService CreatePageCacheService()

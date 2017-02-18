@@ -25,7 +25,6 @@ namespace Atlas.Forms.Behaviors
             var previousPage = e.Page;
             PageActionInvoker.InvokeOnPageDisappeared(previousPage, new ParametersService());
             PageActionInvoker.InvokeOnPageAppeared(currentPage, new ParametersService());
-            previousPage.Behaviors?.Clear();
         }
     }
 }
