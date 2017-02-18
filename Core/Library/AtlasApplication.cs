@@ -73,7 +73,7 @@ namespace Atlas.Forms
         {
             var navigationProvider = new NavigationProvider(navigation);
             var pageStackController = CreatePageStackController(navigationProvider);
-            return new NavigationController(new ApplicationProvider(), navigationProvider, pageStackController, PageKeyStore);
+            return new NavigationController(new ApplicationProvider(), navigationProvider, pageStackController);
         }
 
         protected virtual IPageRetriever CreatePageRetriever()

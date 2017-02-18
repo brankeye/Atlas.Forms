@@ -23,7 +23,11 @@ namespace Atlas.Forms.Components
 
         protected IPageKeyStore PageKeyStore { get; }
 
-        public AutoCacheController(ICacheController cacheController, IPageCacheMap pageCacheMap, IPageKeyStore pageKeyStore, IPageFactory pageFactory, ICacheSubscriber cacheSubscriber)
+        public AutoCacheController(ICacheController cacheController, 
+                                   IPageCacheMap pageCacheMap, 
+                                   IPageKeyStore pageKeyStore, 
+                                   IPageFactory pageFactory, 
+                                   ICacheSubscriber cacheSubscriber)
         {
             CacheController = cacheController;
             PageCacheMap = pageCacheMap;

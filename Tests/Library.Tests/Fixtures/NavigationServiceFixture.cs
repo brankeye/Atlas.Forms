@@ -179,7 +179,7 @@ namespace Library.Tests.Fixtures
             var pageKeyStore = new PageKeyStore();
             var cachePubSubService = new CachePubSubService(new MessagingService());
             var navigationProvider = new NavigationProvider(null);
-            var navigationController = new NavigationController(new ApplicationProviderMock(), navigationProvider, new PageStackController(navigationProvider, pageKeyStore), pageKeyStore);
+            var navigationController = new NavigationController(new ApplicationProviderMock(), navigationProvider, new PageStackController(navigationProvider, pageKeyStore));
             var pageNavigationStore = new PageNavigationStore();
             pageNavigationStore.AddTypeAndConstructorInfo("NavigationPage", typeof(NavigationPage));
             pageNavigationStore.AddTypeAndConstructorInfo("MainPage", typeof(ContentPage));

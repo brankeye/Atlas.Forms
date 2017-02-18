@@ -17,18 +17,14 @@ namespace Atlas.Forms.Components
         protected INavigationProvider NavigationProvider { get; }
 
         protected IPageStackController PageStackController { get; }
-
-        protected IPageKeyStore PageKeyStore { get; }
         
         public NavigationController(IApplicationProvider applicationProvider,
                                     INavigationProvider navigationProvider,
-                                    IPageStackController pageStackController,
-                                    IPageKeyStore pageKeyStore)
+                                    IPageStackController pageStackController)
         {
             ApplicationProvider = applicationProvider;
             NavigationProvider = navigationProvider;
             PageStackController = pageStackController;
-            PageKeyStore = pageKeyStore;
         }
 
         public virtual void SetMainPage(Page page, IParametersService parameters)
@@ -68,8 +64,9 @@ namespace Atlas.Forms.Components
         {
             var pageStack = useModal ? NavigationProvider.Navigation.ModalStack
                                      : NavigationProvider.Navigation.NavigationStack;
+            
             var currentPage = pageStack[pageStack.Count - 1];
-            var pageContainer = PageKeyStore.GetPageContainer(currentPage);
+            var pageContainer = GetCurrentPageInfo(useModal);
             PageActionInvoker.InvokeOnPageDisappearing(currentPage, parameters);
             if (useModal)
             {
@@ -134,6 +131,13 @@ namespace Atlas.Forms.Components
         public virtual void TrySetNavigation(Page page)
         {
             NavigationProvider.TrySetNavigation(page);
+        }
+
+        protected virtual IPageInfo GetCurrentPageInfo(bool useModal)
+        {
+            var pageInfoStack = useModal ? PageStackController.ModalStack
+                                     : PageStackController.NavigationStack;
+            return pageInfoStack.Count > 0 ? pageInfoStack.Last() : null;
         }
     }
 }
