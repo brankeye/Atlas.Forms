@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Atlas.Forms.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 

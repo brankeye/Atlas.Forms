@@ -1,4 +1,5 @@
-﻿using Atlas.Forms.Interfaces.Managers;
+﻿using Atlas.Forms.Infos;
+using Atlas.Forms.Interfaces.Managers;
 using Atlas.Forms.Interfaces.Pages;
 using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Services;

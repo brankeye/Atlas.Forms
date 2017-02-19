@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using atlas.samples.helloworld.Shared.Views.Pages;
 using atlas.samples.helloworld.Shared.Views.Pages.NavigationPage;
 using Atlas.Forms;
+using Atlas.Forms.Components;
 using Atlas.Forms.Interfaces;
+using Atlas.Forms.Interfaces.Managers;
+using Atlas.Forms.Pages;
 using Atlas.Forms.Services;
+using Xamarin.Forms;
 
 namespace atlas.samples.helloworld.Shared
 {
@@ -12,20 +17,11 @@ namespace atlas.samples.helloworld.Shared
     {
         public App()
         {
-            Setup();
-
+            //MessagingTest();
             NavigationService.SetMainPage(Nav.Get<MainMasterDetailPage>().Info());
-            //NavigationService.SetMainPage(Nav.Get("MyContentPage").AsNavigationPage().Info());
-            //NavigationService.PushAsync(Nav.Get("MyNextPage").Info()).Wait();
-            //NavigationService.PushAsync(Nav.Get("NextTabPage").Info()).Wait();
-            //var pageCache = CacheController.GetPageCache();
-            //NavigationService.PopAsync().Wait();
-            //pageCache = CacheController.GetPageCache();
-            //NavigationService.PopAsync().Wait();
-            //pageCache = CacheController.GetPageCache();
         }
 
-        public void Setup()
+        public void MessagingTest()
         {
             MessagingService.Current.SubscribeAsync("Hi", async () =>
             {

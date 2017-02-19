@@ -1,4 +1,5 @@
-﻿using Atlas.Forms.Services;
+﻿using Atlas.Forms.Infos;
+using Atlas.Forms.Services;
 
 namespace atlas.samples.helloworld.Shared.ViewModels
 {

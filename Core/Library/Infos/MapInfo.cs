@@ -1,4 +1,4 @@
-﻿namespace Atlas.Forms.Pages.Infos
+﻿namespace Atlas.Forms.Infos
 {
     public class MapInfo
     {

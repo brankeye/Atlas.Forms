@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Atlas.Forms.Enums;
+using Atlas.Forms.Infos;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
-using Atlas.Forms.Pages.Infos;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Components

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Atlas.Forms.Enums;
+using Atlas.Forms.Infos;
 using Atlas.Forms.Interfaces.Components;
-using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Components
 {

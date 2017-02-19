@@ -1,6 +1,6 @@
 ﻿using Atlas.Forms.Enums;
 
-namespace Atlas.Forms.Pages
+namespace Atlas.Forms.Infos
 {
     public class TriggerPageInfo
     {

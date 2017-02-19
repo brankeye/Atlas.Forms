@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Atlas.Forms.Infos;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Caching
 {

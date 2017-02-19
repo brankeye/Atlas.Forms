@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using Atlas.Forms.Infos;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 

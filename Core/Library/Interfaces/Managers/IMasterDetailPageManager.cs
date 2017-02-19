@@ -1,4 +1,5 @@
-﻿using Atlas.Forms.Interfaces.Services;
+﻿using Atlas.Forms.Infos;
+using Atlas.Forms.Interfaces.Services;
 using Atlas.Forms.Services;
 
 namespace Atlas.Forms.Interfaces.Managers

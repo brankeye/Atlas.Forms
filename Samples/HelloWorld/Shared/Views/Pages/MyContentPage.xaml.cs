@@ -21,6 +21,7 @@ namespace atlas.samples.helloworld.Shared.Views.Pages
         public MyContentPage()
         {
             InitializeComponent();
+            BindingContext = new ViewModels.Pages.MyContentPage();
             Label.Text = Guid.NewGuid().ToString();
         }
 

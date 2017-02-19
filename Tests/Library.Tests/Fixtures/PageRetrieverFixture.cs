@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 using Atlas.Forms.Components;
 using Atlas.Forms.Enums;
+using Atlas.Forms.Infos;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Navigation;
 using Atlas.Forms.Pages;
-using Atlas.Forms.Pages.Infos;
 using Atlas.Forms.Services;
 using Xamarin.Forms;
 

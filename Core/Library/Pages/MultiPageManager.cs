@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Atlas.Forms.Infos;
 using Atlas.Forms.Interfaces;
 using Atlas.Forms.Interfaces.Components;
 using Atlas.Forms.Interfaces.Managers;
@@ -22,7 +23,7 @@ namespace Atlas.Forms.Pages
 
         public IReadOnlyList<IPageInfo> Children => CreateChildren().ToList();
 
-        protected WeakReference<MultiPage<T>> PageReference { get; set; }
+        protected MultiPage<T> PageInstance { get; set; }
 
         protected IPageRetriever PageRetriever { get; set; }
 
@@ -33,45 +34,30 @@ namespace Atlas.Forms.Pages
             IPageRetriever pageRetriever,
             IPageKeyStore pageKeyStore)
         {
-            PageReference = new WeakReference<MultiPage<T>>(page);
+            PageInstance = page;
             PageRetriever = pageRetriever;
             PageKeyStore = pageKeyStore;
         }
 
         protected virtual IEnumerable GetItemsSource()
         {
-            MultiPage<T> page;
-            if (PageReference.TryGetTarget(out page))
-            {
-                return page.ItemsSource;
-            }
-            return null;
+            return PageInstance.ItemsSource;
         }
 
         protected virtual object GetSelectedItem()
         {
-            MultiPage<T> page;
-            if (PageReference.TryGetTarget(out page))
-            {
-                return page.SelectedItem;
-            }
-            return null;
+            return PageInstance.SelectedItem;
         }
 
         public void AddPage(NavigationInfo pageInfo, IParametersService parameters = null)
         {
             var pageInstance = PageRetriever.GetCachedOrNewPage(pageInfo, parameters ?? new ParametersService()) as T;
-            MultiPage<T> page;
-            if (PageReference.TryGetTarget(out page))
+            PageInstance.Children.Add(pageInstance);
+            var children = Children;
+            if (children.Count == 1)
             {
-                page.Children.Add(pageInstance);
-                var children = Children;
-                if (children.Count == 1)
-                {
-                    CurrentPage = children[0];
-                }
+                CurrentPage = children[0];
             }
-            
         }
 
         public IPageInfo RemovePage(NavigationInfo navigationInfo)
@@ -90,30 +76,20 @@ namespace Atlas.Forms.Pages
 
         public IPageInfo RemovePageAt(int index)
         {
-            MultiPage<T> page;
-            if (PageReference.TryGetTarget(out page))
-            {
-                var pageContainer = PageKeyStore.GetPageContainer(page.Children[index]);
-                page.Children.RemoveAt(index);
-                return pageContainer;
-            }
-            return null;
+            var pageContainer = PageKeyStore.GetPageContainer(PageInstance.Children[index]);
+            PageInstance.Children.RemoveAt(index);
+            return pageContainer;
         }
 
         public IPageInfo SetCurrentPage(int index)
         {
-            MultiPage<T> page;
-            if (PageReference.TryGetTarget(out page))
+            if (index < PageInstance.Children.Count)
             {
-                if (index < page.Children.Count)
-                {
-                    var pageContainer = PageKeyStore.GetPageContainer(page.Children[index]);
-                    page.CurrentPage = page.Children[index];
-                    CurrentPage = pageContainer;
-                    return pageContainer;
-                }
+                var pageContainer = PageKeyStore.GetPageContainer(PageInstance.Children[index]);
+                PageInstance.CurrentPage = PageInstance.Children[index];
+                CurrentPage = pageContainer;
+                return pageContainer;
             }
-            
             return null;
         }
 
@@ -133,37 +109,25 @@ namespace Atlas.Forms.Pages
 
         public void SetPageTemplate(NavigationInfo navigationInfo)
         {
-            MultiPage<T> pageRef;
-            if (PageReference.TryGetTarget(out pageRef))
-            {
-                var pageInstance = PageRetriever.GetCachedOrNewPage(navigationInfo, new ParametersService());
-                pageRef.ItemTemplate = new DataTemplate(() => pageInstance);
-            }
+            var pageInstance = PageRetriever.GetCachedOrNewPage(navigationInfo, new ParametersService());
+            PageInstance.ItemTemplate = new DataTemplate(() => pageInstance);
         }
 
         public object SetSelectedItem(int index)
         {
-            MultiPage<T> pageRef;
-            if (PageReference.TryGetTarget(out pageRef))
+            var itemsSource = PageInstance.ItemsSource as IList;
+            if (index < itemsSource?.Count)
             {
-                var itemsSource = pageRef.ItemsSource as IList;
-                if (index < itemsSource?.Count)
-                {
-                    pageRef.SelectedItem = itemsSource[index];
-                    return pageRef.SelectedItem;
-                }
+                PageInstance.SelectedItem = itemsSource[index];
+                return PageInstance.SelectedItem;
             }
             return null;
         }
 
         public IList<IPageInfo> CreateChildren()
         {
-            MultiPage<T> pageRef;
-            if (PageReference.TryGetTarget(out pageRef))
-            {
-            }
             var children = new List<IPageInfo>();
-            foreach (var child in pageRef.Children)
+            foreach (var child in PageInstance.Children)
             {
                 children.Add(PageKeyStore.GetPageContainer(child));
             }

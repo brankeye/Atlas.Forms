@@ -1,6 +1,6 @@
 ﻿using Atlas.Forms.Enums;
+using Atlas.Forms.Infos;
 using Atlas.Forms.Interfaces;
-using Atlas.Forms.Pages.Infos;
 
 namespace Atlas.Forms.Pages
 {

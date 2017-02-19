@@ -1,18 +1,5 @@
-﻿namespace Atlas.Forms.Services
+﻿namespace Atlas.Forms.Infos
 {
-    public class Nav
-    {
-        public static NavigationInfoFluent Get(string key)
-        {
-            return new NavigationInfoFluent(new NavigationInfo(key));
-        }
-
-        public static NavigationInfoFluent Get<TClass>()
-        {
-            return Get(typeof(TClass).Name);
-        }
-    }
-
     public class NavigationInfo
     {
         public NavigationInfo() { }

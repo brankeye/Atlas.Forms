@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Atlas.Forms.Pages.Infos;
+using Atlas.Forms.Infos;
 using Xamarin.Forms;
 
 namespace Atlas.Forms.Interfaces
