@@ -1,8 +1,6 @@
 # Atlas.Forms
 Atlas is a small library that provides viewmodel-first navigation, event-based automatic page-caching, navigation-stack saving, and some other useful services.
 
-NOTE: Atlas is still in beta.
-
 ## Nuget
 Atlas.Forms is available for [download on Nuget](https://www.nuget.org/packages/Atlas.Forms/).
 To install Atlas.Forms, run the following command in the Package Manager Console:
