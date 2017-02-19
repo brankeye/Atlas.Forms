@@ -5,7 +5,7 @@ Atlas is a small library that provides viewmodel-first navigation, event-based a
 Atlas.Forms is available for [download on Nuget](https://www.nuget.org/packages/Atlas.Forms/).
 To install Atlas.Forms, run the following command in the Package Manager Console:
 
-    Install-Package Atlas.Forms -Pre
+    Install-Package Atlas.Forms
 
 ## Wiki
 Please see the [wiki](https://github.com/brankeye/Atlas.Forms/wiki) for an in-depth guide to using Atlas.
